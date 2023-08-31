@@ -7,16 +7,18 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Nordeste Repuestos',
   description: 'Control de comisiones',
+  authors: {name: "Angelo", url: `https://bitecnologias.com`},
 }
 
-export default function RootLayout({
-  children,
+export default function RootLayout({children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
 }
