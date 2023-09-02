@@ -3,7 +3,7 @@ type Inputs = {
     dni: number,
 
 }
-export default function Validations(inputs: Inputs) {
+export default function validations(inputs: Inputs) {
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     type dni = number;
     let errors: Record<string, string> = {};

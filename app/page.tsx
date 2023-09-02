@@ -1,9 +1,46 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Validations from "../components/validations";
+import axios from "axios";
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const URL = "http://localhost/3000";
+  const [access, setAccess] = useState(false);
+  const router = useRouter();
 
-  const [userData, setUserData] = useState(false);
+  let userData = { dni: "", username: "", password: "" };
+  let dni = userData.dni;
+  let username = userData.username;
+  let password = userData.password;
+  let query: string;
+  if(dni in userData){
+    query = `dni=${dni}&password=${password}`;}
+    else{
+    query = `username=${username}&password=${password}`;
+    };
+
+  useEffect(() => {
+    axios.get(URL + `?${query}`).then((response) => {
+      setAccess(response.data);
+    });
+  }, [userData]);
+
+  async function login(){   
+    try{
+      const response = await axios.get(URL + `?${query}`);
+        
+        if(response.status === 200) {
+          const { access } = response.data;
+          setAccess(true);
+          access && router.replace('/dashboard');
+        }
+      }
+    catch (error){
+      throw new Error ("No se pudo verificar los datos")
+    }
+  }
+
 
   return (
     <>
