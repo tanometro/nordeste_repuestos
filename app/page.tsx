@@ -1,35 +1,45 @@
 "use client";
 import { useState, useEffect } from "react";
-import Validations from "../components/validations";
+import validations from "../components/validations";
 import axios from "axios";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Home() {
   const URL = "http://localhost/3000";
   const [access, setAccess] = useState(false);
+  const [errors, setErrors] = useState({
+    dni: "",
+    username: "",
+    password: "",
+  });
+  const [viewPass, setViewPass] = useState(false);
   const router = useRouter();
 
-  let userData = { dni: "", username: "", password: "" };
-  let dni = userData.dni;
-  let username = userData.username;
-  let password = userData.password;
-  let query: string;
-  if(dni in userData){
-    query = `dni=${dni}&password=${password}`;}
-    else{
-    query = `username=${username}&password=${password}`;
-    };
+const [userData, setUserData] = useState({
+  dni: "", 
+  username: "", 
+  password: "" });
 
-  useEffect(() => {
-    axios.get(URL + `?${query}`).then((response) => {
-      setAccess(response.data);
-    });
-  }, [userData]);
+let dni = userData.dni; 
+let username = userData.username;
+let password = userData.password;
+let query: string;
+if (userData.hasOwnProperty("dni")) {
+  query = `dni=${dni}&password=${password}`;
+} else {
+  query = `username=${username}&password=${password}`;
+}
 
-  async function login(){   
+useEffect(() => {
+  axios.get(URL + `?${query}`).then((response) => {
+    setAccess(response.data);
+  });
+}, [userData]);
+
+  async function login(userData: {dni: string, username: string, password: string}){   
     try{
-      const response = await axios.get(URL + `?${query}`);
-        
+      const response = await axios.get(URL + `?${query}`);    
         if(response.status === 200) {
           const { access } = response.data;
           setAccess(true);
@@ -41,11 +51,33 @@ export default function Home() {
     }
   }
 
+  const handleSubmit = (e: React.FormEvent) =>{
+    e.preventDefault();
+    login(userData);
+  }
+
+  const handleView = () => {
+    if(viewPass == true){
+      setViewPass(false);
+    }
+    else{
+      setViewPass(true);
+    }
+  }
+
+  const handleChange = (e: React.FormEvent) =>{
+    const property = (e.target as HTMLInputElement).name;
+    const value = (e.target as HTMLInputElement).value;
+
+    setUserData({...userData, [property]: value});
+    setErrors(validations({...userData, [property]: value}));
+  } 
+  
 
   return (
     <>
     <div className="align-top">
-    <a href="http://localhost:3000/login">Ir a la Pagina</a>
+    <a href = {URL}>Ir a la Pagina</a>
       <section className="bg-gray-50 dark:bg-gray-900">
   <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -57,19 +89,33 @@ export default function Home() {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Ingresar al sistema
               </h1>
-              <form className="space-y-4 md:space-y-6" action="#">
+              <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
               <div>
-                      <label htmlFor="dni" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su DNI</label>
-                      <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
+                    <input type="text" name="dni" id="dni" placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    required
+                    onChange={handleChange}/>
               </div>
                   <div>
-                      <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su contraseña</label>
-                      <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required/>
+                    <input type={viewPass ? "text" : "password"} 
+                    name="password" 
+                    id="password" 
+                    placeholder="Ingresar aquí su contraseña" 
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    required
+                    onChange={handleChange}
+                    />
+                    <button
+                    type="button"
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+                    onClick={() => handleView()}>
+                    <p>{errors.password}</p>
+                    {viewPass ? <FaEyeSlash /> : <FaEye />}
+                    </button>
                   </div>
                   <div className="flex items-center justify-between">
                       <div className="flex items-start">
                           <div className="flex items-center h-5">
-                            <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required/>
+                            <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
                           </div>
                           <div className="ml-3 text-sm">
                             <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Recordarme</label>

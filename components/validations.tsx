@@ -1,16 +1,24 @@
-type Inputs = {
-    email: string,
-    dni: number,
 
-}
-export default function validations(inputs: Inputs) {
+export default function validations(userData: { dni: string, username: string, password: string}) {
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    type dni = number;
-    let errors: Record<string, string> = {};
+    let errors: { dni: string, username: string, password: string, } = {
+        dni: "",
+        username: "",
+        password: "",
+      };
 
-    (!inputs.email) ? errors.email = "Escribir un email" : errors.email = "";
-    (!regexEmail.test(inputs.email)) ? errors.email = "Email no válido" : errors.email = "";
-    (typeof inputs.dni !== "number") ? errors.dni = "Ingresa un DNI con números sin puntos ni espacios" : errors.dni = "";
+      if (!userData.dni) {
+        errors.dni = "Ingresa un DNI válido";
+      }
+    
+      if (!userData.username) {
+        errors.username = "Ingresa un nombre de usuario válido";
+      }
+    
+      if (!userData.password) {
+        errors.password = "Ingresa una contraseña válida";
+      }
+
 
     return errors;
 }
