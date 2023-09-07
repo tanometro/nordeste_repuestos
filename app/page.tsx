@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Home() {
-  const URL = "http://localhost/3000";
   const [access, setAccess] = useState(false);
   const [errors, setErrors] = useState({
     dni: "",
@@ -21,29 +20,29 @@ const [userData, setUserData] = useState({
   username: "", 
   password: "" });
 
-let dni = userData.dni; 
-let username = userData.username;
-let password = userData.password;
-let query: string;
-if (userData.hasOwnProperty("dni")) {
-  query = `dni=${dni}&password=${password}`;
-} else {
-  query = `username=${username}&password=${password}`;
-}
 
-useEffect(() => {
-  axios.get(URL + `?${query}`).then((response) => {
-    setAccess(response.data);
-  });
-}, [userData]);
+  useEffect(() => {
+    !access && router.replace('/');
+ }, [access]);
 
   async function login(userData: {dni: string, username: string, password: string}){   
+    const URL = "http://89.117.33.196:8000/auth/login";
+    const { dni, username, password } = userData;
+    let query: string;
+    if (userData.hasOwnProperty("dni")) {
+    query = `dni=${dni}&password=${password}`;
+    } else {
+    query = `username=${username}&password=${password}`;
+    }
+   
     try{
       const response = await axios.get(URL + `?${query}`);    
-        if(response.status === 200) {
+        if(response.data) {
           const { access } = response.data;
-          setAccess(true);
-          access && router.replace('/dashboard');
+          setAccess(access);
+          if (access) {
+            router.replace('/dashboard');
+          }
         }
       }
     catch (error){
@@ -52,6 +51,7 @@ useEffect(() => {
   }
 
   const handleSubmit = (e: React.FormEvent) =>{
+    console.log("Envía datos")
     e.preventDefault();
     login(userData);
   }
