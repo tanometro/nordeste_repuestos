@@ -7,63 +7,38 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
-  const [errors, setErrors] = useState({
-    dni: "",
-    username: "",
-    password: "",
-  });
-  const [viewPass, setViewPass] = useState(false);
   const router = useRouter();
 
-const [userData, setUserData] = useState({
-  dni: "", 
+  const [userData, setUserData] = useState({
   username: "", 
-  password: "" });
+  password: "",
+});
+const [errors, setErrors] = useState({
+  username: "",
+  password: "",
+});
 
+async function login(userData: {username: string, password: string}) {
+  const { username, password } = userData;
+  const URL = 'https://89.117.33.196:8000/auth/login';
+  try {
+    const response = await axios.post(URL + `?username=${username}&password=${password}`)
+    
+    if(response.data){
+     const { access } = response.data;
+       setAccess(true);
+       access && router.replace('/dashboard');}
+    }
+    catch (error) {
+    console.error(error);
+     if(error) throw new Error ("No se pudo verificar los datos")
+  }
+  
+}
 
   useEffect(() => {
     !access && router.replace('/');
  }, [access]);
-
-  async function login(userData: {dni: string, username: string, password: string}){   
-    const URL = "http://89.117.33.196:8000/auth/login";
-    const { dni, username, password } = userData;
-    let query: string;
-    if (userData.hasOwnProperty("dni")) {
-    query = `dni=${dni}&password=${password}`;
-    } else {
-    query = `username=${username}&password=${password}`;
-    }
-   
-    try{
-      const response = await axios.get(URL + `?${query}`);    
-        if(response.data) {
-          const { access } = response.data;
-          setAccess(access);
-          if (access) {
-            router.replace('/dashboard');
-          }
-        }
-      }
-    catch (error){
-      throw new Error ("No se pudo verificar los datos")
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) =>{
-    console.log("Envía datos")
-    e.preventDefault();
-    login(userData);
-  }
-
-  const handleView = () => {
-    if(viewPass == true){
-      setViewPass(false);
-    }
-    else{
-      setViewPass(true);
-    }
-  }
 
   const handleChange = (e: React.FormEvent) =>{
     const property = (e.target as HTMLInputElement).name;
@@ -72,7 +47,22 @@ const [userData, setUserData] = useState({
     setUserData({...userData, [property]: value});
     setErrors(validations({...userData, [property]: value}));
   } 
+
+    const handleSubmit = (e: React.FormEvent) =>{
+    console.log("Envía datos", userData)
+    e.preventDefault();
+    login(userData);
+  }
   
+  const [viewPass, setViewPass] = useState(false);
+  const handleView = () => {
+    if(viewPass == true){
+      setViewPass(false);
+    }
+    else{
+      setViewPass(true);
+    }
+  }
 
   return (
     <>
@@ -87,7 +77,12 @@ const [userData, setUserData] = useState({
               </h1>
               <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
               <div>
-                    <input type="text" name="dni" id="dni" placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    <input type="text" 
+                    name="username" 
+                    id="username" 
+                    value={userData.username}
+                    placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" 
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                     required
                     onChange={handleChange}/>
               </div>
@@ -98,6 +93,7 @@ const [userData, setUserData] = useState({
                     placeholder="Ingresar aquí su contraseña" 
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                     required
+                    value={userData.password}
                     onChange={handleChange}
                     />
                     <button
@@ -130,3 +126,4 @@ const [userData, setUserData] = useState({
     </>
   )
 }
+
