@@ -20,7 +20,7 @@ const [errors, setErrors] = useState({
 
 async function login(userData: {username: string, password: string}) {
   const { username, password } = userData;
-  const URL = 'https://89.117.33.196:8000/auth/login';
+  const URL = 'http://89.117.33.196:8000/auth/login';
   try {
     const response = await axios.post(URL + `?username=${username}&password=${password}`)
     
