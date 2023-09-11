@@ -1,12 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import validations from "../components/validations";
-import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import apiUrl from "./api/login";
+import { log } from "console";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
+  const [userLogin, setUserLogin] = useState({
+    user: {},
+    token: "",
+  })
   const router = useRouter();
 
   const [userData, setUserData] = useState({
@@ -18,22 +23,56 @@ const [errors, setErrors] = useState({
   password: "",
 });
 
-async function login(userData: {username: string, password: string}) {
-  const { username, password } = userData;
-  const URL = 'http://89.117.33.196:8000/auth/login';
+async function checkCORS() {
   try {
-    const response = await axios.post(URL, userData)
-    console.log(response);
-    if(response.data){
-     const { access } = response.data;
-       setAccess(true);
-       access && router.replace('/dashboard');}
+    const response = await fetch('http://89.117.33.196:8000/auth/login', {
+      method: 'OPTIONS', 
+      headers: {
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'Content-Type',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('La solicitud OPTIONS falló');
     }
-    catch (error) {
-    console.error(error);
-     if(error) throw new Error ("No se pudo verificar los datos")
+  } catch (error) {
+    console.error('Error al verificar la configuración CORS:', error);
+    throw new Error('No se pudo verificar la configuración CORS');
   }
+}
+
+async function login(userData: {username: string, password: string}) {
+  const formData = new FormData();
+  formData.append('username', userData.username);
+  formData.append('password', userData.password);
+  try {
+    const response = await fetch('http://89.117.33.196:8000/auth/login', {
+      method: 'POST', 
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error('No se pudo obtener la respuesta correcta de la API');
+      console.error('Error en la respuesta de la API:', response.status, response.statusText);
+    }
   
+
+    if (response.status === 200) {
+      const data = await response.json();
+      setUserLogin({
+      user: data.user,
+      token: data.token,
+      })
+      setAccess(true);
+      router.replace('/dashboard');
+    } else {
+      throw new Error('Credenciales incorrectas');
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('No se pudo verificar los datos');
+  }
 }
 
   useEffect(() => {
@@ -50,9 +89,8 @@ async function login(userData: {username: string, password: string}) {
 
     const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    // login(userData);
-    const response = await axios.post('/login', userData)
-    console.log(response);
+    login(userData);
+   
   }
   
   const [viewPass, setViewPass] = useState(false);
