@@ -1,29 +1,22 @@
 import Header from "@/components/header";
 import SearchBar from "@/components/searchBar";
-import Lista from "@/components/listas";
+import Lista from "@/components/lists";
 import UsersList from "@/components/users";
+import List from "@/components/lists";
 
 export default function Users(){
-    interface UsersList {
-        name: string,
-        dni: string,
-        balance: string,
-        roleId: string,
-      }
-      
-    let users: UsersList[] = [
-        {
-        name: "Angelo",
-        dni: "36552942",
-        balance: "300",
-        roleId: "Admin",
-        }
-    ]
+
+  const getUsers = async () => {
+    const response = await fetch("http://89.117.33.196:8000/user/list", {
+      method: "GET",
+    });
+
+  }
     return (
         <div>
             <Header title="Usuarios"></Header>
             <SearchBar id={''}/>
-            <Lista>
+            <List>
               <table>
                 <thead>
                   <tr>
@@ -33,7 +26,7 @@ export default function Users(){
                     <th className="mx-3">Saldo</th>
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {users.map((user, index) => (
                     <tr key={index}>
                       <UsersList
@@ -44,9 +37,9 @@ export default function Users(){
                       />
                     </tr>
                     ))}
-                </tbody>
+                </tbody> */}
               </table>
-          </Lista>
+          </List>
         </div>
     )
 }

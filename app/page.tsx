@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import validations from "../components/validations";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import apiUrl from "./api/login";
-import { log } from "console";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
@@ -54,9 +52,7 @@ async function login(userData: {username: string, password: string}) {
 
     if (!response.ok) {
       throw new Error('No se pudo obtener la respuesta correcta de la API');
-      console.error('Error en la respuesta de la API:', response.status, response.statusText);
     }
-  
 
     if (response.status === 200) {
       const data = await response.json();
