@@ -1,8 +1,8 @@
 interface UserProps {
     name: string,
     dni: string,
-    roleId: string,
-    balance: string
+    roleId: number,
+    balance: number
 
 }
 export default function UsersList(props: UserProps){

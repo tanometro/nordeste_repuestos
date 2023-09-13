@@ -7,3 +7,7 @@ And I will do it with Next.js, Tailwind and Typescript!!
 HELLO NETWORK: I MADE IT!
 
 THIS IS NOT A SIMPLE PROJECT. IT'S "THE" PROJECT.
+
+La URL está en:
+page.tsx
+users/page.tsx
