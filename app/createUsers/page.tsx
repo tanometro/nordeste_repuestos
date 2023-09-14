@@ -2,9 +2,18 @@
 import Header from "@/components/header";
 import { useState } from "react";
 
+
+interface User {
+    dni: string,
+    username: string,
+    password: string,
+    name: string,
+    roleId: number,
+  }  
+
 export default function CreateUser () {
     const [userData, setUserData] = useState({
-        role: "",
+        roleId: "",
         name: "",
         username: "",
         dni: "",
@@ -12,6 +21,18 @@ export default function CreateUser () {
         commission: "",
     })
 
+    const postUser = async (user: User) => {
+        try {
+        const response = fetch('http://89.117.33.196:8000/user/add', {
+            method: 'POST',    
+            HEADER: token,
+                user,
+            }) 
+        }
+        catch(error){
+            throw new Error ("No se pudo enviar los datos del user")
+        }
+    }
     const handleChange = (e: React.FormEvent) => {
         const property = (e.target as HTMLInputElement).name;
         const value = (e.target as HTMLInputElement).value;
@@ -20,13 +41,19 @@ export default function CreateUser () {
     
 }
 
+    const handleSubmit = async (e: React.FormEvent) =>{
+        e.preventDefault();
+        postUser(userData);
+        
+        }
+
 let roles = ["Mecánico", "Adiministrador"];
 
     return (
         <div>
         <Header title="Crear nuevo usuario"/>
         <div className="flex items-center justify-center h-screen">
-        <form className="flex flex-col items-center w-1/2">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
         <select className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
                 value={userData.role}
                 onChange={handleChange}>
