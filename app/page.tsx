@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import validations from "../components/validations";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {pushToken} from "../redux/features/setTokenSlice";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
@@ -11,6 +13,7 @@ export default function Home() {
     token: "",
   })
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [userData, setUserData] = useState({
   username: "", 
@@ -20,25 +23,6 @@ const [errors, setErrors] = useState({
   username: "",
   password: "",
 });
-
-async function checkCORS() {
-  try {
-    const response = await fetch('http://89.117.33.196:8000/auth/login', {
-      method: 'OPTIONS', 
-      headers: {
-        'Access-Control-Request-Method': 'POST',
-        'Access-Control-Request-Headers': 'Content-Type',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('La solicitud OPTIONS falló');
-    }
-  } catch (error) {
-    console.error('Error al verificar la configuración CORS:', error);
-    throw new Error('No se pudo verificar la configuración CORS');
-  }
-}
 
 async function login(userData: {username: string, password: string}) {
   const formData = new FormData();
@@ -86,7 +70,8 @@ async function login(userData: {username: string, password: string}) {
   const handleSubmit = async (e: React.FormEvent) =>{
   e.preventDefault();
   login(userData);
-   
+  //dispatch(pushToken(userLogin.token));
+    console.log("el token es:" + userLogin.token);
   }
   
   const [viewPass, setViewPass] = useState(false);
