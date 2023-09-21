@@ -1,20 +1,17 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import validations from "../components/validations";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {pushToken} from "../redux/features/setTokenSlice";
+import { log } from "console";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
-  const [userLogin, setUserLogin] = useState({
-    user: {},
-    token: "",
-  })
   const router = useRouter();
   const dispatch = useAppDispatch();
-
   const [userData, setUserData] = useState({
   username: "", 
   password: "",
@@ -37,13 +34,10 @@ async function login(userData: {username: string, password: string}) {
     if (!response.ok) {
       throw new Error('No se pudo obtener la respuesta correcta de la API');
     }
+    const data = await response.json();
 
     if (response.status === 200) {
-      const data = await response.json();
-      setUserLogin({
-      user: data.user,
-      token: data.token,
-      })
+      dispatch(pushToken(data.token));
       setAccess(true);
       router.replace('/dashboard');
     } else {
@@ -70,8 +64,6 @@ async function login(userData: {username: string, password: string}) {
   const handleSubmit = async (e: React.FormEvent) =>{
   e.preventDefault();
   login(userData);
-  //dispatch(pushToken(userLogin.token));
-    console.log("el token es:" + userLogin.token);
   }
   
   const [viewPass, setViewPass] = useState(false);
