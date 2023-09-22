@@ -17,6 +17,7 @@ interface User {
 export default function Users(){
 
   const [users,setUsers] = useState<User[]>([]);
+  const storedToken = localStorage.getItem('token');
 
   useEffect(() => {
     async function fetchData() {
@@ -31,18 +32,24 @@ export default function Users(){
   }, []);
 
   const getUsers = async () => {
-    try{
-      const response = await axios.get('http://89.117.33.196:8000/user/list');
-      if(response.status !== 200){
-        throw new Error(`Error en la solicitud: ${response}`);
+    try {
+      const response = await axios.get('http://89.117.33.196:8000/user/list', {
+        headers: {
+          Authorization: storedToken, 
+        },
+      });
+  
+      if (response.status !== 200) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
       }
-      const data = await response.data();
+  
+      const data = response.data;
+  
       return data;
+    } catch (error) {
+      throw new Error("Error en obtener usuarios");
     }
-    catch (error){
-      throw new Error ("Error en obtener usuarios");
-    }
-  }
+  };
     return (
         <div>
             <Header title="Usuarios"></Header>
