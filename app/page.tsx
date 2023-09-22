@@ -4,14 +4,13 @@ import { useState, useEffect } from "react";
 import validations from "../components/validations";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {pushToken} from "../redux/features/setTokenSlice";
-import { log } from "console";
+// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+// import {pushToken} from "../redux/features/setTokenSlice";
 
 export default function Home() {
   const [access, setAccess] = useState(false);
   const router = useRouter();
-  const dispatch = useAppDispatch();
+ //const dispatch = useAppDispatch();
   const [userData, setUserData] = useState({
   username: "", 
   password: "",
@@ -37,7 +36,8 @@ async function login(userData: {username: string, password: string}) {
     const data = await response.json();
 
     if (response.status === 200) {
-      dispatch(pushToken(data.token));
+      // dispatch(pushToken(data.token));
+      localStorage.setItem('token', data.token);
       setAccess(true);
       router.replace('/dashboard');
     } else {
