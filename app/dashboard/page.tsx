@@ -8,20 +8,14 @@ export default function Dashboard(){
     const storedToken = localStorage.getItem('token');
     const router = useRouter();
 
-    // if(storedToken){
-    //     setToken(storedToken);
-    // }
-    const click = () => {
-        console.log(storedToken)
+    const logOut = async () =>{
+        try{
+            router.push('/')
+        }
+        catch (error){
+            throw new Error("Fallo en logout ")
+        }
     }
-    // const logOut = async () =>{
-    //     try{
-    //         router.push('/')
-    //     }
-    //     catch (error){
-    //         throw new Error("Fallo en logout ")
-    //     }
-    // }
     return (
         <div>
             <Header title="Dashboard"/>
@@ -35,7 +29,7 @@ export default function Dashboard(){
                     className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Usuarios
                     </button>
-                    <button onClick={click} 
+                    <button onClick={logOut} 
                     className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Log Out
                     </button>

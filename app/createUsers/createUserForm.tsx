@@ -1,6 +1,5 @@
 "use client";
-import { useState } from "react";
-import Header from "@/components/header";
+import { useState, } from "react";
 // import {useAppSelector} from "@/redux/hooks";
 
 interface User {
@@ -11,7 +10,8 @@ interface User {
     name: string,
     //commission: number | null,
     
-  }  
+  } 
+
 
 export default function CreateUserForm(){
 //const token = useAppSelector(state => state.tokenReducer.token);
@@ -150,7 +150,7 @@ return (
         </form>
         </div>
         {showSuccessMessage && (
-      <p className="text-green-500 mt-2 text-black">Usuario creado correctamente</p>
+      <p className="text-black mt-24">Usuario creado correctamente</p>
     )}
     </div>
 )

@@ -1,6 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+
+
 // import { Providers } from '@/redux/provider';
 // import { PersistGate } from 'redux-persist/integration/react';
 // import { persistStore } from 'redux-persist';
@@ -25,7 +27,9 @@ export default function RootLayout({children,
       <body className={inter.className}>
         {/* <PersistGate persistor={persistor}>
             <Providers> */}
+        {/* <TaskProvider> */}
             {children}
+          {/* </TaskProvider> */}
             {/* </Providers> 
         </PersistGate> */}
       </body>

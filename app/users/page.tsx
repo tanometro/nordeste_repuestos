@@ -12,6 +12,7 @@ interface User {
   dni: string;
   roleId: number;
   balance: number;
+  id: number,
 }
 
 export default function Users(){
@@ -71,7 +72,8 @@ export default function Users(){
                         name={user.name}
                         dni={user.dni}
                         roleId={user.roleId} 
-                        balance={user.balance} 
+                        balance={user.balance}
+                        id={user.id}
                       />
                     </tr>
                     ))}
