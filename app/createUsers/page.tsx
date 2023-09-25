@@ -39,17 +39,16 @@ export default function CreateUser () {
 // const [name, setName] = useState("");
 // const [roleId, setRoleId] = useState("");
 
- const resetFormFields = () => {
-    setUserData({
-      roleId: null,
-      name: "",
-      username: "",
-      dni: "",
-      password: "",
-      commission: 5,
-    });
-  };
-
+//  const resetFormFields = () => {
+//     setUserData({
+//       roleId: null,
+//       name: "",
+//       username: "",
+//       dni: "",
+//       password: "",
+//       commission: 5
+//     });
+//   };
     // const [repitePass, setRepeatePass] = useState<string>("");
 
     const postUser = async (user: User) => {
@@ -75,18 +74,6 @@ export default function CreateUser () {
         }
     }
 
-    const editUser = async (user: User) => {
-      if (storedToken !== null) {
-        const response = await fetch(`${BASE_URL}/user/add`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json', 
-            Authorization: storedToken,
-          },
-          body: JSON.stringify(user),
-        });
-        router.refresh();
-    }}
 
     const handleChange = (e: React.FormEvent) => {
         const property = (e.target as HTMLInputElement).name;
@@ -98,18 +85,13 @@ export default function CreateUser () {
 
     const handleSubmit = async (e: React.FormEvent) =>{
       e.preventDefault();
-      if(params.id){
-        editUser(userData);
-        console.log(params.id)
-      }
-      else{
+     
         postUser(userData);
         setShowSuccessMessage(true);
         setTimeout(() => {
           setShowSuccessMessage(false);
         }, 5000);
-        resetFormFields();
-      }    
+        router.push('/allUsers') 
         }
 
 let roles = [1, 2, 3];
