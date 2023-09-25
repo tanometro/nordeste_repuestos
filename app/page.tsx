@@ -4,39 +4,36 @@ import { useState, useEffect } from "react";
 import validations from "../components/validations";
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-// import {pushToken} from "../redux/features/setTokenSlice";
+
+
+export const BASE_URL = 'http://89.117.33.196:8000'
 
 export default function Home() {
   const [access, setAccess] = useState(false);
   const router = useRouter();
- //const dispatch = useAppDispatch();
+
   const [userData, setUserData] = useState({
   username: "", 
   password: "",
 });
-const [errors, setErrors] = useState({
-  username: "",
-  password: "",
-});
+const [error, setError] = useState<string | null>(null);
 
 async function login(userData: {username: string, password: string}) {
   const formData = new FormData();
   formData.append('username', userData.username);
   formData.append('password', userData.password);
   try {
-    const response = await fetch('http://89.117.33.196:8000/auth/login', {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST', 
       body: formData
     });
 
     if (!response.ok) {
-      throw new Error('No se pudo obtener la respuesta correcta de la API');
+      throw new Error('Credenciales incorrectas');
     }
     const data = await response.json();
 
     if (response.status === 200) {
-      // dispatch(pushToken(data.token));
       localStorage.setItem('token', data.token);
       setAccess(true);
       router.replace('/dashboard');
@@ -44,8 +41,11 @@ async function login(userData: {username: string, password: string}) {
       throw new Error('Credenciales incorrectas');
     }
   } catch (error) {
-    console.error(error);
-    throw new Error('No se pudo verificar los datos');
+    if (error instanceof Error) {
+      setError(error.message || 'Ocurrió un error desconocido');
+    } else {
+      setError('Ocurrió un error desconocido');
+    }
   }
 }
 
@@ -58,7 +58,7 @@ async function login(userData: {username: string, password: string}) {
     const value = (e.target as HTMLInputElement).value;
 
     setUserData({...userData, [property]: value});
-    setErrors(validations({...userData, [property]: value}));
+    // setErrors(validations({...userData, [property]: value}));
   } 
 
   const handleSubmit = async (e: React.FormEvent) =>{
@@ -110,9 +110,13 @@ async function login(userData: {username: string, password: string}) {
                     type="button"
                     className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
                     onClick={() => handleView()}>
-                    <p>{errors.password}</p>
                     {viewPass ? <FaEyeSlash /> : <FaEye />}
                     </button>
+                    {error && (
+                <div className="error-message text-white">
+                  {error}
+                </div>
+                   )}
                   </div>
                   <div className="flex items-center justify-between">
                       <div className="flex items-start">

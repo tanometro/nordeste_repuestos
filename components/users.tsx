@@ -18,8 +18,8 @@ export default function UsersList(props: UserProps){
             <h3 className="mx-3">{dni}</h3>
             <h3 className="mx-3"> {roleId === 1 ? 'SúperAdmin' : roleId === 2 ? 'Admin' : roleId === 3 ? 'Mecánico' : ''}</h3>
             <h3 className="mx-3"> {roleId === 1 ? 'Sin saldo' : roleId === 2 ? 'Sin saldo' : roleId === 3 ? `${balance}` : ""}</h3>
-            <button onClick={() => router.push(`/editUser?id=${id}`)}>
-                <a className="text-blue-500">Editar</a>
+            <button onClick={() => router.push(`/editUser/${id}`)}>
+                <a className="text-blue-500">Ver usuario</a>
             </button>
             <button>Eliminar</button>
         </div>

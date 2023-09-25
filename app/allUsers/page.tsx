@@ -6,6 +6,7 @@ import UsersList from "@/components/users";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../page";
 
 interface User {
   name: string;
@@ -19,6 +20,7 @@ export default function Users(){
 
   const [users,setUsers] = useState<User[]>([]);
   const storedToken = localStorage.getItem('token');
+  const [name, setName] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -34,7 +36,7 @@ export default function Users(){
 
   const getUsers = async () => {
     try {
-      const response = await axios.get('http://89.117.33.196:8000/user/list', {
+      const response = await axios.get(`${BASE_URL}/user/list`, {
         headers: {
           Authorization: storedToken, 
         },
@@ -51,18 +53,29 @@ export default function Users(){
       throw new Error("Error en obtener usuarios");
     }
   };
+  const search = (name: string) =>{
+    try{
+      const filteredUsers = users.filter(user => user.name == name )
+      setName(name);
+      return filteredUsers;
+    }
+    catch(error){
+      console.log(error);
+    }
+   
+ }
     return (
         <div>
             <Header title="Usuarios"></Header>
-            <SearchBar id={''}/>
+            
             <List>
               <table>
                 <thead>
                   <tr>
-                    <th className="mx-3">Nombre</th>
-                    <th className="mx-3">Dni</th>
-                    <th className="mx-3">Tipo</th>
-                    <th className="mx-3">Saldo</th>
+                    <td className="mx-3">Nombre</td>
+                    <td className="mx-3">Dni</td>
+                    <td className="mx-3">Tipo</td>
+                    <td className="mx-3">Saldo</td>
                   </tr>
                 </thead>
                 {<tbody>

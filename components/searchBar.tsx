@@ -1,52 +1,50 @@
-//Leo I know you are leyendo this so I want to say:
-// 6 + 1
-// Bakaaaa
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
-'use client';
-import { useState } from "react";
-import axios from "axios";
-
+interface User {
+  name: string;
+  dni: string;
+  roleId: number;
+  balance: number;
+  id: number,
+}
 interface SearchBarProps {
-    id: string;
+    name: string;
+    buscar: (name: string) => Promise<User[] | undefined>;
   }
 
 export default function SearchBar(props: SearchBarProps){
-    const [id, setId] = useState();
+  const {buscar} = props;
+  const router = useRouter();
+  const [users, setUsers] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-    // const search = async (string: string | number) => {
-    //     let response;
+  useEffect(() => {
+    setFilteredUsers(users);
+  }, [users]);
 
-    //     const URL: string = "";
-       
-    //         if(typeof string == "string"){ //Si es USER NAME 
-    //             try{
-    //                 const response = await axios.get("") //Solicitud con USERNAME
-    //             }
-    //             catch(error){
-    //                 if (error instanceof Error) {
-    //                     window.alert("Error: " + error.message);
-    //             }
-    //                 else{
-    //                     window.alert("Error desconocido en SearchBar");
-    //                 }}}
-    //         else{ //Si es DNI
-    //             try{
-    //                 const response = await axios.get("") //Solicitud con DNI
-    //             }
-    //             catch(error){
-    //                 if (error instanceof Error) {
-    //                     window.alert("Error: " + error.message);
-    //             }
-    //                 else{
-    //                     window.alert("Error desconocido en SearchBar");
-    //                 }}}}
+  const handleChange = (e: React.FormEvent) =>{
+    const property = (e.target as HTMLInputElement).name;
+    const value = (e.target as HTMLInputElement).value;
+
+    setUsers({...users, [property]: value});
+    setFilteredUsers(users.filter(user => user.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+  } 
+
 
     return (
         <div className="flex justify-center mt-12">
         <input 
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
-        placeholder="Busca por DNI o NOMBRE USUARIO"
-        type="search"/>
+        placeholder="Busca por NOMBRE"
+        type="search"
+        value={userssetUsers}
+        onChange={handleChange}
+        />
+        <button className="bg-red-500 text-white p-2 rounded"
+        onClick={buscar} type="button">
+          Buscar
+        </button>
         </div>
     )
     }
