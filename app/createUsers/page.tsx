@@ -2,8 +2,9 @@
 
 import Header from "@/components/header";
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect} from "react";
+import { useState} from "react";
 import { BASE_URL } from "@/app/page";
+import validations from '../../components/validations';
 
 interface User {
   roleId: number | null,
@@ -11,19 +12,18 @@ interface User {
   username: string,
   password: string,
   name: string,
-  //commission: number | null,
+  commission: number | null,
   
 } 
-
-interface UserFormParams {
-  id?: number; 
-}
 
 export default function CreateUser () {
   const storedToken = localStorage.getItem('token');
   const params = useParams()
   const router = useRouter();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errors, setErrors] = useState({
+    password: "",
+});
 
   const [userData, setUserData] = useState<User>({
     dni: "",
@@ -31,6 +31,7 @@ export default function CreateUser () {
     password: "",        
     name: "",
     roleId: null,
+    commission: 5,
   })
 // const [userDni, setUserDni] = useState("");
 // const [username, setUsername] = useState("");
@@ -45,27 +46,11 @@ export default function CreateUser () {
       username: "",
       dni: "",
       password: "",
+      commission: 5,
     });
   };
 
-   
-  // useEffect(() =>{
-  //   if(params.id){
-  //     fetch(`${BASE_URL}/user/${params.id}`)
-  //     .then(((res) => res.json()))
-  //     .then((data) => {
-  //       setUserData(data)
-  //     });
-  //   }
-  // }, [])
-
-  useEffect(() =>{
-    console.log(JSON.stringify(params))
-  }, [])
-
-
     // const [repitePass, setRepeatePass] = useState<string>("");
-    // const [passwordError, setPasswordError] = useState<string>("");
 
     const postUser = async (user: User) => {
         try {
@@ -108,6 +93,7 @@ export default function CreateUser () {
         const value = (e.target as HTMLInputElement).value;
 
         setUserData({...userData, [property]: value});
+        setErrors(validations({...userData, [property] : value}));
     }
 
     const handleSubmit = async (e: React.FormEvent) =>{
@@ -183,6 +169,7 @@ let roles = [1, 2, 3];
          value={userData.password}
          onChange={handleChange}
          required/>
+         <p>{errors.password}</p>
         {/* <input
         name="repite-pass" placeholder="Repetir contraseña" 
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
@@ -191,15 +178,15 @@ let roles = [1, 2, 3];
         required
         />
         {passwordError && <p className="text-red-500">{passwordError}</p>} */}
-        {/* <input 
+        <input 
         name="commission"
         placeholder="% comisión"
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
          value={userData.commission !== null ? userData.commission.toString() : ""}
-         onChange={handleChange}/> */}
+         onChange={handleChange}/>
          <button type="submit" 
          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            {params.id? "Actualizar" : "Crear usuario"}
+            Crear usuario
          </button>
         </form>
         </div>
