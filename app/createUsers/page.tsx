@@ -11,7 +11,7 @@ interface User {
   username: string,
   password: string,
   name: string,
-  //commission: number | null,
+  commission: number | null,
   
 } 
 
@@ -31,6 +31,7 @@ export default function CreateUser () {
     password: "",        
     name: "",
     roleId: null,
+    commission: 0
   })
 // const [userDni, setUserDni] = useState("");
 // const [username, setUsername] = useState("");
@@ -38,32 +39,16 @@ export default function CreateUser () {
 // const [name, setName] = useState("");
 // const [roleId, setRoleId] = useState("");
 
- const resetFormFields = () => {
-    setUserData({
-      roleId: null,
-      name: "",
-      username: "",
-      dni: "",
-      password: "",
-    });
-  };
-
-   
-  // useEffect(() =>{
-  //   if(params.id){
-  //     fetch(`${BASE_URL}/user/${params.id}`)
-  //     .then(((res) => res.json()))
-  //     .then((data) => {
-  //       setUserData(data)
-  //     });
-  //   }
-  // }, [])
-
-  useEffect(() =>{
-    console.log(JSON.stringify(params))
-  }, [])
-
-
+//  const resetFormFields = () => {
+//     setUserData({
+//       roleId: null,
+//       name: "",
+//       username: "",
+//       dni: "",
+//       password: "",
+//       commission: 5
+//     });
+//   };
     // const [repitePass, setRepeatePass] = useState<string>("");
     // const [passwordError, setPasswordError] = useState<string>("");
 
@@ -90,18 +75,6 @@ export default function CreateUser () {
         }
     }
 
-    const editUser = async (user: User) => {
-      if (storedToken !== null) {
-        const response = await fetch(`${BASE_URL}/user/add`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json', 
-            Authorization: storedToken,
-          },
-          body: JSON.stringify(user),
-        });
-        router.refresh();
-    }}
 
     const handleChange = (e: React.FormEvent) => {
         const property = (e.target as HTMLInputElement).name;
@@ -112,18 +85,13 @@ export default function CreateUser () {
 
     const handleSubmit = async (e: React.FormEvent) =>{
       e.preventDefault();
-      if(params.id){
-        editUser(userData);
-        console.log(params.id)
-      }
-      else{
+     
         postUser(userData);
         setShowSuccessMessage(true);
         setTimeout(() => {
           setShowSuccessMessage(false);
         }, 5000);
-        resetFormFields();
-      }    
+        router.push('/allUsers') 
         }
 
 let roles = [1, 2, 3];
@@ -191,12 +159,12 @@ let roles = [1, 2, 3];
         required
         />
         {passwordError && <p className="text-red-500">{passwordError}</p>} */}
-        {/* <input 
+        <input 
         name="commission"
         placeholder="% comisión"
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
          value={userData.commission !== null ? userData.commission.toString() : ""}
-         onChange={handleChange}/> */}
+         onChange={handleChange}/>
          <button type="submit" 
          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
             {params.id? "Actualizar" : "Crear usuario"}

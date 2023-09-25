@@ -2,11 +2,11 @@
 
 import Header from "@/components/header";
 import SearchBar from "@/components/searchBar";
-import UsersList from "@/components/users";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../page";
+import { useRouter } from "next/navigation";
 
 interface User {
   name: string;
@@ -21,6 +21,7 @@ export default function Users(){
   const [users,setUsers] = useState<User[]>([]);
   const storedToken = localStorage.getItem('token');
   const [name, setName] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -69,30 +70,32 @@ export default function Users(){
             <Header title="Usuarios"></Header>
             
             <List>
-              <table>
+              <table cellSpacing="10">
                 <thead>
-                  <tr>
-                    <td className="mx-3">Nombre</td>
-                    <td className="mx-3">Dni</td>
-                    <td className="mx-3">Tipo</td>
-                    <td className="mx-3">Saldo</td>
+                  <tr className="border-b border-gray">
+                    <th className="">Nombre</th>
+                    <th className="">Dni</th>
+                    <th className="">Tipo</th>
+                    <th className="">Saldo</th>
                   </tr>
                 </thead>
-                {<tbody>
+                <tbody>
                   {users.map((user, index) => (
                     <tr key={index}>
-                      <UsersList
-                        name={user.name}
-                        dni={user.dni}
-                        roleId={user.roleId} 
-                        balance={user.balance}
-                        id={user.id}
-                      />
-                    </tr>
-                    ))}
-                </tbody>}
-              </table>
-          </List>
+                      <td className="">{user.name}</td>
+                          <td className="">{user.dni}</td>
+                          <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+                          <td className=""> {user.roleId === 1 ? 'Sin saldo' : user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 ? `${user.balance}` : ""}</td>
+                          <button onClick={() => router.push(`/editUser/${user.id}`)}>
+                              <a className="text-blue-500">Ver usuario</a>
+                          </button>
+                          <button>Eliminar</button>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </List>
+
         </div>
     )
 }
