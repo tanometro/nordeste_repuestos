@@ -18,7 +18,6 @@ interface User {
 
 export default function CreateUser () {
   const storedToken = localStorage.getItem('token');
-  const params = useParams()
   const router = useRouter();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [errors, setErrors] = useState({
@@ -151,7 +150,7 @@ let roles = [1, 2, 3];
          value={userData.password}
          onChange={handleChange}
          required/>
-         <p>{errors.password}</p>
+         <p className="text-black ">{errors.password}</p>
         {/* <input
         name="repite-pass" placeholder="Repetir contraseña" 
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"

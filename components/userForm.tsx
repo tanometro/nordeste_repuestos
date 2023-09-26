@@ -42,24 +42,13 @@ const [userData, setUserData] = useState<User>({
     });
   };
 
-   
-useEffect(() =>{
-  if(params && params.id){
-    fetch(`${BASE_URL}/user/${params.id}`)
-    .then(((res) => res.json()))
-    .then((data) => {
-      setUserData(data)
-    });
-  }
-}, [])
-
     // const [repitePass, setRepeatePass] = useState<string>("");
     // const [passwordError, setPasswordError] = useState<string>("");
 
     const postUser = async (user: User) => {
         try {
             if (storedToken !== null) {
-            const response = await fetch('http://89.117.33.196:8000/user/add', {
+            const response = await fetch(`${BASE_URL}/user/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json', 
@@ -79,18 +68,6 @@ useEffect(() =>{
         }
     }
 
-    const editUser = async (user: User) => {
-      if (storedToken !== null) {
-        const response = await fetch('http://89.117.33.196:8000/user/add', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json', 
-            Authorization: storedToken,
-          },
-          body: JSON.stringify(user),
-        });
-        router.refresh();
-    }}
 
     const handleChange = (e: React.FormEvent) => {
         const property = (e.target as HTMLInputElement).name;
@@ -101,19 +78,14 @@ useEffect(() =>{
 
     const handleSubmit = async (e: React.FormEvent) =>{
       e.preventDefault();
-      if(params.id){
-        editUser(userData);
-        console.log(params.id)
-      }
-      else{
         postUser(userData);
         setShowSuccessMessage(true);
         setTimeout(() => {
           setShowSuccessMessage(false);
         }, 5000);
         resetFormFields();
-      }    
-        }
+        router.push('/allUsers')
+      }   
 
 let roles = [1, 2, 3];
 
@@ -181,7 +153,7 @@ return (
          onChange={handleChange}/> */}
          <button type="submit" 
          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            {params.id? "Actualizar" : "Crear usuario"}
+           Crear usuario
          </button>
         </form>
         </div>

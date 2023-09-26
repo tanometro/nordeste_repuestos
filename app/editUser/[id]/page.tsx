@@ -14,7 +14,6 @@ interface User {
   name: string,
   commission: number | null,
   isActive: boolean,
-  
 } 
 
 interface Params{
@@ -28,17 +27,16 @@ export default function EditUserForm () {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userData, setUserData] = useState({
-    balance: null,
-    commission: null,
     dni: "",
-    id: 0,
-    name: "",
-    roleId: 0,
     username: "",
     password: "",
+    name: "",
+    roleId: 0,
+    commission: null,
+    balance: null,
+    id: 0,
     isActive: true,
   });
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -90,7 +88,7 @@ export default function EditUserForm () {
           }
 
       } catch(error){
-          throw new Error ("No se pudo editar el usuario")
+          throw new Error ("No editó el usuario")
       }
     }
 
