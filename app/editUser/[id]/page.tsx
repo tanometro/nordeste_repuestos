@@ -17,10 +17,6 @@ interface User {
   
 } 
 
-interface Params{
-  id?: number
-}
-
 export default function EditUserForm () {
   const storedToken = localStorage.getItem('token');
   const params = useParams();
@@ -121,58 +117,64 @@ export default function EditUserForm () {
       
       <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
         <input
-        name="name"
-        placeholder="Nombre" 
-        className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-        value={userData.name}
-        onChange={handleChange}
-        required/>
+          name="name"
+          placeholder="Nombre" 
+          className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+          value={userData.name}
+          onChange={handleChange}
+          required
+        />
         <input 
-        name="username"
-        placeholder="Username" 
-        className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-        value={userData.username}
-        onChange={handleChange}
-        required/>
+          name="username"
+          placeholder="Username" 
+          className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+          value={userData.username}
+          onChange={handleChange}
+          required
+        />
         <input 
-        name="dni"
-        type="number"
-        placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-         value={userData.dni}
-         onChange={handleChange}
-         required/>
+          name="dni"
+          type="number"
+          placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+          value={userData.dni}
+          onChange={handleChange}
+          required
+        />
         <input 
-        name="password"
-        placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-         value={userData.password}
-         onChange={handleChange}
-         required/>
+          name="password"
+          placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+          value={userData.password}
+          onChange={handleChange}
+          required
+        />
        
         <button 
-        className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        type="submit">
-          Guardar
+          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          type="submit">
+            Guardar
         </button>
       </form>
     ) : (
       
       <div className="flex flex-col items-center w-1/2">
-      <h1 className="text-center text-black mb-4">Editando el usuario: {name}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">{name}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
-      Rol: {roleId == 1 ? "SúperAdmin" : roleId == 2 ? "Admin" : roleId == 3 ? "Mecánico" : ""}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Id: {id}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {dni}</h1>
-      <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {commission? commission : "No tiene comisiones"}</h1>
-        <button
-        className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        onClick={handleEditClick}>Editar</button>
+        <h1 className="text-center text-black mb-4">Editando el usuario: {name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">{name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
+        Rol: {roleId == 1 ? "SúperAdmin" : roleId == 2 ? "Admin" : roleId == 3 ? "Mecánico" : ""}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Id: {id}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {dni}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {commission? commission : "No tiene comisiones"}</h1>
+          <button
+          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          onClick={handleEditClick}>
+            Editar
+          </button>
       </div>
     )}
   </div>
     </div>
   )
-  }
+}
 
