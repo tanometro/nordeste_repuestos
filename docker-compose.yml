@@ -1,0 +1,10 @@
+services:
+  app:
+    container_name: frontend_repuestos
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
+    command: tail -F anything
+    build:
+      context: ./
