@@ -11,7 +11,7 @@ export default function Header(props: HeaderProps) {
   
     return (
       <div className="flex h-full items-center justify-between my-6 ">
-        <img className="h-12 m-2 " src="assets/logo.svg" alt="logo"/>
+        <img className="h-12 m-2 " src="assets/logo.svg" alt="logo" onClick={() => router.push('/dashboard')}/>
         <h1 className="h-8 w-80 text-white bg-custom-red rounded-2xl flex items-center justify-center ">{title}</h1>
         <button
         type="button" 

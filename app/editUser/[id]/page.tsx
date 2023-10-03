@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import { BASE_URL } from '@/app/page';
+import { BASE_URL } from '@/components/constants';
 import Header from '@/components/header';
 
 interface User {
@@ -116,6 +116,8 @@ export default function EditUserForm () {
     {isEditing ? (
       
       <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
+        <label className="text-clip text-black">Nombre:</label>
+        <label className="text-clip text-black">Comisión:</label>
         <input
           name="name"
           placeholder="Nombre" 
@@ -124,6 +126,7 @@ export default function EditUserForm () {
           onChange={handleChange}
           required
         />
+        <label className="text-clip text-black">Username:</label>
         <input 
           name="username"
           placeholder="Username" 
@@ -132,6 +135,7 @@ export default function EditUserForm () {
           onChange={handleChange}
           required
         />
+        <label className="text-clip text-black">DNI:</label>
         <input 
           name="dni"
           type="number"
@@ -140,6 +144,7 @@ export default function EditUserForm () {
           onChange={handleChange}
           required
         />
+        <label className="text-clip text-black">Password:</label>
         <input 
           name="password"
           placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
@@ -158,7 +163,7 @@ export default function EditUserForm () {
       
       <div className="flex flex-col items-center w-1/2">
         <h1 className="text-center text-black mb-4">Editando el usuario: {name}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">{name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {name}</h1>
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
