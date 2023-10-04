@@ -8,8 +8,6 @@ import deleteUser from "@/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/components/interfaces";
 
-
-
 export default function Users(){
 
   const [users,setUsers] = useState<UserInterface[]>([]);
@@ -37,9 +35,13 @@ export default function Users(){
   // Filtrado de usuarios //
    const filterUser = (): UserInterface[] =>{
     if(search.length == 0)
-      return users.slice(currentPage, currentPage + valorPaginacion)
+      return users.slice(currentPage, currentPage + valorPaginacion);
 
-    const filtered = users.filter((us) => us.name.includes(search))
+    const filtered = users.filter((us) => {
+      const filterName = us.name || '';
+      return filterName.toLowerCase().includes(search.toLowerCase());
+    });
+
     return filtered.slice(currentPage, currentPage + valorPaginacion)
    };
 
@@ -90,7 +92,7 @@ export default function Users(){
                         <td className="">{user.name}</td>
                             <td className="">{user.dni}</td>
                             <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                            <td className=""> {user.roleId === 1 ? 'Sin saldo' : user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 ? `${user.balance}` : ""}</td>
+                            <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
                             <td>
                               <button onClick={() => router.push(`/editUser/${user.id}`)}>
                                 <a className="text-blue-500">Ver usuario</a>
