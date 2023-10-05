@@ -1,71 +1,56 @@
-'use client';
+"use client";
 
-import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import {ReactNode, createContext, useCallback, useContext, useMemo, useState,} from "react";
 
-interface User {
-  roleId: number,
-  dni: string,
-  username: string,
-  password: string,
-  name: string,
-}
-
-interface UsersContextType {
-  users: User[];
-  createUser: (newUser: User) => void;
-}
-
-export const context = createContext<UsersContextType | null>(null);
-
-export const useTask = (): UsersContextType => {
-  const dataContext = useContext(context);
-  if (!dataContext) throw new Error('useTask must be used within a provider');
-  return dataContext;
+type AuthTokens = {
+  token: string;
+  refresh_token: string;
 };
 
-interface UsersProviderProps {
+const AUTH_TOKENS_KEY = "NEXT_JS_AUTH";
+
+export const AuthContext = createContext({
+  login: (authTokens: AuthTokens) => {},
+  logout: () => {},
+  isLoggedIn: false,
+  authTokens: null,
+});
+
+export default function AuthContextProvider({
+  children,
+}: {
   children: ReactNode;
-}
+}) {
+  const authTokensInLocalStorage = window.localStorage.getItem(AUTH_TOKENS_KEY);
+  const [authTokens, setAuthTokens] = useState(
+    authTokensInLocalStorage === null
+      ? null
+      : JSON.parse(authTokensInLocalStorage)
+  );
 
-
-export default function TaskProvider({ children }: UsersProviderProps) {
-  const storedToken = localStorage.getItem('token');
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get('http://89.117.33.196:8000/user/list', {
-          headers: {
-            Authorization: storedToken,
-          },
-        });
-
-        if (response.status !== 200) {
-          throw new Error(`Error en la solicitud: ${response.status}`);
-        }
-
-        const data = response.data;
-        setUsers(data);
-      } catch (error) {
-        throw new Error("Error en obtener usuarios");
-      }
-    };
-
-    fetchUsers(); 
+  const login = useCallback(function (authTokens: AuthTokens) {
+    window.localStorage.setItem(AUTH_TOKENS_KEY, JSON.stringify(authTokens));
+    setAuthTokens(authTokens);
   }, []);
 
-  const createUser = (newUser: User) => {
-    setUsers([...users, newUser]);
-  }
+  const logout = useCallback(function () {
+    window.localStorage.removeItem(AUTH_TOKENS_KEY);
+    setAuthTokens(null);
+  }, []);
 
-  return (
-    <context.Provider value={
-      {users,
-      createUser
-      }}>
-      {children}
-    </context.Provider>
+  const value = useMemo(
+    () => ({
+      login,
+      logout,
+      authTokens,
+      isLoggedIn: authTokens !== null,
+    }),
+    [authTokens, login, logout]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuthContext() {
+  return useContext(AuthContext);
 }

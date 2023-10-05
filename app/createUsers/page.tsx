@@ -3,7 +3,7 @@
 import Header from "@/components/header";
 import { useRouter, useParams } from 'next/navigation';
 import { useState} from "react";
-import { BASE_URL } from "@/app/page";
+import postUser from "@/components/requests/postUser";
 import validations from '../../components/validations';
 
 interface User {
@@ -13,19 +13,17 @@ interface User {
   password: string,
   name: string,
   commission: number | null,
-  
 } 
 
 export default function CreateUser () {
   const storedToken = localStorage.getItem('token');
-  const params = useParams()
   const router = useRouter();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [errors, setErrors] = useState({
     password: "",
 });
 
-  const [userData, setUserData] = useState<User>({
+const [userData, setUserData] = useState<User>({
     dni: "",
     username: "",
     password: "",        
@@ -33,11 +31,6 @@ export default function CreateUser () {
     roleId: null,
     commission: 5,
   })
-// const [userDni, setUserDni] = useState("");
-// const [username, setUsername] = useState("");
-// const [password, setPassword] = useState("");
-// const [name, setName] = useState("");
-// const [roleId, setRoleId] = useState("");
 
 //  const resetFormFields = () => {
 //     setUserData({
@@ -51,28 +44,6 @@ export default function CreateUser () {
 //   };
     // const [repitePass, setRepeatePass] = useState<string>("");
 
-    const postUser = async (user: User) => {
-        try {
-            if (storedToken !== null) {
-            const response = await fetch(`${BASE_URL}/user/add`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json', 
-                Authorization: storedToken,
-              },
-              body: JSON.stringify(user),
-            });
-            if (!response.ok) {
-                throw new Error('Error al crear el usuario');
-            } 
-        }  else{
-                window.alert("Usuario creado exitosamente")
-            }
-
-        } catch(error){
-            throw new Error ("No se pudo crear el usuario")
-        }
-    }
 
 
     const handleChange = (e: React.FormEvent) => {
@@ -80,7 +51,7 @@ export default function CreateUser () {
         const value = (e.target as HTMLInputElement).value;
 
         setUserData({...userData, [property]: value});
-        setErrors(validations({...userData, [property] : value}));
+        // setErrors(validations({...userData, [property] : value}));
     }
 
     const handleSubmit = async (e: React.FormEvent) =>{
@@ -94,7 +65,7 @@ export default function CreateUser () {
         router.push('/allUsers') 
         }
 
-let roles = [1, 2, 3];
+let roles = [2, 3];
 
     return (
         <div>
@@ -120,7 +91,7 @@ let roles = [1, 2, 3];
             </option>
             {roles.map((roleId, index) => (
                 <option key={index} value={roleId.toString()}>
-                {roleId === 1 ? "SúperAdmin" : roleId === 2 ? "Admin" : roleId === 3 ? "Mecánico" : ""}
+                {roleId === 2 ? "Admin" : roleId === 3 ? "Mecánico" : ""}
                 </option>
             ))}
       </select>

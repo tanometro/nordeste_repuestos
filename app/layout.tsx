@@ -1,12 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-
-
-// import { Providers } from '@/redux/provider';
-// import { PersistGate } from 'redux-persist/integration/react';
-// import { persistStore } from 'redux-persist';
-// import { store } from '@/redux/store';
+import AuthContextProvider from '@/context/userContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +11,6 @@ export const metadata: Metadata = {
   authors: {name: "Angelo", url: `https://bitecnologias.com`},
 }
 
-//const persistor = persistStore(store);
 
 export default function RootLayout({children,
 }: {
@@ -25,13 +19,9 @@ export default function RootLayout({children,
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <PersistGate persistor={persistor}>
-            <Providers> */}
-        {/* <TaskProvider> */}
-            {children}
-          {/* </TaskProvider> */}
-            {/* </Providers> 
-        </PersistGate> */}
+        <AuthContextProvider>
+          {children}
+        </AuthContextProvider>
       </body>
     </html>
   )
