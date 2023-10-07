@@ -7,11 +7,21 @@ import getAllUsers from "@/components/requests/getAllUsers";
 import deleteUser from "@/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/components/interfaces";
+// import { useAppSelector } from "@/redux/hooks";
+
+
+interface User {
+  name: string;
+  dni: string;
+  isActive: boolean;
+  id: number, 
+  balance: number,
+  roleId: number,
+}
 
 export default function Users(){
-
-  const [users,setUsers] = useState<UserInterface[]>([]);
-  const storedToken = localStorage.getItem('token');
+  // const users = useAppSelector(state => state.userReducer.users)
+  const [users, setUsers] = useState<UserInterface[]>([]);
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -32,18 +42,19 @@ export default function Users(){
   }, []);
 
 
-  // Filtrado de usuarios //
-   const filterUser = (): UserInterface[] =>{
-    if(search.length == 0)
-      return users.slice(currentPage, currentPage + valorPaginacion);
+ // Filtrado de usuarios //
 
-    const filtered = users.filter((us) => {
-      const filterName = us.name || '';
-      return filterName.toLowerCase().includes(search.toLowerCase());
-    });
+const filteredUsers = users.filter((user) => {
+  const lowercaseSearchTerm = search.toLowerCase();
+  return (
+    (user.dni && user.dni.toLowerCase().includes(lowercaseSearchTerm)) ||
+    (user.name && user.name.toLowerCase().includes(lowercaseSearchTerm))
+  );
+});
 
-    return filtered.slice(currentPage, currentPage + valorPaginacion)
-   };
+const userActive = filteredUsers.filter((user) => user.isActive == true)
+
+//Paginación
 
    const nextPage = () => {
     if(users.filter(us => us.name.includes(search)).length > currentPage + valorPaginacion ){
@@ -69,7 +80,7 @@ export default function Users(){
               <div className="flex justify-center mt-12 w-1/2">
                   <input 
                   className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
-                  placeholder="Busca por NOMBRE"
+                  placeholder="Busca por NOMBRE o DNI"
                   type="text"
                   value={search}
                   onChange={searchUser}
@@ -86,26 +97,25 @@ export default function Users(){
                     </tr>
                   </thead>
                   <tbody>
-                    {filterUser().filter((user) => user.isActive === true)
-                    .map((user, index) => (
-                      <tr key={index} className="hover:bg-gray-100">
-                        <td className="">{user.name}</td>
-                            <td className="">{user.dni}</td>
-                            <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                            <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
-                            <td>
-                              <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                                <a className="text-blue-500">Ver usuario</a>
-                              </button>
-                            </td>
-                            <td>
-                              <button onClick={() => deleteUser(user.id, setUsers)}>
-                                <a className="text-blue-500">Eliminar</a>
-                              </button>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
+          {userActive.map((user, index) => (
+      <tr key={index} className="hover:bg-gray-100">
+        <td className="">{user.name}</td>
+            <td className="">{user.dni}</td>
+            <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+            <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+            <td>
+              <button onClick={() => router.push(`/editUser/${user.id}`)}>
+                <a className="text-blue-500">Ver usuario</a>
+              </button>
+            </td>
+            <td>
+              <button onClick={() => deleteUser(user.id, setUsers)}>
+                <a className="text-blue-500">Eliminar</a>
+              </button>
+            </td>
+        </tr>
+        ))}
+    </tbody>
                 </table>
               </List>
                 <div className="flex flex-end mx-4 w-1/3 ">
