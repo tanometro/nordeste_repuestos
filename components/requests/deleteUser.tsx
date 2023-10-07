@@ -15,11 +15,11 @@ const deleteUser = async (id: number, setUsers: React.Dispatch<React.SetStateAct
         body: JSON.stringify({id: id.toString()}),
       });
       if (!response.ok) {
-          throw new Error('Error al editar el usuario' + response);
+          throw new Error('Error al eliminar el usuario' + response);
       } 
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
   }  else{
-          window.alert("Usuario editado exitosamente")
+          window.alert("Usuario eliminado exitosamente")
       }
 
   } catch (error) {
