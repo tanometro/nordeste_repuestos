@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
 import getAllUsers from "@/components/requests/getAllUsers";
-import deleteUser from "@/components/requests/deleteUser";
+import activateUser from "@/components/requests/activateUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
@@ -109,8 +109,8 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
               </button>
             </td>
             <td>
-              <button onClick={() => deleteUser(user.id, setUsers)}>
-                <a className="text-blue-500">Eliminar</a>
+              <button onClick={() => activateUser(user.id, setUsers)}>
+                <a className="text-blue-500">Re activar</a>
               </button>
             </td>
         </tr>

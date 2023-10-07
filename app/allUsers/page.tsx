@@ -110,7 +110,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
             </td>
             <td>
               <button onClick={() => deleteUser(user.id, setUsers)}>
-                <a className="text-blue-500">Eliminar</a>
+                <a className="text-blue-500">Desactivar</a>
               </button>
             </td>
         </tr>

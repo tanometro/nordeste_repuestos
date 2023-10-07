@@ -17,7 +17,7 @@ export default function Dashboard(){
   
     const logOut = async () =>{
         try{
-            router.push('/')
+            router.push('/');
         }
         catch (error){
             throw new Error("Fallo en logout ")
