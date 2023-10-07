@@ -118,7 +118,8 @@ let roles = [2, 3];
          required/>
         <input 
         name="password"
-        placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black "
+        placeholder="Contraseña"
+        className={userData.roleId == 3 ? "rounded-2xl border border-custom-red w-1/2 text-center text-black " : "rounded-2xl border border-custom-red w-1/2 text-center text-black mb-2"}
          value={userData.password}
          onChange={handleChange}
          required/>
@@ -131,13 +132,20 @@ let roles = [2, 3];
         required
         />
         {passwordError && <p className="text-red-500">{passwordError}</p>} */}
-        <label className='text-black'>Comisión (por defecto 5%):</label>
+        {userData.roleId == 3 ? (
+        <>
+          <label className='text-black'>Comisión (por defecto 5%):</label>
         <input 
         name="commission"
         placeholder="% comisión"
         className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
          value={userData.commission !== null ? userData.commission.toString() : ""}
          onChange={handleChange}/>
+         </>
+        ) : (
+          ""
+        )}
+        
          <button type="submit" 
          className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
             Crear usuario

@@ -59,10 +59,19 @@ export default function EditUserForm () {
 
   return (
     <div>
-      <Header title="Editando usuario"/>
+      <div>
+        
+      </div>
+      {
+        isEditing ? (
+          <Header title="Editando usuario"/>
+        )
+        : (
+          <Header title="Detalle de usuario"/>
+        )
+      }
       <div className="flex justify-center items-center">
     {isEditing ? (
-      
       <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
         <label className="text-clip text-black">Nombre:</label>
         <input
