@@ -118,7 +118,7 @@ let roles = [2, 3];
          required/>
         <input 
         name="password"
-        placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+        placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black "
          value={userData.password}
          onChange={handleChange}
          required/>
@@ -131,6 +131,7 @@ let roles = [2, 3];
         required
         />
         {passwordError && <p className="text-red-500">{passwordError}</p>} */}
+        <label className='text-black'>Comisión (por defecto 5%):</label>
         <input 
         name="commission"
         placeholder="% comisión"
