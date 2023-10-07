@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
 import getAllUsers from "@/components/requests/getAllUsers";
-import deleteUser from "@/components/requests/deleteUser";
+import activateUser from "@/components/requests/activateUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
@@ -52,7 +52,7 @@ const filteredUsers = users.filter((user) => {
   );
 });
 
-const userActive = filteredUsers.filter((user) => user.isActive == true)
+const userActive = filteredUsers.filter((user) => user.isActive == false)
 
 //Paginación
 
@@ -109,8 +109,8 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
               </button>
             </td>
             <td>
-              <button onClick={() => deleteUser(user.id, setUsers)}>
-                <a className="text-blue-500">Desactivar</a>
+              <button onClick={() => activateUser(user.id, setUsers)}>
+                <a className="text-blue-500">Re activar</a>
               </button>
             </td>
         </tr>
@@ -132,10 +132,6 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
                   <button type="button" onClick={() => router.push('/createUsers')} 
                   className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Crear nuevo usuario
-                  </button>
-                  <button type="button" onClick={() => router.push('/deactivatedUsers')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Usuarios eliminados
                   </button>
                   <button type="button" onClick={() => router.push('/dashboard')} 
                   className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">

@@ -2,11 +2,11 @@ import { BASE_URL } from "../constants";
 import { UserInterface } from "../interfaces";
 
 // Borra un usuario //
-const deleteUser = async (id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
+const activateUser = async (id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
     const storedToken = localStorage.getItem('token');
     try {
       if (storedToken !== null) {
-      const response = await fetch(`${BASE_URL}/user/deactivate`, {
+      const response = await fetch(`${BASE_URL}/user/activate`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json', 
@@ -31,4 +31,4 @@ const deleteUser = async (id: number, setUsers: React.Dispatch<React.SetStateAct
   }
   };
 
-export default deleteUser;
+export default activateUser;

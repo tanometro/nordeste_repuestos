@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import {BASE_URL} from '@/components/constants';
+import { useAuthContext } from "@/context/userContext";
+import logReq from "../requests/login";
 
 
 export default function Login (){
   const router = useRouter();
+  const { login } = useAuthContext();
   const [userData, setUserData] = useState({
       username: "", 
       password: "",
@@ -13,35 +15,11 @@ export default function Login (){
   const [viewPass, setViewPass] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
 
-  async function login(userData: {username: string, password: string}) {
-    const formData = new FormData();
-    formData.append('username', userData.username);
-    formData.append('password', userData.password);
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST', 
-        body: formData
-      });
-  
-      if (!response.ok) {
-        throw new Error('Credenciales incorrectas');
-      }
-      const data = await response.json();
-  
-      if (response.status === 200) {
-        localStorage.setItem('token', data.token);
-        router.replace('/dashboard');
-      } else {
-        throw new Error('Credenciales incorrectas');
-      }
-    } catch (error) {
-        throw new Error('Ocurrió un error desconocido');
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    login(userData);
+    logReq(userData);
+    router.replace('/dashboard');
     }
 
   const handleChange = (e: React.FormEvent) =>{

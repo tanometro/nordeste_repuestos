@@ -1,16 +1,23 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import Header from '@/components/header';
-//import {useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from 'react';
+import getAllUsers from '@/components/requests/getAllUsers';
+import {useAppDispatch, useAppSelector} from '@/redux/hooks'
+import { setUsers } from '@/redux/features/userSlice';
 
 export default function Dashboard(){
     //const token = useAppSelector((state) => state.persistedReducer.tokenSaver.token);
+    // const users = useAppSelector(state => state.userReducer.users);
     const storedToken = localStorage.getItem('token');
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
+
+  
     const logOut = async () =>{
         try{
-            router.push('/')
+            router.push('/');
         }
         catch (error){
             throw new Error("Fallo en logout ")
