@@ -17,6 +17,7 @@ export default function Dashboard(){
   
     const logOut = async () =>{
         try{
+            localStorage.removeItem('token');
             router.push('/');
         }
         catch (error){
