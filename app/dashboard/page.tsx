@@ -27,21 +27,36 @@ export default function Dashboard(){
     return (
         <div>
             <Header title="Dashboard"/>
-            <div className="mx-auto w-7/12">
-                <div className='flex mt-32 justify-between'>
+            <div className=" h-full w-full my-6">
+                <div className='flex flex-col mt-32 items-center'>
                     {/* <h1 className='text-black'>{storedToken}</h1> */}
-                    <button onClick={() => router.push('/createUsers')} 
-                    className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Crear Usuario
-                    </button>
-                    <button onClick={() => router.push('/allUsers')}
-                    className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Usuarios
-                    </button>
-                    <button onClick={logOut} 
-                    className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Log Out
-                    </button>
+                    <div className=' justify-arround '>
+                        <button onClick={() => router.push('/activeUsers')}
+                        className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Usuarios
+                        </button>
+                        <button onClick={() => router.push('/createUsers')} 
+                        className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Crear usuario
+                        </button>
+                    </div>
+                    <div className='flex justify-arround'>
+                        <button onClick={() => router.push('/transactions')} 
+                        className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Transacciones
+                        </button>
+                        <button onClick={() => router.push('/newTransaction')}
+                        className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Crear transacción
+                        </button>
+                    </div>
+                    <div>
+                        <button onClick={logOut} 
+                        className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Salir
+                        </button>
+                    </div>
+                   
                 </div>
             </div>
            

@@ -10,15 +10,6 @@ import { UserInterface } from "@/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
 
 
-interface User {
-  name: string;
-  dni: string;
-  isActive: boolean;
-  id: number, 
-  balance: number,
-  roleId: number,
-}
-
 export default function Users(){
   // const users = useAppSelector(state => state.userReducer.users)
   const [users, setUsers] = useState<UserInterface[]>([]);
@@ -97,25 +88,25 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
                     </tr>
                   </thead>
                   <tbody>
-          {userActive.map((user, index) => (
-      <tr key={index} className="hover:bg-gray-100">
-        <td className="">{user.name}</td>
-            <td className="">{user.dni}</td>
-            <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-            <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
-            <td>
-              <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                <a className="text-blue-500">Ver usuario</a>
-              </button>
-            </td>
-            <td>
-              <button onClick={() => deleteUser(user.id, setUsers)}>
-                <a className="text-blue-500">Desactivar</a>
-              </button>
-            </td>
-        </tr>
-        ))}
-    </tbody>
+                  {userActive.map((user, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                <td className="">{user.name}</td>
+                    <td className="">{user.dni}</td>
+                    <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+                    <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+                    <td>
+                      <button onClick={() => router.push(`/editUser/${user.id}`)}>
+                        <a className="text-blue-500">Ver usuario</a>
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => deleteUser(user.id, setUsers)}>
+                        <a className="text-blue-500">Desactivar</a>
+                      </button>
+                    </td>
+                </tr>
+                ))}
+                  </tbody>
                 </table>
               </List>
                 <div className="flex flex-end mx-4 w-1/3 ">
@@ -134,7 +125,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
                     Crear nuevo usuario
                   </button>
                   <button type="button" onClick={() => router.push('/deactivatedUsers')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  className="mx-12 w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Usuarios eliminados
                   </button>
                   <button type="button" onClick={() => router.push('/dashboard')} 
