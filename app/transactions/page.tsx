@@ -3,15 +3,32 @@
 import React from 'react'
 import Header from '@/components/header';
 import List from '@/components/lists';
-import { useState } from 'react';
+import getAllTransactions from '@/components/requests/allTransactions';
+import deleteTransaction from '@/components/requests/deleteTransaction';
+import { TransactionInterface } from '@/components/interfaces';
+import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
+
 
 function AllTransacions() {
     const [search, setSearch] = useState("");
     const [date, setDate] = useState("")
     const [currentPage, setCurrentPage] = useState(0);
-    const [transactions, setTransactions] = useState([]);
+    const [transactions, setTransactions] = useState<TransactionInterface[]>([]);
     const router = useRouter();
+
+    // Cuando monta el componente //
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          const transList = await getAllTransactions();
+          setTransactions(transList);
+        } catch (error) {
+          console.error("Error en render componente", error);
+        }
+      }
+      fetchData();
+    }, []);
 
     // const filteredTransaction = transactions.filter((transaction) => {
     //     const lowercaseSearchTerm = search.toLowerCase();
@@ -64,6 +81,27 @@ function AllTransacions() {
                       <th className="">Comisión</th>
                     </tr>
                 </thead>
+                <tbody>
+                  {transactions.map((transaction, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                    <td className="">{transaction.id}</td>
+                    <td className="">{transaction.userAssociatedName}</td>
+                    <td className="">{transaction.created}</td>
+                    <td className=""> {transaction.saleTotalAmount}</td>
+                    <td className=""> {transaction.saleCommissionedAmount}</td>
+                    <td>
+                      <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
+                        <a className="text-blue-500">Ver usuario</a>
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => deleteTransaction(transaction.id, setTransactions)}>
+                        <a className="text-blue-500">Eliminar</a>
+                      </button>
+                    </td>
+                </tr>
+                ))}
+                  </tbody>
                 </table>
             </List>
             <div className="flex mx-4">

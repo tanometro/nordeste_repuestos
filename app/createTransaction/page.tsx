@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import Trueque from '@/components/trueque';
 import NewSell from '@/components/sell';
 
-function NewTransaction() {
+function CreateTransaction() {
   const [select, setSelect] = useState(true);
 
   const changeSelect = () => {
@@ -33,4 +33,4 @@ function NewTransaction() {
   )
 }
 
-export default NewTransaction;
+export default CreateTransaction;

@@ -7,17 +7,20 @@ import getAllUsers from "@/components/requests/getAllUsers";
 import deleteUser from "@/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/components/interfaces";
-// import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { setCurrentPage, setSearchResults } from "@/redux/features/paginationSlice";
 
 
 export default function Users(){
   // const users = useAppSelector(state => state.userReducer.users)
+  const dispatch = useAppDispatch();
   const [users, setUsers] = useState<UserInterface[]>([]);
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
+  // const [currentPage, setCurrentPage] = useState(0);
+  const pagination = useAppSelector(state => state.paginationReducer.usersPorPage);
+  const currentPage = useAppSelector(state => state.paginationReducer.currentPage);
 
-  const valorPaginacion = 10;
 
 // Cuando monta el componente //
   useEffect(() => {
@@ -32,8 +35,11 @@ export default function Users(){
     fetchData();
   }, []);
 
+// Paginación para mostrar en la pagina actual
+const startIndex = (currentPage - 1) * pagination;
+const endIndex = startIndex + pagination;
 
- // Filtrado de usuarios //
+// Filtrado de usuarios //
 
 const filteredUsers = users.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
@@ -43,26 +49,37 @@ const filteredUsers = users.filter((user) => {
   );
 });
 
+//Filtrado segun pagina actual
+const userToDisplay = filteredUsers.slice(startIndex, endIndex)
+
+
 const userActive = filteredUsers.filter((user) => user.isActive == true)
 
 //Paginación
 
    const nextPage = () => {
-    if(users.filter(us => us.name.includes(search)).length > currentPage + valorPaginacion ){
-      setCurrentPage(currentPage + valorPaginacion)
+    if(users.filter(us => us.name.includes(search)).length > currentPage + pagination ){
+      setCurrentPage(currentPage + pagination)
     };   };
 
    const prevPage = () => {
     if(currentPage > 0){
-      setCurrentPage(currentPage - valorPaginacion)
+      setCurrentPage(currentPage - pagination)
     }
-    
    }
 
-   const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrentPage(0);
-      setSearch(target.value)
-   }
+   const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setCurrentPage(0)); 
+    setSearch(target.value);
+    dispatch(setSearchResults(filteredUsers)); 
+  };
+  
+
+  const totalPage = search.length > 0
+  ? Math.ceil(filteredUsers.length / pagination)
+  : Math.ceil(users.length / pagination);
+
+const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
 
     return (
         <div>
@@ -109,16 +126,34 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
                   </tbody>
                 </table>
               </List>
-                <div className="flex flex-end mx-4 w-1/3 ">
-                  <button type="button" onClick={prevPage} 
-                    className="w-24 mt-6 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                      Anteriores
+              <div className="flex items-center justify-center mt-6 space-x-4">
+              <button
+                type="button"
+                onClick={prevPage}
+                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Anteriores
+              </button>
+              <div className='text-black flex items-center'>
+                {pageNumbers.map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className="text-red mx-2"
+                  >
+                    {pageNumber}
                   </button>
-                  <button type="button" onClick={nextPage} 
-                    className="w-24 mt-6 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                      Siguientes
-                  </button>
-                </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={nextPage}
+                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Siguientes
+              </button>
+            </div>
+
                 <div className="flex mx-4">
                   <button type="button" onClick={() => router.push('/createUsers')} 
                   className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
