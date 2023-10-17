@@ -1,10 +1,8 @@
 'use client';
+import { HeaderProps } from "./interfaces";
 
 import { useRouter } from "next/navigation";
 
-interface HeaderProps {
-    title: string;
-  }
 export default function Header(props: HeaderProps) {
     const router = useRouter();
     const { title } = props;

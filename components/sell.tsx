@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { SellInterface } from './interfaces';
+import { UserInterface } from './interfaces';
+
+import SelectUser from './selectUser';
 
 function NewSell() {
 
   const [sellData, setSellData] = useState<SellInterface>({
-    user: "",
-    concept: "",
-    ammount: 0,
-    commission: 0
+      finalCustomerName: '',
+      finalCustomerDni: '',
+      mechanicUserId: 0,
+      totalAmount: 0,
+      concept: '',
+      isFinalCustomerTransaction: true
+    
   });
-
-  // // Cuando monta el componente //
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const userList = await getAllUsers();
-  //       setUsers(userList);
-  //     } catch (error) {
-  //       console.error("Error en render componente", error);
-  //     }
-  //   }
-  //   fetchData();
-  // }, []);
+  const [user, setUser] = useState<UserInterface>({
+    name: '',
+    username: '',
+    password: '',
+    dni: '',
+    roleId: 3,
+    balance: 0,
+    id: 0,
+    isActive: true,
+    commission: 0,
+  });
 
   const onChange = (e: React.FormEvent) => {
     const property = (e.target as HTMLInputElement).name;
@@ -32,14 +36,23 @@ function NewSell() {
   };
 
   const calculateCommission = () => {
-    const total = sellData.ammount * 0.05;
+    const total = sellData.totalAmount * user.commission;
     return total;
   };
 
   return (
     <div className="w-full flex items-center justify-center mt-2">
-      {/* <SelectUser/> */}
+      <SelectUser user={user} setUser={setUser} />
       <form className="flex flex-col items-center w-1/2">
+        <input
+          type="text"
+          placeholder="Nombre cliente"
+          name="finalCustomerName"
+          onChange={onChange}
+          value={sellData.finalCustomerName}
+          required
+          className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
+        />
         <input
           type="text"
           placeholder="Concepto / nº factura"
@@ -54,7 +67,7 @@ function NewSell() {
           placeholder="Monto"
           name="ammount"
           onChange={onChange}
-          value={sellData.ammount}
+          value={sellData.totalAmount}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />

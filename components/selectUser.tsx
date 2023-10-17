@@ -1,59 +1,65 @@
-// 'use client';
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { SelectUserProps, UserInterface } from "./interfaces";
+import getOneMechanic from './requests/searchMechanic';
 
+const SelectUser = (props: SelectUserProps) => {
+    const { user, setUser } = props;
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredUsers, setFilteredUsers] = useState<UserInterface[]>([]);
+  
+    useEffect(() => {
+      const fetchUsers = async () => {
+        try {
+          const userFind = await getOneMechanic(searchTerm);
+          console.log('User' + userFind)
+          if (userFind) {
+            setFilteredUsers([userFind]);
+          }
+          console.log('Array' + filteredUsers);
+        } catch (error) {
+          console.error("Error en obtener usuario mecánico", error);
+          setFilteredUsers([]);
+        }
+      };
+  
+      if (searchTerm.trim() !== '') {
+        fetchUsers();
+      } else {
+        setFilteredUsers([]);  
+      }
+    }, [searchTerm]);
+  
+    const handleSelectOption = () => {
+      
+        setFilteredUsers([user]);
+       
+        setSearchTerm('');
+      };
 
-
-// export default function SelectUser() {
-//   const [users, setUsers] = useState([]);
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [filteredUsers, setFilteredUsers] = useState([]);
-//   const [selectedUsers, setSelectedUsers] = useState([]);
-
-//   useEffect(() => {
-//     const filtered = users.filter((user) =>
-//       user.toLowerCase().includes(searchTerm.toLowerCase())
-//     );
-//     setFilteredUsers(filtered);
-//   }, [searchTerm, users]);
-
-//   const handleInputChange = (e) => {
-//     setSearchTerm(e.target.value);
-//   };
-
-//   const handleSelectOption = (team) => {
-//     setSearchTerm('');
-//     setSelectedUsers((prevSelectedTeams) => [...prevSelectedTeams, team]);
-//     onChange({ target: { name: 'teams', value: [...selectedTeams, team] } });
-//   };
-
-//   const handleRemoveTeam = (team) => {
-//     setSelectedTeams((prevSelectedTeams) =>
-//       prevSelectedTeams.filter((selectedTeam) => selectedTeam !== team)
-//     );
-//     onChange({
-//       target: { name: 'teams', value: selectedTeams.filter((t) => t !== team) },
-//     });
-//   };
-
-//   return (
-//     <div className={styles.multiselect}>
-//       <div className={styles.inputContainer}>
-//         <input
-//           type="search"
-//           placeholder="Buscar escudería"
-//           value={searchTerm}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       {searchTerm && (
-//         <ul className={styles.optionsList}>
-//           {filteredTeams.map((team, index) => (
-//             <li key={index} onClick={() => handleSelectOption(team)}>
-//               {team}
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </div>
-//   );
-// }
+return (
+    <div className="text-black">
+      <div>
+        <input
+          type="search"
+          placeholder="Buscar por NOMBRE o DNI"
+          value={searchTerm}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+          className="rounded-2xl border border-custom-red h-10 w-80 text-center text-black mb-2"
+        />
+      </div>
+      {searchTerm && (
+        <ul className="text-black">
+          {filteredUsers.map((user, index) => (
+            <li key={index} onClick={() => handleSelectOption()}>
+              <div className="text-black">{user.name}</div>
+              <div className="text-black">DNI: {user.dni}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+  
+  }
+  
+  export default SelectUser;

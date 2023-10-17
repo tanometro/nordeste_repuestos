@@ -38,3 +38,15 @@ export interface SellInterface {
   concept: string,
   isFinalCustomerTransaction: boolean
 }
+
+export interface SelectUserProps {
+  
+  user: UserInterface;
+  setUser: React.Dispatch<React.SetStateAction<UserInterface>>;
+}
+
+
+export interface HeaderProps {
+  title: string;
+}
+
