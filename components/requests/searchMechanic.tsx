@@ -2,7 +2,7 @@ import { BASE_URL } from "../constants";
 import axios from "axios";
 import { UserInterface } from "../interfaces";
 
-const getOneMechanic = async (parameter: string | number): Promise<UserInterface | null> => {
+const getOneMechanic = async (parameter: string | number): Promise<UserInterface[]> => {
   const storedToken = localStorage.getItem('token');
   try {
     const response = await axios.get(`${BASE_URL}/user/search?nameOrDni=${parameter}`, {
@@ -15,14 +15,15 @@ const getOneMechanic = async (parameter: string | number): Promise<UserInterface
       throw new Error(`Error en la solicitud: ${response.status}`);
     }
 
-    const userData = response.data as UserInterface;
+    const data = response.data;
 
-    return userData;
+    return data; 
   } catch (error) {
     console.error("Error en obtener usuario mecánico", error);
-    return null;
+    return []; 
   }
 };
+
 
 export default getOneMechanic;
 

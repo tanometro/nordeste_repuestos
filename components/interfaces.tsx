@@ -11,23 +11,12 @@ export interface UserInterface {
   }
 
 export interface TransactionInterface {
-  id: 0,
-  created: string,
-  updated: string,
-  updatedByUserName: string,
-  updatedByUserDni: string,
   finalCustomerName: string,
   finalCustomerDni: string,
-  userSellerName: string,
-  userSellerDni: string,
-  userAssociatedName: string,
-  userAssociatedDni: string,
-  saleCommissionedAmount: number,
-  saleTotalAmount: number,
-  saleConcept: string,
-  userAssociatedCommision: number,
-  status: boolean,
-  isFinalCustomerTransaction: boolean
+  mechanicUserId: number,
+  totalAmount: number,
+  concept: string,
+  isFinalCustomerTransaction: boolean,
 }
 
 export interface SellInterface {
@@ -40,8 +29,8 @@ export interface SellInterface {
 }
 
 export interface SelectUserProps {
-  
-  user: UserInterface;
+  setSellData: React.Dispatch<React.SetStateAction<SellInterface>>
+  sellData: SellInterface,
   setUser: React.Dispatch<React.SetStateAction<UserInterface>>;
 }
 
