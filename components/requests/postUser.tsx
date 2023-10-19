@@ -11,7 +11,6 @@ interface User {
 
 const postUser = async (user: User) => {
   const storedToken = localStorage.getItem('token');
-
   try {
     if (storedToken !== null) {
       const response = await fetch(`${BASE_URL}/user/add`, {
@@ -37,12 +36,9 @@ const postUser = async (user: User) => {
       throw new Error("No se pudo crear el usuario: Token no disponible");
     }
   } catch (error) { 
-    if ((error as Error).message.includes("No autorizado")) {
+    if (error as Error) {
       window.alert((error as Error).message);
-    } else {
-   
-      window.alert("No se pudo crear el usuario. Por favor, intenta de nuevo más tarde.");
-    }
+    } 
   }
 };
 

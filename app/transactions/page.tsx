@@ -86,12 +86,12 @@ function AllTransacions() {
               <tr key={index} className="hover:bg-gray-100">
                     <td className="">{transaction.id}</td>
                     <td className="">{transaction.userAssociatedName}</td>
-                    <td className="">{transaction.created}</td>
+                    <td>{transaction.created.toLocaleDateString()}</td>
                     <td className=""> {transaction.saleTotalAmount}</td>
                     <td className=""> {transaction.saleCommissionedAmount}</td>
                     <td>
                       <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
-                        <a className="text-blue-500">Ver usuario</a>
+                        <a className="text-blue-500">Ver detalles</a>
                       </button>
                     </td>
                     <td>
