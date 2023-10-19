@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import { useAuthContext } from "@/context/userContext";
 import logReq from "../requests/login";
 
 
 export default function Login (){
   const router = useRouter();
-  const { login } = useAuthContext();
   const [userData, setUserData] = useState({
       username: "", 
       password: "",
@@ -18,8 +16,12 @@ export default function Login (){
 
   const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    logReq(userData);
-    router.replace('/dashboard');
+    try {
+      await logReq(userData);
+      router.replace('/dashboard');
+    } catch (error) {
+      setErrors('Credenciales incorrectas');
+    }
     }
 
   const handleChange = (e: React.FormEvent) =>{

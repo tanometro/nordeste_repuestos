@@ -1,36 +1,34 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { UserInterface } from "@/components/interfaces";
 
 interface UsersState {
     users: UserInterface[];
   }
 
-const initialState = {
-    users: [],
+  interface RootState {
+    commission: {
+      defaultCommission: number;
+    };
+  }
+  
+const initialState = { 
+    defaultCommission: 5,
 }
-export const userSlice = createSlice({
-    name: "user",
+export const commissionSlice = createSlice({
+    name: "commission",
     initialState,
     reducers: {
-
-        setUsers:(state, action) => {
-            state.users = action.payload;
-        },
-        deleteUser: (state, action: PayloadAction<number>) => {
-            state.users = state.users.filter(user => user.id !== action.payload);
-          },
-        editUser: (state, action: PayloadAction<UserInterface>) => {
-            const index = state.users.findIndex(user => user.id === action.payload.id);
-            if (index !== -1) {
-              state.users[index] = action.payload;
-            }
-          },
-        
+        setCommission: (state, action) => {
+          state.defaultCommission = action.payload.defaultCommission;
+        }
     }
 })
 
-export default userSlice.reducer;
+export default commissionSlice.reducer;
 
-export const {
-    setUsers,
-} = userSlice.actions;
+export const { setCommission } = commissionSlice.actions;
+
+export const selectCommission = (state: RootState) => state.commission.defaultCommission;
+
+
+

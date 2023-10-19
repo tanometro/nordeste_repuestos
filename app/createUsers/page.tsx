@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useState} from "react";
 import postUser from "@/components/requests/postUser";
 import validations from '../../components/validations';
+import { useAppSelector } from "@/redux/hooks";
 
 interface User {
   roleId: number | null,
@@ -19,6 +20,7 @@ export default function CreateUser () {
   const storedToken = localStorage.getItem('token');
   const router = useRouter();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const defaultCommission = useAppSelector(state => state.userReducer.defaultCommission);
   const [errors, setErrors] = useState({
     password: "",
 });
@@ -29,22 +31,8 @@ const [userData, setUserData] = useState<User>({
     password: "",        
     name: "",
     roleId: null,
-    commission: 5,
+    commission: defaultCommission,
   })
-
-//  const resetFormFields = () => {
-//     setUserData({
-//       roleId: null,
-//       name: "",
-//       username: "",
-//       dni: "",
-//       password: "",
-//       commission: 5
-//     });
-//   };
-    // const [repitePass, setRepeatePass] = useState<string>("");
-
-
 
     const handleChange = (e: React.FormEvent) => {
         const property = (e.target as HTMLInputElement).name;
@@ -54,16 +42,27 @@ const [userData, setUserData] = useState<User>({
         // setErrors(validations({...userData, [property] : value}));
     }
 
-    const handleSubmit = async (e: React.FormEvent) =>{
-      e.preventDefault();
-     
-        postUser(userData);
-        setShowSuccessMessage(true);
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-        }, 5000);
-        router.push('/allUsers') 
-        }
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const commissionPercentage = userData.commission !== null ? userData.commission / 100 : null;
+
+  const userWithPercentage: User = {
+    ...userData,
+    commission: commissionPercentage,
+  };
+
+  postUser(userWithPercentage);
+
+  setShowSuccessMessage(true);
+  setTimeout(() => {
+    setShowSuccessMessage(false);
+  }, 5000);
+  router.push('/activeUsers');
+};
+
+
 
 let roles = [2, 3];
 
@@ -84,13 +83,13 @@ let roles = [2, 3];
             onChange={handleChange}
             required
             name="roleId"
-            value={userData.roleId !== null ? userData.roleId.toString() : ""}
+            value={userData.roleId !== null ? userData.roleId : ""}
             >
             <option value="" disabled defaultValue="" hidden>
                 Seleccionar rol
             </option>
             {roles.map((roleId, index) => (
-                <option key={index} value={roleId.toString()}>
+                <option key={index} value={roleId}>
                 {roleId === 2 ? "Admin" : roleId === 3 ? "Mecánico" : ""}
                 </option>
             ))}
@@ -134,7 +133,7 @@ let roles = [2, 3];
         {passwordError && <p className="text-red-500">{passwordError}</p>} */}
         {userData.roleId == 3 ? (
         <>
-          <label className='text-black'>Comisión (por defecto 5%):</label>
+          <label className='text-black'>Comisión %:</label>
         <input 
         name="commission"
         placeholder="% comisión"

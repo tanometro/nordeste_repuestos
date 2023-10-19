@@ -55,7 +55,7 @@ export default function EditUserForm () {
       router.push('/allUsers')
     };
 
-  const { balance, commission, dni, name, roleId, username } = userData;
+  const { balance, commission, dni, name, roleId, username, id } = userData;
 
   return (
     <div>
@@ -138,6 +138,7 @@ export default function EditUserForm () {
           <h1 className="text-center text-black mb-4">Detalle del usuario {name}</h1>
         )}
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">ID: {id}</h1>
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
         {roleId == 3 ? (
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
