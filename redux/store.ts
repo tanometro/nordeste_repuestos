@@ -1,28 +1,26 @@
-import { configureStore } from "@reduxjs/toolkit";
-import tokenReducer from "./features/setTokenSlice";
-import storage from "redux-persist/lib/storage";
-import { combineReducers } from "@reduxjs/toolkit";
-import {persistReducer} from "redux-persist";
-import thunk from "redux-thunk";
+import { configureStore,  } from "@reduxjs/toolkit";
+import userReducer from "./features/userSlice";
+import paginationReducer from './features/paginationSlice';
+import { userApi } from "./services/usersApi";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
 
-const persistConfig= {
-    key: 'root',
-    storage,
-    whitelist: ['tokenSaver']
-}
-
-const rootReducer = combineReducers({
-    tokenSaver: tokenReducer,
-})
-
-const persistedReducer = persistReducer(persistConfig, rootReducer )
+// const persistConfig= {
+//     key: 'root',
+//     storage,
+//     whitelist: ['tokenSaver']
+// }
 
 export const store = configureStore({
     reducer: {
-        persistedReducer 
+       userReducer,
+       paginationReducer,
+       [userApi.reducerPath]: userApi.reducer,
     },
-    middleware: [thunk]
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([userApi.middleware])
 })
+
+setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+

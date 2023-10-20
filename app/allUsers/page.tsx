@@ -1,11 +1,10 @@
 "use client";
 
 import Header from "@/components/header";
-import SearchBar from "@/components/searchBar";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../page";
+import { BASE_URL } from "@/components/constants";
 import { useRouter } from "next/navigation";
 
 interface User {
