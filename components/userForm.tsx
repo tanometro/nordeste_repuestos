@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect} from "react";
-import { BASE_URL } from "@/app/page";
+import { BASE_URL } from "./constants";
 import { useRouter } from "next/navigation";
 // import {useAppSelector} from "@/redux/hooks";
 

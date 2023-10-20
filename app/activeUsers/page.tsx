@@ -108,20 +108,20 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   {userActive.map((user, index) => (
               <tr key={index} className="hover:bg-gray-100">
                 <td className="">{user.name}</td>
-                    <td className="">{user.dni}</td>
-                    <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                    <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
-                    <td>
-                      <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                        <a className="text-blue-500">Ver usuario</a>
-                      </button>
-                    </td>
-                    <td>
-                      <button onClick={() => deleteUser(user.id, setUsers)}>
-                        <a className="text-blue-500">Desactivar</a>
-                      </button>
-                    </td>
-                </tr>
+                <td className="px-5">{user.dni}</td>
+                <td className="px-5"> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+                <td className="px-5"> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+                <td>
+                  <button onClick={() => router.push(`/editUser/${user.id}`)}>
+                    <a className="text-blue-500 px-3">Ver usuario</a>
+                  </button>
+                </td>
+                <td>
+                  <button onClick={() => deleteUser(user.id, setUsers)}>
+                    <a className="text-blue-500 px-3">Desactivar</a>
+                  </button>
+                </td>
+              </tr>
                 ))}
                   </tbody>
                 </table>
