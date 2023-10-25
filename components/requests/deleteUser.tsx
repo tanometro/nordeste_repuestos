@@ -24,7 +24,7 @@ const deleteUser = async (id: number, setUsers: React.Dispatch<React.SetStateAct
 
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error("No editó el usuario: " + error.message);
+      throw new Error("No eliminó el usuario: " + error.message);
     } else {
       throw new Error("Error desconocido: " + String(error));
     }

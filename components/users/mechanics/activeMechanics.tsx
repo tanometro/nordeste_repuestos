@@ -1,17 +1,17 @@
 "use client";
 
-import Header from "@/components/header";
 import List from "@/components/lists";
 import { useEffect, useState } from "react";
-import getAllUsers from "@/components/requests/getAllUsers";
 import deleteUser from "@/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { UserInterface } from "@/components/interfaces";
+import { UserInterface, ActiveMechanicsProps } from "@/components/interfaces";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { setCurrentPage, setSearchResults } from "@/redux/features/paginationSlice";
 
 
-export default function Users(){
+const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
+const {mechanics, setMechanics} = props;
+
   // const users = useAppSelector(state => state.userReducer.users)
   const dispatch = useAppDispatch();
   const [users, setUsers] = useState<UserInterface[]>([]);
@@ -23,17 +23,17 @@ export default function Users(){
 
 
 // Cuando monta el componente //
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const userList = await getAllUsers();
-        setUsers(userList);
-      } catch (error) {
-        console.error("Error en render componente", error);
-      }
-    }
-    fetchData();
-  }, []);
+//   useEffect(() => {
+//     async function fetchData() {
+//       try {
+//         const userList = await getAllUsers();
+//         setUsers(userList);
+//       } catch (error) {
+//         console.error("Error en render componente", error);
+//       }
+//     }
+//     fetchData();
+//   }, []);
 
 // Paginación para mostrar en la pagina actual
 const startIndex = (currentPage - 1) * pagination;
@@ -41,7 +41,7 @@ const endIndex = startIndex + pagination;
 
 // Filtrado de usuarios //
 
-const filteredUsers = users.filter((user) => {
+const filteredUsers = mechanics.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
   return (
     (user.dni && user.dni.toLowerCase().includes(lowercaseSearchTerm)) ||
@@ -58,7 +58,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
 //Paginación
 
    const nextPage = () => {
-    if(users.filter(us => us.name.includes(search)).length > currentPage + pagination ){
+    if(mechanics.filter(us => us.name.includes(search)).length > currentPage + pagination ){
       setCurrentPage(currentPage + pagination)
     };   };
 
@@ -77,15 +77,13 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
 
   const totalPage = search.length > 0
   ? Math.ceil(filteredUsers.length / pagination)
-  : Math.ceil(users.length / pagination);
+  : Math.ceil(mechanics.length / pagination);
 
 const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
 
     return (
-        <div>
-          <Header title="Usuarios"/>
-            <div className="flex flex-col items-center h-screen">
-              <div className="flex justify-center mt-12 w-1/2">
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center mt-6 w-full">
                   <input 
                   className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
                   placeholder="Busca por NOMBRE o DNI"
@@ -117,7 +115,7 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => deleteUser(user.id, setUsers)}>
+                  <button onClick={() => deleteUser(user.id, setMechanics)}>
                     <a className="text-blue-500 px-3">Desactivar</a>
                   </button>
                 </td>
@@ -154,12 +152,12 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
               </button>
             </div>
 
-                <div className="flex mx-4">
+                {/* <div className="flex mx-4">
                   <button type="button" onClick={() => router.push('/createUsers')} 
                   className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Crear nuevo usuario
                   </button>
-                  <button type="button" onClick={() => router.push('/deactivatedUsers')} 
+                  <button type="button" onClick={() => router.push('/inactiveAdminUsers')} 
                   className="mx-12 w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Usuarios eliminados
                   </button>
@@ -167,8 +165,9 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Ir al inicio
                   </button>
-                </div>
+                </div> */}
             </div>
-        </div>
     )
 }
+
+export default ActiveMechanics;

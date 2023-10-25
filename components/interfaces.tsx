@@ -9,7 +9,7 @@ export interface UserInterface {
     isActive: boolean,
     commission: number,
   }
-
+  
 export interface SellInterface {
   finalCustomerName: string,
   finalCustomerDni: string,
@@ -62,4 +62,14 @@ export interface ErrorType {
   username: string;
   dni: string;
   password: string;
+}
+
+export interface ActiveMechanicsProps {
+  mechanics: UserInterface[];
+  setMechanics: React.Dispatch<React.SetStateAction<UserInterface[]>>;
+}
+
+export interface ActiveAdminsProps {
+  admins: UserInterface[];
+  setAdmins: React.Dispatch<React.SetStateAction<UserInterface[]>>;
 }

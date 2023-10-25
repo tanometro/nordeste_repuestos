@@ -1,5 +1,4 @@
 "use client";
-import ButtonAuth from "@/components/ButtonAuth/authButton";
 import Login from "../components/login/login";
 
 export default function Home() {
@@ -14,8 +13,7 @@ export default function Home() {
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Ingresar al sistema
-              </h1>
-              <ButtonAuth/>
+              </h1>           
               <Login/>
             </div>
           </div>
@@ -24,4 +22,3 @@ export default function Home() {
     </div>
   )
 }
-

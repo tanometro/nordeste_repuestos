@@ -30,7 +30,7 @@ export default function Dashboard() {
       <div className="h-full w-full my-6">
         <div className='flex flex-col mt-32 items-center'>
           <div className='justify-arround '>
-            <button onClick={() => router.push('/activeUsers')}
+            <button onClick={() => router.push('/allUsers')}
               className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               Usuarios
             </button>
