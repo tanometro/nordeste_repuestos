@@ -1,8 +1,8 @@
 import { BASE_URL } from "../constants";
-import { TransactionInterface } from "../interfaces";
+import { SellInterface } from "../interfaces";
 
 
-const postTransaction = async (transaction: TransactionInterface) => {
+const postTransaction = async (transaction: SellInterface) => {
   const storedToken = localStorage.getItem('token');
 
   try {

@@ -1,14 +1,12 @@
 "use client";
 import { useRouter } from 'next/navigation';
-import Header from '@/components/header';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { useSession } from "next-auth/react";
+import Header from '@/app/components/header';
+import { signOut, useSession } from "next-auth/react";
 
 export default function Dashboard() {
   const storedToken = localStorage.getItem('token');
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const defaultCommission = useAppSelector(state => state.userReducer.defaultCommission);
+  const defaultCommission = 5
   const { data: session, status } = useSession();
 
   const logOut = async () => {

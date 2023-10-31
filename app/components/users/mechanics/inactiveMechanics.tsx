@@ -1,10 +1,10 @@
 "use client";
 
-import List from "@/components/lists";
+import List from "@/app/components/lists";
 import { useEffect, useState } from "react";
-import activateUser from "@/components/requests/activateUser";
+import activateUser from "@/app/components/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveMechanicsProps } from "@/components/interfaces";
+import { UserInterface, ActiveMechanicsProps } from "@/app/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
 
 const InactiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {

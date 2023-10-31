@@ -2,35 +2,50 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import logReq from "../requests/login";
+import { signIn } from "next-auth/react";
 
 
 export default function Login (){
   const router = useRouter();
-  const [userData, setUserData] = useState({
-      username: "", 
-      password: "",
-    });
+  // const [userData, setUserData] = useState({
+  //     username: "", 
+  //     password: "",
+  //   });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [viewPass, setViewPass] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
 
 
+  // const handleSubmit = async (e: React.FormEvent) =>{
+  //   e.preventDefault();
+  //   try {
+  //     await logReq(userData);
+  //     router.replace('/dashboard');
+  //   } catch (error) {
+  //     setErrors('Credenciales incorrectas');
+  //   }
+  //   }
   const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    try {
-      await logReq(userData);
-      router.replace('/dashboard');
-    } catch (error) {
+    
+    const responseNextAuth = await signIn('credentials', {
+      username,
+      password,
+      redirect: false
+    })
+    if(responseNextAuth?.error) {
       setErrors('Credenciales incorrectas');
     }
+    router.push('/dashboard');
     }
-
-  const handleChange = (e: React.FormEvent) =>{
-    const property = (e.target as HTMLInputElement).name;
-    const value = (e.target as HTMLInputElement).value;
+  // const handleChange = (e: React.FormEvent) =>{
+  //   const property = (e.target as HTMLInputElement).name;
+  //   const value = (e.target as HTMLInputElement).value;
     
-    setUserData({...userData, [property]: value});
-    // setErrors(validations({...userData, [property]: value}));
-  } 
+  //   setUserData({...userData, [property]: value});
+  //   // setErrors(validations({...userData, [property]: value}));
+  // } 
   
   //Ver o desver la pass
   const handleView = () => {
@@ -47,11 +62,11 @@ export default function Login (){
     <div>
       <input type="text" 
         name="username" 
-        value={userData.username}
+        value={username}
         placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        onChange={handleChange}/>
+        onChange={(event)=> setUsername(event.target.value)}/>
     </div>
     <div>
       <input type={viewPass ? "text" : "password"} 
@@ -59,8 +74,8 @@ export default function Login (){
         placeholder="Ingresar aquí su contraseña" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        value={userData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={(event)=> setPassword(event.target.value)}
       />
     </div>
     <div>

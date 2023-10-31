@@ -1,16 +1,17 @@
 "use client";
 
-import List from "@/components/lists";
-import { useState } from "react";
-import deleteUser from "@/components/requests/deleteUser";
+import List from "@/app/components/lists";
+import { useEffect, useState } from "react";
+import deleteUser from "@/app/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveAdminsProps } from "@/components/interfaces";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { setCurrentPage, setSearchResults } from "@/redux/features/paginationSlice";
+import { UserInterface, ActiveMechanicsProps } from "@/app/components/interfaces";
+import { useAppSelector, useAppDispatch } from "@/app/redux/hooks";
+import { setCurrentPage, setSearchResults } from "@/app/redux/features/paginationSlice";
 
 
-const ActiveMechanics: React.FC<ActiveAdminsProps> = (props) => {
-  const {admins, setAdmins} = props;
+const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
+const {mechanics, setMechanics} = props;
+
   // const users = useAppSelector(state => state.userReducer.users)
   const dispatch = useAppDispatch();
   const [users, setUsers] = useState<UserInterface[]>([]);
@@ -40,7 +41,7 @@ const endIndex = startIndex + pagination;
 
 // Filtrado de usuarios //
 
-const filteredUsers = admins.filter((user) => {
+const filteredUsers = mechanics.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
   return (
     (user.dni && user.dni.toLowerCase().includes(lowercaseSearchTerm)) ||
@@ -57,7 +58,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
 //Paginación
 
    const nextPage = () => {
-    if(admins.filter(us => us.name.includes(search)).length > currentPage + pagination ){
+    if(mechanics.filter(us => us.name.includes(search)).length > currentPage + pagination ){
       setCurrentPage(currentPage + pagination)
     };   };
 
@@ -76,13 +77,13 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
 
   const totalPage = search.length > 0
   ? Math.ceil(filteredUsers.length / pagination)
-  : Math.ceil(admins.length / pagination);
+  : Math.ceil(mechanics.length / pagination);
 
 const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
 
     return (
-      <div className="flex flex-col items-center">
-        <div className="flex justify-center mt-6 w-full">
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center mt-6 w-full">
                   <input 
                   className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
                   placeholder="Busca por NOMBRE o DNI"
@@ -114,7 +115,7 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => deleteUser(user.id, setAdmins)}>
+                  <button onClick={() => deleteUser(user.id, setMechanics)}>
                     <a className="text-blue-500 px-3">Desactivar</a>
                   </button>
                 </td>

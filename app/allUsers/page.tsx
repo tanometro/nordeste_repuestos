@@ -1,18 +1,17 @@
 "use client";
 
-import Header from "@/components/header";
+import Header from "@/app/components/header";
 import { useEffect, useState } from "react";
-import getAllUsers from "@/components/requests/getAllUsers";
+import getAllUsers from "@/app/components/requests/getAllUsers";
 import { useRouter } from "next/navigation";
-import { UserInterface } from "@/components/interfaces";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import ActiveAdmins from "@/components/users/admins/activeAdmins";
-import InactiveAdmins from "@/components/users/admins/inactiveAdmins";
-import ActiveMechanics from "@/components/users/mechanics/activeMechanics";
-import InactiveMechanics from "@/components/users/mechanics/inactiveMechanics";
+import { UserInterface } from "@/app/components/interfaces";
+import ActiveAdmins from "@/app/components/users/admins/activeAdmins";
+import InactiveAdmins from "@/app/components/users/admins/inactiveAdmins";
+import ActiveMechanics from "@/app/components/users/mechanics/activeMechanics";
+import InactiveMechanics from "@/app/components/users/mechanics/inactiveMechanics";
 
 export default function Users(){
-  const dispatch = useAppDispatch();
+  
   const [users, setUsers] = useState<UserInterface[]>([]);
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);

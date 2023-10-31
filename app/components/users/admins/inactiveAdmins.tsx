@@ -1,11 +1,11 @@
 "use client";
 
-import List from "@/components/lists";
+import List from "@/app/components/lists";
 import { useEffect, useState } from "react";
-import getAllUsers from "@/components/requests/getAllUsers";
-import activateUser from "@/components/requests/activateUser";
+import getAllUsers from "@/app/components/requests/getAllUsers";
+import activateUser from "@/app/components/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveAdminsProps } from "@/components/interfaces";
+import { UserInterface, ActiveAdminsProps } from "@/app/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
 
 

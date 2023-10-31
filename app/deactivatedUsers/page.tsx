@@ -1,12 +1,12 @@
 "use client";
 
-import Header from "@/components/header";
-import List from "@/components/lists";
+import Header from "@/app/components/header";
+import List from "@/app/components/lists";
 import { useEffect, useState } from "react";
-import getAllUsers from "@/components/requests/getAllUsers";
-import activateUser from "@/components/requests/activateUser";
+import getAllUsers from "@/app/components/requests/getAllUsers";
+import activateUser from "@/app/components/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface } from "@/components/interfaces";
+import { UserInterface } from "@/app/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
 
 

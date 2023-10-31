@@ -1,12 +1,11 @@
 "use client";
 
-import Header from "@/components/header";
+import Header from "@/app/components/header";
 import { useRouter } from 'next/navigation';
 import { useState} from "react";
-import postUser from "@/components/requests/postUser";
-import validations from "@/components/validations";
-import { useAppSelector } from "@/redux/hooks";
-import { ErrorType } from "@/components/interfaces";
+import postUser from "@/app/components/requests/postUser";
+import validations from "@/app/components/validations";
+import { useAppSelector } from "@/app/redux/hooks";
 
 interface User {
   roleId: number | null,
