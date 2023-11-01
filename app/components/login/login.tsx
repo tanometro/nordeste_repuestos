@@ -7,45 +7,44 @@ import { signIn } from "next-auth/react";
 
 export default function Login (){
   const router = useRouter();
-  // const [userData, setUserData] = useState({
-  //     username: "", 
-  //     password: "",
-  //   });
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [userData, setUserData] = useState({
+      username: "", 
+      password: "",
+    });
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
   const [viewPass, setViewPass] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
 
-
-  // const handleSubmit = async (e: React.FormEvent) =>{
-  //   e.preventDefault();
-  //   try {
-  //     await logReq(userData);
-  //     router.replace('/dashboard');
-  //   } catch (error) {
-  //     setErrors('Credenciales incorrectas');
-  //   }
-  //   }
   const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    
-    const responseNextAuth = await signIn('credentials', {
-      username,
-      password,
-      redirect: false
-    })
-    if(responseNextAuth?.error) {
+    try {
+      await logReq(userData);
+      router.replace('/dashboard');
+    } catch (error) {
       setErrors('Credenciales incorrectas');
     }
-    router.push('/dashboard');
     }
-  // const handleChange = (e: React.FormEvent) =>{
-  //   const property = (e.target as HTMLInputElement).name;
-  //   const value = (e.target as HTMLInputElement).value;
+  // const handleSubmit = async (e: React.FormEvent) =>{
+  //   e.preventDefault();
     
-  //   setUserData({...userData, [property]: value});
-  //   // setErrors(validations({...userData, [property]: value}));
-  // } 
+  //   const responseNextAuth = await signIn('credentials', {
+  //     username,
+  //     password,
+  //     redirect: false
+  //   })
+  //   if(responseNextAuth?.error) {
+  //     setErrors('Credenciales incorrectas');
+  //   }
+  //   router.push('/dashboard');
+  //   }
+  const handleChange = (e: React.FormEvent) =>{
+    const property = (e.target as HTMLInputElement).name;
+    const value = (e.target as HTMLInputElement).value;
+    
+    setUserData({...userData, [property]: value});
+    // setErrors(validations({...userData, [property]: value}));
+  } 
   
   //Ver o desver la pass
   const handleView = () => {
@@ -62,11 +61,11 @@ export default function Login (){
     <div>
       <input type="text" 
         name="username" 
-        value={username}
+        value={userData.username}
         placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        onChange={(event)=> setUsername(event.target.value)}/>
+        onChange={handleChange}/>
     </div>
     <div>
       <input type={viewPass ? "text" : "password"} 
@@ -74,8 +73,8 @@ export default function Login (){
         placeholder="Ingresar aquí su contraseña" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        value={password}
-        onChange={(event)=> setPassword(event.target.value)}
+        value={userData.password}
+        onChange={handleChange}
       />
     </div>
     <div>

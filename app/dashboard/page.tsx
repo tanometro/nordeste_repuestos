@@ -18,13 +18,10 @@ export default function Dashboard() {
     }
   }
 
-
   return (
     <div>
       <Header title="Dashboard" />
-      {/* <pre className='text-black'>
-        <code>{JSON.stringify(session)}</code>
-      </pre> */}
+      {/* <h1 className='text-black'>hola {storedToken}</h1> */}
       <div className="h-full w-full my-6">
         <div className='flex flex-col mt-32 items-center'>
           <div className='justify-arround '>
