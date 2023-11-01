@@ -90,10 +90,10 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
                 <table cellSpacing="10">
                   <thead>
                     <tr className="border-b border-gray">
-                      <th className="">Nombre</th>
-                      <th className="">Dni</th>
-                      <th className="">Tipo</th>
-                      <th className="">Saldo</th>
+                      <th className="px-5">Nombre</th>
+                      <th className="px-5">Dni</th>
+                      <th className="px-5">Tipo</th>
+                      <th className="px-5">Saldo</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -105,12 +105,12 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
             <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
             <td>
               <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                <a className="text-blue-500">Ver usuario</a>
+                <a className="text-blue-500 px-3">Ver usuario</a>
               </button>
             </td>
             <td>
               <button onClick={() => activateUser(user.id, setUsers)}>
-                <a className="text-blue-500">Re activar</a>
+                <a className="text-blue-500 px-3">Re activar</a>
               </button>
             </td>
         </tr>

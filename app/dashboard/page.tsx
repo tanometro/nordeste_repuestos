@@ -2,13 +2,14 @@
 import { useRouter } from 'next/navigation';
 import Header from '@/components/header';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-
+import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
   const storedToken = localStorage.getItem('token');
   const router = useRouter();
   const dispatch = useAppDispatch();
   const defaultCommission = useAppSelector(state => state.userReducer.defaultCommission);
+  const { data: session, status } = useSession();
 
   const logOut = async () => {
     try {
@@ -23,7 +24,9 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      <p className='text-black'>{storedToken}</p>
+      {/* <pre className='text-black'>
+        <code>{JSON.stringify(session)}</code>
+      </pre> */}
       <div className="h-full w-full my-6">
         <div className='flex flex-col mt-32 items-center'>
           <div className='justify-arround '>

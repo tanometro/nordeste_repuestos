@@ -74,11 +74,11 @@ function AllTransacions() {
                 <table>
                 <thead>
                 <tr className="border-b border-gray">
-                      <th className="">Numero</th>
-                      <th className="">Usuario</th>
-                      <th className="">Fecha</th>
-                      <th className="">Total</th>
-                      <th className="">Comisión</th>
+                      <th className="px-5">Numero</th>
+                      <th className="px-5">Usuario</th>
+                      <th className="px-5">Fecha</th>
+                      <th className="px-5">Total</th>
+                      <th className="px-5">Comisión</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,17 +86,17 @@ function AllTransacions() {
               <tr key={index} className="hover:bg-gray-100">
                     <td className="">{transaction.id}</td>
                     <td className="">{transaction.userAssociatedName}</td>
-                    <td className="">{transaction.created}</td>
+                    <td>{transaction.created.toLocaleDateString()}</td>
                     <td className=""> {transaction.saleTotalAmount}</td>
                     <td className=""> {transaction.saleCommissionedAmount}</td>
                     <td>
                       <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
-                        <a className="text-blue-500">Ver usuario</a>
+                        <a className="text-blue-500 px-3">Ver detalles</a>
                       </button>
                     </td>
                     <td>
                       <button onClick={() => deleteTransaction(transaction.id, setTransactions)}>
-                        <a className="text-blue-500">Eliminar</a>
+                        <a className="text-blue-500 px-3">Eliminar</a>
                       </button>
                     </td>
                 </tr>
