@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import getOneUser from '@/src/app/components/requests/getOneuser';
-import patchUser from '@/src/app/components/requests/patchUser';
-import Header from '@/src/app/components/header';
+import getOneUser from '@/src/components/requests/getOneuser';
+import patchUser from '@/src/components/requests/patchUser';
+import Header from '@/src/components/header';
 
 
 export default function EditUserForm () {

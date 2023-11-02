@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserInterface } from "@/src/app/components/interfaces";
+import { UserInterface } from "@/src/components/interfaces";
 
 interface UsersState {
     users: UserInterface[];

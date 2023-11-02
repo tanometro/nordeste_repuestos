@@ -1,10 +1,10 @@
 "use client";
 
-import Header from "@/src/app/components/header";
+import Header from "@/src/components/header";
 import { useRouter } from 'next/navigation';
 import { useState} from "react";
-import postUser from "@/src/app/components/requests/postUser";
-import validations from "@/src/app/components/validations";
+import postUser from "@/src/components/requests/postUser";
+import validations from "@/src/components/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
 
 interface User {

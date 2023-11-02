@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from 'next/navigation';
-import Header from '@/src/app/components/header';
+import Header from '@/src/components/header';
 import { signOut, useSession } from "next-auth/react";
 
 export default function Dashboard() {
@@ -21,6 +21,7 @@ export default function Dashboard() {
     <div>
       <Header title="Dashboard" />
       {/* <h1 className='text-black'>hola {storedToken}</h1> */}
+      <h1 className='text-blac'>{storedToken}</h1>
       <pre>
         <code className='text-black'>{JSON.stringify(session, null, 2)}</code>
       </pre>
@@ -71,4 +72,5 @@ export default function Dashboard() {
     </div>
   )
 }
+
 

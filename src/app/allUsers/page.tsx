@@ -1,14 +1,14 @@
 "use client";
 
-import Header from "../components/header";
-import getAllUsers from "../components/requests/getAllUsers";
-import { UserInterface } from "../components/interfaces";
+import Header from "../../components/header";
+import getAllUsers from "../../components/requests/getAllUsers";
+import { UserInterface } from "../../components/interfaces";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ActiveMechanics from "../components/users/mechanics/activeMechanics";
-import ActiveAdmins from "../components/users/admins/activeAdmins";
-import InactiveAdmins from "../components/users/admins/inactiveAdmins";
-import InactiveMechanics from "../components/users/mechanics/inactiveMechanics";
+import ActiveMechanics from "../../components/users/mechanics/activeMechanics";
+import ActiveAdmins from "../../components/users/admins/activeAdmins";
+import InactiveAdmins from "../../components/users/admins/inactiveAdmins";
+import InactiveMechanics from "../../components/users/mechanics/inactiveMechanics";
 
 export default function Users(){
   

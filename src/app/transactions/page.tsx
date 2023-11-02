@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react'
-import Header from '@/src/app/components/header';
-import List from '@/src/app/components/lists';
-import getAllTransactions from '@/src/app/components/requests/allTransactions';
-import deleteTransaction from '@/src/app/components/requests/deleteTransaction';
-import { TransactionInterface } from '@/src/app/components/interfaces';
+import Header from '@/src/components/header';
+import List from '@/src/components/lists';
+import getAllTransactions from '@/src/components/requests/allTransactions';
+import deleteTransaction from '@/src/components/requests/deleteTransaction';
+import { TransactionInterface } from '@/src/components/interfaces';
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 

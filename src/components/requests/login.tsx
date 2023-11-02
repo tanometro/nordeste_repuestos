@@ -15,7 +15,6 @@ async function logReq(userData: { username: string; password: string }) {
 
     if (response.status === 200) {
       localStorage.setItem('token', data.token);
-      //const decodedToken = jwt.decode(token);
     } else {
       throw new Error('Credenciales incorrectas');
     }

@@ -1,10 +1,10 @@
 "use client";
 
-import List from "@/src/app/components/lists";
+import List from "@/src/components/lists";
 import { useState } from "react";
-import deleteUser from "@/src/app/components/requests/deleteUser";
+import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { ActiveMechanicsProps } from "@/src/app/components/interfaces";
+import { ActiveMechanicsProps } from "@/src/components/interfaces";
 import { useAppSelector, useAppDispatch } from "@/src/app/redux/hooks";
 import { setCurrentPage, setSearchResults } from "@/src/app/redux/features/paginationSlice";
 

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react'
-import Header from '@/src/app/components/header';
-import Trueque from '@/src/app/components/trueque';
-import NewSell from '@/src/app/components/sell';
+import Header from '@/src/components/header';
+import Trueque from '@/src/components/trueque';
+import NewSell from '@/src/components/sell';
 
 function CreateTransaction() {
   const [select, setSelect] = useState(true);

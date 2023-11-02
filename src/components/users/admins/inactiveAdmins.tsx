@@ -1,25 +1,23 @@
 "use client";
 
-import List from "@/src/app/components/lists";
-import { useEffect, useState } from "react";
-import activateUser from "@/src/app/components/requests/activateUser";
-import { useRouter } from "next/navigation";
-import { UserInterface, ActiveMechanicsProps } from "@/src/app/components/interfaces";
-// import { useAppSelector } from "@/redux/hooks";
+import List from "@/src/components/lists";
+import { useState } from "react";
 
-const InactiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
-  const {mechanics, setMechanics} = props;
+import activateUser from "@/src/components/requests/activateUser";
+import { useRouter } from "next/navigation";
+import { UserInterface, ActiveAdminsProps } from "@/src/components/interfaces";
+
+const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
+  const {admins, setAdmins} = props;
   // const users = useAppSelector(state => state.userReducer.users)
-  const [users, setUsers] = useState<UserInterface[]>([]);
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
-
   const valorPaginacion = 10;
 
  // Filtrado de usuarios //
 
-const filteredUsers = mechanics.filter((user) => {
+const filteredUsers = admins.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
   return (
     (user.dni && user.dni.toLowerCase().includes(lowercaseSearchTerm)) ||
@@ -32,7 +30,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
 //Paginación
 
    const nextPage = () => {
-    if(mechanics.filter(us => us.name.includes(search)).length > currentPage + valorPaginacion ){
+    if(admins.filter(us => us.name.includes(search)).length > currentPage + valorPaginacion ){
       setCurrentPage(currentPage + valorPaginacion)
     };   };
 
@@ -81,7 +79,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
               </button>
             </td>
             <td>
-              <button onClick={() => activateUser(user.id, setMechanics)}>
+              <button onClick={() => activateUser(user.id, setAdmins)}>
                 <a className="text-blue-500 px-3">Re activar</a>
               </button>
             </td>
@@ -119,4 +117,4 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
     )
 }
 
-export default InactiveMechanics;
+export default InactiveAdmins;

@@ -22,8 +22,9 @@ const handler = NextAuth({
           }
         );
         const user = await res.json();
-        if (user.error) throw user;
-
+        if (res.status === 200) {
+          localStorage.setItem('token', user.token);
+        }
         return user;
       },
     }),
