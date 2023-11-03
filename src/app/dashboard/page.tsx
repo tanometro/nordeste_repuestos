@@ -20,11 +20,10 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      {/* <h1 className='text-black'>hola {storedToken}</h1> */}
       <h1 className='text-blac'>{storedToken}</h1>
-      <pre>
+      {/* <pre>
         <code className='text-black'>{JSON.stringify(session, null, 2)}</code>
-      </pre>
+      </pre> */}
       <div className="h-full w-full my-6">
         <div className='flex flex-col mt-32 items-center'>
           <div className='justify-arround '>

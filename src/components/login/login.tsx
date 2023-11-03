@@ -16,28 +16,28 @@ export default function Login (){
   const [viewPass, setViewPass] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
 
-  // const handleSubmit = async (e: React.FormEvent) =>{
-  //   e.preventDefault();
-  //   try {
-  //     await logReq(userData);
-  //     router.replace('/dashboard');
-  //   } catch (error) {
-  //     setErrors('Credenciales incorrectas');
-  //   }
-  //   }
   const handleSubmit = async (e: React.FormEvent) =>{
     e.preventDefault();
-    
-    const responseNextAuth = await signIn('credentials', {
-      username: userData.username,
-      password: userData.password,
-      redirect: false,
-    })
-    if(responseNextAuth?.error) {
+    try {
+      await logReq(userData);
+      router.replace('/dashboard');
+    } catch (error) {
       setErrors('Credenciales incorrectas');
     }
-    router.push('/dashboard');
     }
+  // const handleSubmit = async (e: React.FormEvent) =>{
+  //   e.preventDefault();
+    
+  //   const responseNextAuth = await signIn('credentials', {
+  //     username: userData.username,
+  //     password: userData.password,
+  //     redirect: false,
+  //   })
+  //   if(responseNextAuth?.error) {
+  //     setErrors('Credenciales incorrectas');
+  //   }
+  //   router.push('/dashboard');
+  //   }
   const handleChange = (e: React.FormEvent) =>{
     const property = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;

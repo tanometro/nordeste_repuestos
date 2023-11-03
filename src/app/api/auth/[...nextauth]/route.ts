@@ -22,6 +22,8 @@ const handler = NextAuth({
           }
         );
         const user = await res.json();
+        console.log(user);
+        
         if (res.status === 200) {
           localStorage.setItem('token', user.token);
         }
