@@ -1,13 +1,13 @@
 export interface UserInterface {
-    name: string,
+    dni: string,
     username: string,
     password: string,
-    dni: string,
+    name: string,
     roleId: number,
-    balance: number,
-    id: number,
-    isActive: boolean,
     commission: number,
+    id: number,
+    balance: number,
+    isActive: boolean,
   }
   
 export interface SellInterface {
@@ -72,4 +72,14 @@ export interface ActiveMechanicsProps {
 export interface ActiveAdminsProps {
   admins: UserInterface[];
   setAdmins: React.Dispatch<React.SetStateAction<UserInterface[]>>;
+}
+
+export interface FinalTransactionsProps {
+  finalTransactions: TransactionInterface[];
+  setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+}
+
+export interface MechanicsTransactionsProps {
+  mechanicTransactions: TransactionInterface[];
+  setMechhanicTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
 }

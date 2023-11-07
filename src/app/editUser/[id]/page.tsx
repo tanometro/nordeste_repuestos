@@ -8,7 +8,6 @@ import Header from '@/src/components/header';
 
 
 export default function EditUserForm () {
-  const storedToken = localStorage.getItem('token');
   const params = useParams();
   const userId = Array.isArray(params.id) ? parseInt(params.id[0], 10) : parseInt(params.id, 10);
   const router = useRouter();
@@ -53,8 +52,6 @@ export default function EditUserForm () {
       patchUser(userData);
       router.push('/allUsers')
     };
-
-  const { balance, commission, dni, name, roleId, username, id } = userData;
 
   return (
     <div>
@@ -131,22 +128,22 @@ export default function EditUserForm () {
     ) : (
       <div className="flex flex-col items-center w-1/2">
         {isEditing ? (
-          <h1 className="text-center text-black mb-4">Editando el usuario {name}</h1>
+          <h1 className="text-center text-black mb-4">Editando el usuario {userData.name}</h1>
         ) :
         (
-          <h1 className="text-center text-black mb-4">Detalle del usuario {name}</h1>
+          <h1 className="text-center text-black mb-4">Detalle del usuario {userData.name}</h1>
         )}
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {name}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">ID: {id}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
-        {roleId == 3 ? (
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {userData.name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">ID: {userData.id}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {userData.username}</h1>
+        {userData.roleId == 3 ? (
+          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {userData.balance}</h1>
         ) : ""
         }
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
-        Rol: {roleId == 1 ? "SúperAdmin" : roleId == 2 ? "Admin" : roleId == 3 ? "Mecánico" : ""}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {dni}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {commission? commission : "No tiene comisiones"}</h1>
+        Rol: {userData.roleId == 1 ? "SúperAdmin" : userData.roleId == 2 ? "Admin" : userData.roleId == 3 ? "Mecánico" : ""}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {userData.dni}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {userData.commission? userData.commission : "No tiene comisiones"}</h1>
           <button
           className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           onClick={handleEditClick}>

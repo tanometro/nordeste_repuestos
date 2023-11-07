@@ -57,30 +57,31 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
                   />
               </div>
               <List>
-                <table cellSpacing="10">
-                  <thead>
+              <table className="min-w-full text-left text-sm font-light">
+              <thead className="border-b font-medium dark:border-neutral-500">
                     <tr className="border-b border-gray">
-                      <th className="px-5">Nombre</th>
-                      <th className="px-5">Dni</th>
-                      <th className="px-5">Tipo</th>
-                      <th className="px-5">Saldo</th>
+                      <th scope="col" className="px-6 py-4">Nombre</th>
+                      <th scope="col" className="px-6 py-4">Dni</th>
+                      <th scope="col" className="px-6 py-4">Tipo</th>
+                      <th scope="col" className="px-6 py-4">Saldo</th>
                     </tr>
                   </thead>
                   <tbody>
           {userActive.map((user, index) => (
-      <tr key={index} className="hover:bg-gray-100">
-        <td className="">{user.name}</td>
-            <td className="">{user.dni}</td>
-            <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-            <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+      <tr key={index} 
+      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+        <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
+            <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
+            <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+            <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
             <td>
               <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                <a className="text-blue-500 px-3">Ver usuario</a>
+                <a className="text-custom-red px-3">Ver usuario</a>
               </button>
             </td>
             <td>
               <button onClick={() => activateUser(user.id, setAdmins)}>
-                <a className="text-blue-500 px-3">Re activar</a>
+                <a className="text-custom-red px-3">Re activar</a>
               </button>
             </td>
         </tr>
@@ -98,20 +99,6 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
                       Siguientes
                   </button>
                 </div>
-                {/* <div className="flex mx-4">
-                  <button type="button" onClick={() => router.push('/createUsers')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Crear nuevo usuario
-                  </button>
-                  <button type="button" onClick={() => router.push('/activeUsers')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Usuarios activos
-                  </button>
-                  <button type="button" onClick={() => router.push('/dashboard')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Ir al inicio
-                  </button>
-                </div> */}
             </div>
         </div>
     )

@@ -22,7 +22,6 @@ const startIndex = (currentPage - 1) * pagination;
 const endIndex = startIndex + pagination;
 
 // Filtrado de usuarios //
-
 const filteredUsers = mechanics.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
   return (
@@ -34,11 +33,9 @@ const filteredUsers = mechanics.filter((user) => {
 //Filtrado segun pagina actual
 const userToDisplay = filteredUsers.slice(startIndex, endIndex)
 
-
 const userActive = filteredUsers.filter((user) => user.isActive == true)
 
 //Paginación
-
    const nextPage = () => {
     if(mechanics.filter(us => us.name.includes(search)).length > currentPage + pagination ){
       setCurrentPage(currentPage + pagination)
@@ -56,7 +53,6 @@ const userActive = filteredUsers.filter((user) => user.isActive == true)
     dispatch(setSearchResults(filteredUsers)); 
   };
   
-
   const totalPage = search.length > 0
   ? Math.ceil(filteredUsers.length / pagination)
   : Math.ceil(mechanics.length / pagination);
@@ -75,33 +71,34 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   />
               </div>
               <List>
-                <table cellSpacing="10">
-                  <thead>
-                    <tr className="border-b border-gray">
-                      <th className="">Nombre</th>
-                      <th className="">Dni</th>
-                      <th className="">Tipo</th>
-                      <th className="">Saldo</th>
+              <table className="min-w-full text-left text-sm font-light">
+                <thead className="border-b font-medium dark:border-neutral-500">
+                  <tr className="border-b border-gray">
+                      <th scope="col" className="px-6 py-4">Nombre</th>
+                      <th scope="col" className="px-6 py-4">Dni</th>
+                      <th scope="col" className="px-6 py-4">Tipo</th>
+                      <th scope="col" className="px-6 py-4">Saldo</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                   {userActive.map((user, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="">{user.name}</td>
-                <td className="px-5">{user.dni}</td>
-                <td className="px-5"> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                <td className="px-5"> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
-                <td>
-                  <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                    <a className="text-blue-500 px-3">Ver usuario</a>
-                  </button>
-                </td>
-                <td>
-                  <button onClick={() => deleteUser(user.id, setMechanics)}>
-                    <a className="text-blue-500 px-3">Desactivar</a>
-                  </button>
-                </td>
-              </tr>
+                  <tr key={index} 
+                    className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+                    <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
+                    <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
+                    <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+                    <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+                    <td>
+                      <button onClick={() => router.push(`/editUser/${user.id}`)}>
+                        <a className="text-custom-red px-3">Ver usuario</a>
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => deleteUser(user.id, setMechanics)}>
+                        <a className="text-custom-red px-3">Desactivar</a>
+                      </button>
+                    </td>
+                  </tr>
                 ))}
                   </tbody>
                 </table>
@@ -133,21 +130,6 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                 Siguientes
               </button>
             </div>
-
-                {/* <div className="flex mx-4">
-                  <button type="button" onClick={() => router.push('/createUsers')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Crear nuevo usuario
-                  </button>
-                  <button type="button" onClick={() => router.push('/inactiveAdminUsers')} 
-                  className="mx-12 w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Usuarios eliminados
-                  </button>
-                  <button type="button" onClick={() => router.push('/dashboard')} 
-                  className="w-48 mt-6 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Ir al inicio
-                  </button>
-                </div> */}
             </div>
     )
 }

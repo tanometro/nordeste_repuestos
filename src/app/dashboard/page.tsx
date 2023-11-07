@@ -20,7 +20,7 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      <h1 className='text-blac'>{storedToken}</h1>
+      <h1 className='text-black'>{storedToken}</h1>
       {/* <pre>
         <code className='text-black'>{JSON.stringify(session, null, 2)}</code>
       </pre> */}
