@@ -37,7 +37,7 @@ export default function Dashboard() {
             </button>
           </div>
           <div className='flex justify-arround'>
-            <button onClick={() => router.push('/transactions')}
+            <button onClick={() => router.push('/allTransactions')}
               className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               Transacciones
             </button>
