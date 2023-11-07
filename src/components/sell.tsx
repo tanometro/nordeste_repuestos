@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { SellInterface } from './interfaces';
 import { UserInterface } from './interfaces';
 import postTransaction from './requests/postTransaction';
-
 import SelectUser from './selectUser';
 
 function NewSell() {
@@ -43,7 +42,6 @@ function NewSell() {
 
   const onSubmit = () => {
     postTransaction(sellData)
-    console.log(sellData)
   }
 
 
@@ -58,6 +56,16 @@ function NewSell() {
           name="finalCustomerName"
           onChange={onChange}
           value={sellData.finalCustomerName}
+          required
+          className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
+        />
+        <label className='text-black'>DNI del cliente</label>
+        <input
+          type="text"
+          placeholder="DNI sin puntos ni guiones"
+          name="finalCustomerDni"
+          onChange={onChange}
+          value={sellData.finalCustomerDni}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />

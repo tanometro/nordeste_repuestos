@@ -13,7 +13,6 @@ const SelectUser = (props: SelectUserProps) => {
         try {
           const userFind = await getOneMechanic(searchTerm);
           setFilteredUsers(userFind);
-
         } catch (error) {
           console.error("Error en obtener usuario mecánico", error);
           setFilteredUsers([]);

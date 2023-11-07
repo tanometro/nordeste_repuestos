@@ -74,11 +74,11 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
                       {mechanicTransactions.map((transaction, index) => (
                     <tr
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
-                        <td className="whitespace-nowrap px-6 py-4 font-medium">{transaction.id}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{transaction.userAssociatedName}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4"> {transaction.saleTotalAmount}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{transaction.saleCommissionedAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}</td>
                     <td>
                       <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
                     <a className="text-custom-red px-3">Ver detalles</a>

@@ -55,9 +55,6 @@ export default function EditUserForm () {
 
   return (
     <div>
-      <div>
-        
-      </div>
       {
         isEditing ? (
           <Header title="Editando usuario"/>

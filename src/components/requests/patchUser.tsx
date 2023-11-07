@@ -1,18 +1,6 @@
-// import { BASE_URL } from "../constants"
-
-
-interface User {
-    roleId: number | null,
-    dni: string,
-    username: string,
-    password: string,
-    name: string,
-    commission: number | null,
-    isActive: boolean,
-    
-  } 
-
-const patchUser = async (user: User) => {
+import { UserInterface } from "../interfaces"
+ 
+const patchUser = async (user: UserInterface) => {
     const storedToken = localStorage.getItem('token');
     try {
         if (storedToken !== null) {
