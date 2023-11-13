@@ -13,7 +13,8 @@ const nextConfig = {
                 ]
             }
         ]
-    }
+    },
+    pagesDir: 'src/pages',
 }
 
 module.exports = nextConfig
