@@ -18,8 +18,7 @@ const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   // const [currentPage, setCurrentPage] = useState(0);
   const pagination = useAppSelector(state => state.paginationReducer.usersPorPage);
   const currentPage = useAppSelector(state => state.paginationReducer.currentPage);
-
-
+  
 // Paginación para mostrar en la pagina actual
 const startIndex = (currentPage - 1) * pagination;
 const endIndex = startIndex + pagination;

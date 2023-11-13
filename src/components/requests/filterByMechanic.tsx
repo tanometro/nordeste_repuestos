@@ -1,11 +1,11 @@
 import axios from "axios";
 import { TransactionInterface } from "../interfaces";
 
-const filterByFinalCustomer = async (parameters: string | number): Promise<TransactionInterface[]> => {
+const filterByMechanic = async (parameters: string | number): Promise<TransactionInterface[]> => {
     
     const storedToken = localStorage.getItem('token');
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByFinalCustomer/?dni_or_name=${parameters}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByMechanic/?dni_or_name=${parameters}`, {
         headers: {
           Authorization: storedToken, 
         },
@@ -23,4 +23,4 @@ const filterByFinalCustomer = async (parameters: string | number): Promise<Trans
     }
   };
 
-export default filterByFinalCustomer;
+export default filterByMechanic;

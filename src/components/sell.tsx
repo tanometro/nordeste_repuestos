@@ -36,9 +36,14 @@ function NewSell() {
   };
 
   const calculateCommission = () => {
-    const total = sellData.totalAmount * user.commission;
-    return total;
+    if (user.commission !== null) {
+      const total = sellData.totalAmount * user.commission;
+      return total;
+    } else {
+      return 0;
+    }
   };
+  
 
   const onSubmit = () => {
     postTransaction(sellData)

@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import getOneUser from '@/src/components/requests/getOneuser';
 import patchUser from '@/src/components/requests/patchUser';
+import deleteTransaction from '@/src/components/requests/deleteTransaction';
 import Header from '@/src/components/header';
+import List from '@/src/components/lists';
+import filterByMechanic from '@/src/components/requests/filterByMechanic';
+import { TransactionInterface } from '@/src/components/interfaces';
 
 
 export default function EditUserForm () {
@@ -24,11 +28,16 @@ export default function EditUserForm () {
     id: 0,
     isActive: true,
   });
+
+  const [transactions, setTransactions] = useState<TransactionInterface[]>([])
+
   useEffect(() => {
     async function fetchData() {
       try {
         const user = await getOneUser(userId);
+        const transactions = await filterByMechanic(userId);
         setUserData(user);
+        setTransactions(transactions);
       } catch (error) {
         console.error("Error en render componente", error);
       }
@@ -148,7 +157,51 @@ export default function EditUserForm () {
           </button>
       </div>
     )}
-  </div>
+      </div>
+      <div className="flex justify-center items-center">
+        <h3 className="mt-12 text-3xl font-bold mb-4 text-black">Transacciones del usuario</h3>
+      </div>
+      <div>
+        <List>
+           <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-4">Número</th>
+                        <th scope="col" className="px-6 py-4">Cliente</th>
+                        <th scope="col" className="px-6 py-4">Fecha</th>
+                        <th scope="col" className="px-6 py-4">Total</th>
+                        <th scope="col" className="px-6 py-4">Comisión</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {transactions.map((transaction, index) => (
+                          <tr
+                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">
+                          {transaction.isFinalCustomerTransaction == true ? transaction.finalCustomerName : "Intercambio"}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base"> 
+                        {transaction.isFinalCustomerTransaction == true ? transaction.saleTotalAmount : `-${transaction.saleTotalAmount}`}$
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
+                    <td>
+                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
+                    <a className="text-custom-red px-3">Ver detalles</a>
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => deleteTransaction(transaction.id, setTransactions)}>
+                    <a className="text-custom-red px-3">Eliminar</a>
+                      </button>
+                    </td>
+                    </tr>
+                  ))}
+                    </tbody>
+                  </table>
+        </List>
+      </div>
     </div>
   )
 }

@@ -9,8 +9,8 @@ import { useRouter } from "next/navigation";
 
 
 const DelFinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
-    const {finalTransactions, setFinalTransactions}= props;
-    
+  const {finalTransactions, setFinalTransactions}= props;
+
   const [search, setSearch] = useState("");
   const [date, setDate] = useState("")
   const [currentPage, setCurrentPage] = useState(0);
@@ -32,6 +32,9 @@ const DelFinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setDate(target.value);
     }
+
+  const deletedTransaction = finalTransactions.filter((transaction) => transaction.status == false)
+  
   return (
     <div className='w-full'>
       <div className="flex flex-col items-center h-screen w-full">
@@ -71,7 +74,7 @@ const DelFinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
                     </tr>
                       </thead>
                       <tbody>
-                      {finalTransactions.map((transaction, index) => (
+                      {deletedTransaction.map((transaction, index) => (
                     <tr
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
                         <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
@@ -80,13 +83,13 @@ const DelFinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
                         <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}</td>
                     <td>
-                      <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
+                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
                     <a className="text-custom-red px-3">Ver detalles</a>
                       </button>
                     </td>
                     <td>
                       <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
+                    <a className="text-custom-red px-3">Reactivar</a>
                       </button>
                     </td>
                     </tr>

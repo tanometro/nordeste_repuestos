@@ -1,4 +1,3 @@
-// import { BASE_URL } from "../constants";
 import { SellInterface } from "../interfaces";
 
 
@@ -30,12 +29,7 @@ const postTransaction = async (transaction: SellInterface) => {
       throw new Error("No se pudo crear la transacción: Token no disponible");
     }
   } catch (error) { 
-    if ((error as Error).message.includes("No autorizado")) {
-      window.alert((error as Error).message);
-    } else {
-   
-      window.alert("No se pudo crear la transacción. Por favor, intenta de nuevo más tarde.");
-    }
+    window.alert((error as Error).message);
   }
 };
 

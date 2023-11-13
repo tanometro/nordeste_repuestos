@@ -1,6 +1,5 @@
 import { TransactionInterface } from "../interfaces";
 
-// Borra una transacción //
 const deleteTransaction = async (id: number, setUsers: React.Dispatch<React.SetStateAction<TransactionInterface[]>>) => {
     const storedToken = localStorage.getItem('token');
     try {

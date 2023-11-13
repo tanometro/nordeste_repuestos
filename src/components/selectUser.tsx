@@ -26,7 +26,7 @@ const SelectUser = (props: SelectUserProps) => {
 
     const handleSelectOption = (user: UserInterface) => {
       setUser(user);
-      const {id} = user;
+      const {id, dni} = user;
       setSellData({
         ...sellData,
         mechanicUserId: id,

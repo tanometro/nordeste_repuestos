@@ -1,14 +1,15 @@
 export interface UserInterface {
-    dni: string,
-    username: string,
-    password: string,
-    name: string,
-    roleId: number,
-    commission: number,
-    id: number,
-    balance: number,
-    isActive: boolean,
-  }
+  dni: string;
+  username: string;
+  password: string;
+  name: string;
+  roleId: number;
+  commission: number | null;
+  id: number;
+  balance: number | null; 
+  isActive: boolean;
+}
+
   
 export interface SellInterface {
   finalCustomerName: string,
@@ -82,4 +83,17 @@ export interface FinalTransactionsProps {
 export interface MechanicsTransactionsProps {
   mechanicTransactions: TransactionInterface[];
   setMechhanicTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+}
+
+export interface FilterByClientProps {
+  searchClient: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchByClient: string;
+  setFilteredTransactions: (filteredTransactions: TransactionInterface[]) => void;
+}
+
+export interface FilterByMechanicsProps {
+  searchMechanic: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchByMechanic: string;
+  filteredTransactions: TransactionInterface[];
+  setFilteredTransactions: (filteredTransactions: TransactionInterface[]) => void;
 }
