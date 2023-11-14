@@ -3,8 +3,8 @@ import Login from "../components/login/login";
 
 export default function Home() {
 
-  return (
-   
+  return (   
+
     <div className="align-top">
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 mx-auto md:h-screen lg:py-0">

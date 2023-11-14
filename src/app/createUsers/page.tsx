@@ -68,7 +68,7 @@ const [userData, setUserData] = useState<User>({
   
         try {
           await postUser(userWithPercentage);
-          router.push('/activeUsers');
+          router.push('/allUsers');
         } catch (error: any) {
           if (error.response) {
             const apiErrors = await error.response.json();

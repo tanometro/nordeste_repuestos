@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
+import { useRouter } from 'next/router';
 
 async function logReq(userData: { username: string; password: string }) {
+  //const router = useRouter();
+
   const formData = new FormData();
   formData.append('username', userData.username);
   formData.append('password', userData.password);
@@ -12,10 +15,14 @@ async function logReq(userData: { username: string; password: string }) {
     });
 
     const data = await response.json();
-
+    
     if (response.status === 200) {
+      // if(data.user.id === 1) {
+      //   router.push('/')
+      // }
       localStorage.setItem('token', data.token);
     } else {
+      
       throw new Error('Credenciales incorrectas');
     }
   } catch (error) {
