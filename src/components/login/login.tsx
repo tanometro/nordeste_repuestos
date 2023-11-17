@@ -17,7 +17,7 @@ export default function Login (){
   const [errors, setErrors] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) =>{
-    e.preventDefault();
+    await e.preventDefault();
     try {
       await logReq(userData);
       router.replace('/dashboard');
