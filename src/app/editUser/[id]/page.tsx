@@ -6,10 +6,8 @@ import getOneUser from '@/src/components/requests/getOneuser';
 import patchUser from '@/src/components/requests/patchUser';
 import deleteTransaction from '@/src/components/requests/deleteTransaction';
 import Header from '@/src/components/header';
-import List from '@/src/components/lists';
 import filterByMechanic from '@/src/components/requests/filterByMechanic';
 import { TransactionInterface } from '@/src/components/interfaces';
-
 
 export default function EditUserForm () {
   const params = useParams();
@@ -74,7 +72,7 @@ export default function EditUserForm () {
       }
       <div className="flex justify-center items-center">
     {isEditing ? (
-      <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
+      <form onSubmit={handleSubmit} className="flex items-center w-1/2">
         <label className="text-clip text-black">Nombre:</label>
         <input
           name="name"
@@ -159,11 +157,12 @@ export default function EditUserForm () {
     )}
       </div>
       <div className="flex justify-center items-center">
-        <h3 className="mt-12 text-3xl font-bold mb-4 text-black">Transacciones del usuario</h3>
+        <h3 className="mt-14 text-3xl font-bold mb-1 text-black">Transacciones del usuario</h3>
       </div>
       <div>
-        <List>
-           <table className="min-w-full text-left text-sm font-light">
+      <div className="flex items-center justify-center mt-1 p-8 ">
+            <div className="shadow-xl rounded-2xl border-custom-red border-2 p-8 text-black">
+            <table className="min-w-full text-left text-sm font-light">
                     <thead className="border-b font-medium dark:border-neutral-500">
                       <tr>
                         <th scope="col" className="px-6 py-4">Número</th>
@@ -200,7 +199,8 @@ export default function EditUserForm () {
                   ))}
                     </tbody>
                   </table>
-        </List>
+            </div>
+        </div>
       </div>
     </div>
   )

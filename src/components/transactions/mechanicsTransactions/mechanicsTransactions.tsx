@@ -3,15 +3,16 @@
 import React from 'react'
 import List from '@/src/components/lists';
 import deleteTransaction from '@/src/components/requests/deleteTransaction';
-import { MechanicsTransactionsProps } from '@/src/components/interfaces';
+import { MechanicsTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
-
+import filterByMechanic from '../../requests/filterByMechanic';
 
 const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
-    const {mechanicTransactions, setMechhanicTransactions}= props;
+  const {mechanicTransactions, setMechhanicTransactions}= props;
     
   const [search, setSearch] = useState("");
+  const [mechanicFind, setMechanicFind] = useState<TransactionInterface[]>([]);
   const [date, setDate] = useState("")
   const [currentPage, setCurrentPage] = useState(0);
     const router = useRouter();
@@ -24,14 +25,20 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
     //     );
     //   });
 
-    const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
+    const searchUser = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentPage(0);
-        setSearch(target.value)
+        setSearch(target.value);
+
+        const usersFind = await filterByMechanic(search);
+        setMechanicFind(usersFind);
      }
     
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setDate(target.value);
     }
+
+    const aceptedTransaction = mechanicTransactions.filter((transaction) => transaction.status == true);
+
   return (
     <div className='w-full'>
       <div className="flex flex-col items-center h-screen w-full">
@@ -71,13 +78,13 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
                     </tr>
                       </thead>
                       <tbody>
-                      {mechanicTransactions.map((transaction, index) => (
+                      {aceptedTransaction.map((transaction, index) => (
                     <tr
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                         <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base"> -{transaction.saleTotalAmount}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}</td>
                     <td>
                       <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>

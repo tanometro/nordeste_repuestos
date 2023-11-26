@@ -1,6 +1,5 @@
 import { UserInterface } from "../interfaces";
 
-// Borra un usuario //
 const activateUser = async (id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
     const storedToken = localStorage.getItem('token');
     try {
