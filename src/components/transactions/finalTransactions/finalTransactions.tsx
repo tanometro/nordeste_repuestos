@@ -21,8 +21,6 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
   const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
      
-    
-
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setDate(target.value);
     }
