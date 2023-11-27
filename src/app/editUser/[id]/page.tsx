@@ -27,6 +27,7 @@ export default function EditUserForm () {
     isActive: true,
   });
 
+
   const [transactions, setTransactions] = useState<TransactionInterface[]>([])
 
   useEffect(() => {
@@ -92,33 +93,33 @@ export default function EditUserForm () {
           required
         />
         <label className="text-clip text-black">DNI:</label>
-        <input 
-          name="dni"
-          type="number"
-          placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.dni}
-          onChange={handleChange}
-          required
-        />
+          <input 
+            name="dni"
+            type="number"
+            placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+            value={userData.dni}
+            onChange={handleChange}
+            required
+          />
         <label className="text-clip text-black">Password:</label>
-        <input 
-          name="password"
-          placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.password}
-          onChange={handleChange}
-          required
-        />
+          <input 
+            name="password"
+            placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+            value={userData.password}
+            onChange={handleChange}
+            required
+          />
         {
           userData.roleId == 3 ? (
           <div>
           <label className="text-clip text-black">Comisión %:</label>
             <input 
-          name="commission"
-          placeholder="Comisión %" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.commission || ""} 
-          onChange={handleChange}
-          required
-        />
+              name="commission"
+              placeholder="Comisión %" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+              value={userData.commission || ""} 
+              onChange={handleChange}
+              required
+            />
         </div>
           ) : null
         }
@@ -147,7 +148,7 @@ export default function EditUserForm () {
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
         Rol: {userData.roleId == 1 ? "SúperAdmin" : userData.roleId == 2 ? "Admin" : userData.roleId == 3 ? "Mecánico" : ""}</h1>
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {userData.dni}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {userData.commission? userData.commission : "No tiene comisiones"}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión: {userData.commission? `${userData.commission * 100}%` : "No tiene comisiones"}</h1>
           <button
           className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           onClick={handleEditClick}>

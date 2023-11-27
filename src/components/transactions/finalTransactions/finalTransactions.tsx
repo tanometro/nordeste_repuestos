@@ -6,13 +6,25 @@ import deleteTransaction from '@/src/components/requests/deleteTransaction';
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from "next/navigation";
+import { DateRange } from 'react-date-range'
+import format from 'date-fns/format'
+import { addDays } from 'date-fns'
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 
 const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
   const {finalTransactions, setFinalTransactions}= props;
-    
-  const [date, setDate] = useState("")
+  const [range, setRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: 'selection'
+    }
+  ]);
+  const [open, setOpen] = useState(false);
+  const refOne = useRef<HTMLDivElement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
@@ -20,11 +32,8 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
   const [searchByClient, setSearchByClient ] = useState<string>("");
   const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-     
-    const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setDate(target.value);
-    }
-
+  
+   
     const applyFilters = () => {
       let filteredResult = [...finalTransactions];
   
@@ -50,7 +59,7 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
       const client = await filterByFinalCustomer(searchByClient);
       setFilteredByClient(client);
       applyFilters();
-   }
+   };
 
   const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentPage(0);
@@ -58,7 +67,20 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
     const mechanic = await filterByMechanic(searchByMechanic);
     setFilteredByMechanic(mechanic);
     applyFilters();
- }
+ };
+
+ const hideOnEscape = (e: React.KeyboardEvent) => {
+  
+  if( e.key === "Escape" ) {
+    setOpen(false)
+  }
+}
+
+const hideOnClickOutside = (e: React.MouseEvent) => {
+  if (refOne.current && !refOne.current.contains(e.target as Node)) {
+    setOpen(false);
+  }
+}
 
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
 
@@ -83,14 +105,33 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
               onChange={searchClient}
             />
           </div>
-          <div className="flex justify-center mt-12 w-1/2">
-            <input 
-              className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"
-              placeholder="Desde"
-              type="date"
-              value={date}
-              onChange={searchDate}
-            />
+          <div className="flex justify-center mt-12 w-6/12">
+            <div className="calendarWrap">
+              <input
+                value={`${format(range[0].startDate, 'dd/MM/yyyy')} a ${format(range[0].endDate, "dd/MM/yyyy")}`}
+                readOnly
+                className="rounded-2xl border border-custom-red h-10 w-full text-center text-black"
+                onClick={ () => setOpen(open => !open) }
+              />
+              <div ref={refOne} >
+                {open && 
+                  <DateRange
+                  onChange={(item) => {
+                    const { startDate, endDate } = item.selection;
+                    if (startDate !== undefined && endDate !== undefined) {
+                      setRange([{ startDate, endDate, key: 'selection' }]);
+                    }
+                  }}
+                  editableDateInputs={true}
+                  moveRangeOnFirstSelection={false}
+                  ranges={range}
+                  months={1}
+                  direction="horizontal"
+                  className="calendarElement"
+                />
+                }
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-col">

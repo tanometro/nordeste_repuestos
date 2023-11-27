@@ -26,7 +26,7 @@ const postUser = async (user: User) => {
         const errorMessage = await response.text();
 
         if (response.status === 401) {
-          throw new Error("No autorizado. Por favor, vuelve a iniciar sesión.");
+          window.location.href = '/';
         } else {
           throw new Error(`Error al crear el usuario: ${errorMessage}`);
         }
@@ -36,10 +36,13 @@ const postUser = async (user: User) => {
       throw new Error("No se pudo crear el usuario: Token no disponible");
     }
   } catch (error) { 
-    if (error as Error) {
-      window.alert((error as Error).message);
-    } 
+    if (error instanceof Error) {
+      window.alert(error.message);
+    } else {
+      window.alert("Error desconocido al crear el usuario");
+    }
   }
 };
 
 export default postUser;
+
