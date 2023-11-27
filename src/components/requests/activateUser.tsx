@@ -13,7 +13,11 @@ const activateUser = async (id: number, setUsers: React.Dispatch<React.SetStateA
         body: JSON.stringify({id: id.toString()}),
       });
       if (!response.ok) {
-          throw new Error('Error al eliminar el usuario' + response);
+        if (response.status === 401) {
+          window.location.href = '/'; 
+        } else {
+          throw new Error('Error al activar el usuario' + response);
+        }
       } 
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
   }  else{

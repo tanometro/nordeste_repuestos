@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 // Obtiene todos los usuarios //
 const getAllUsers = async () => {
@@ -12,15 +12,32 @@ const getAllUsers = async () => {
     });
 
     if (response.status !== 200) {
-      throw new Error(`Error en la solicitud: ${response.status}`);
-    }
+      if (response.status === 401) {
+       
+        window.location.href = '/'; 
+      } else {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }
+    } 
 
     const data = response.data;
 
     return data;
   } catch (error) {
-    throw new Error("Error en obtener usuarios");
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 401) {
+        
+        window.location.href = '/'; 
+      } else {
+        throw new Error(`Error en la solicitud: ${axiosError.response?.status}`);
+      }
+    } else {
+      throw new Error("Error desconocido al obtener usuarios");
+    }
   }
 };
 
 export default getAllUsers;
+
+

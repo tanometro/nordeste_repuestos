@@ -52,8 +52,8 @@ function DetailTransaction() {
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Mecánico: {transactionData.userAssociatedName}</h1>
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">DNI mecánico: {transactionData.userAssociatedDni}</h1>
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Total de la venta: {transactionData.saleTotalAmount}$</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión %: {transactionData.userAssociatedCommision}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión: {transactionData.saleCommissionedAmount}$</h1>
+          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión %: {transactionData.userAssociatedCommision * 100}</h1>
+          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión $: {transactionData.saleCommissionedAmount}$</h1>
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Concepto: {transactionData.saleConcept}</h1>
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Estado: {transactionData.status ? 'Válida' : 'Eliminada'}</h1>
           <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Es un/a {transactionData.isFinalCustomerTransaction === true ? 'Venta' : 'Intercambio' }</h1>

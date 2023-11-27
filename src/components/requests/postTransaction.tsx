@@ -1,6 +1,5 @@
 import { SellInterface } from "../interfaces";
 
-
 const postTransaction = async (transaction: SellInterface) => {
   const storedToken = localStorage.getItem('token');
 
@@ -19,7 +18,7 @@ const postTransaction = async (transaction: SellInterface) => {
         const errorMessage = await response.text();
 
         if (response.status === 401) {
-          throw new Error("No autorizado. Por favor, vuelve a iniciar sesión.");
+          window.location.href = '/';
         } else {
           throw new Error(`Error al crear la transacción: ${errorMessage}`);
         }
@@ -28,8 +27,12 @@ const postTransaction = async (transaction: SellInterface) => {
     } else {
       throw new Error("No se pudo crear la transacción: Token no disponible");
     }
-  } catch (error) { 
-    window.alert((error as Error).message);
+  } catch (error) {
+    if (error instanceof Error) {
+      window.alert(error.message);
+    } else {
+      window.alert("Error desconocido al crear la transacción");
+    }
   }
 };
 
