@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import { useRouter } from 'next/router';
 
 async function logReq(userData: { username: string; password: string }) {
   //const router = useRouter();

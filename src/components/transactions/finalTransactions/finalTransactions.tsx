@@ -3,8 +3,8 @@
 import React from 'react'
 import List from '@/src/components/lists';
 import deleteTransaction from '@/src/components/requests/deleteTransaction';
-import FilterByClient from '../../filtersTransactions/filterByClient';
-import FilterByMechanic from '../../filtersTransactions/filterByMechanic';
+import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
+import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
@@ -16,30 +16,73 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
+  const [filteredByMechanic, setFilteredByMechanic ] = useState<TransactionInterface[]>([]);
   const [searchByClient, setSearchByClient ] = useState<string>("");
+  const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
      
-    const searchClient = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-        setCurrentPage(0);
-        setSearchByClient(target.value)
-     }
-
-    const searchMechanic = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrentPage(0);
-      setSearchByMechanic(target.value)
-   }
-    
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(target.value);
+      setDate(target.value);
     }
+
+    const applyFilters = () => {
+      let filteredResult = [...finalTransactions];
+  
+      if (searchByMechanic.trim() !== "") {
+        filteredResult = filteredResult.filter((transaction) =>
+          transaction.userAssociatedName.toLowerCase().includes(searchByMechanic.toLowerCase())
+        );
+      }
+ 
+      if (searchByClient.trim() !== "") {
+        filteredResult = filteredResult.filter((transaction) =>
+          transaction.finalCustomerName.toLowerCase().includes(searchByClient.toLowerCase())
+        );
+      }
+      
+      filteredResult = filteredResult.filter((transaction) => transaction.status === true);
+      setFilteredTransactions(filteredResult);
+    };
+
+    const searchClient = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrentPage(0);
+      setSearchByClient(target.value);
+      const client = await filterByFinalCustomer(searchByClient);
+      setFilteredByClient(client);
+      applyFilters();
+   }
+
+  const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentPage(0);
+    setSearchByMechanic(target.value);
+    const mechanic = await filterByMechanic(searchByMechanic);
+    setFilteredByMechanic(mechanic);
+    applyFilters();
+ }
 
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
 
     return (
       <div className='w-full'>
         <div className='flex items-center w-full'>
-          <FilterByMechanic filteredTransactions={filteredTransactions} searchMechanic={searchMechanic} searchByMechanic={searchByMechanic} setFilteredTransactions={setFilteredTransactions}/> 
-          <FilterByClient searchClient={searchClient} searchByClient={searchByClient} setFilteredTransactions={setFilteredTransactions} />
+          <div className="flex justify-center mt-12 w-7/12">
+            <input
+              className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"
+              placeholder="Busca por NOMBRE o DNI de mecánico"
+              type="text"
+              value={searchByMechanic}
+              onChange={searchMechanic}
+            />
+          </div>
+          <div className="flex justify-center mt-12 w-7/12">
+            <input
+              className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"
+              placeholder="Busca por NOMBRE o DNI de cliente"
+              type="text"
+              value={searchByClient}
+              onChange={searchClient}
+            />
+          </div>
           <div className="flex justify-center mt-12 w-1/2">
             <input 
               className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"

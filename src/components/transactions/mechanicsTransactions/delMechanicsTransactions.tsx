@@ -32,6 +32,8 @@ const DelMechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) =
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setDate(target.value);
     }
+
+    const deletedTransaction = mechanicTransactions.filter((transaction) => transaction.status == false);
   return (
     <div className='w-full'>
       <div className="flex flex-col items-center h-screen w-full">
@@ -57,7 +59,7 @@ const DelMechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) =
           </div>
           <div className="flex flex-col">
             <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+              <div className="inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="overflow-hidden">
                   <List>
                     <table className="min-w-full text-left text-sm font-light">
@@ -71,7 +73,7 @@ const DelMechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) =
                     </tr>
                       </thead>
                       <tbody>
-                      {mechanicTransactions.map((transaction, index) => (
+                      {deletedTransaction.map((transaction, index) => (
                     <tr
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
                         <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>

@@ -97,3 +97,14 @@ export interface FilterByMechanicsProps {
   filteredTransactions: TransactionInterface[];
   setFilteredTransactions: (filteredTransactions: TransactionInterface[]) => void;
 }
+
+export interface BalanceListInterface {
+    id: number,
+    transactionId: number,
+    created: Date,
+    previousBalance: number,
+    currentBalance: number,
+    userDni: string,
+    userName: string,
+    userCommissionAtTheTime: number
+}
