@@ -14,12 +14,11 @@ const {mechanics, setMechanics} = props;
   const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const pagination = useAppSelector(state => state.paginationReducer.usersPorPage);
-  const currentPage = useAppSelector(state => state.paginationReducer.currentPage);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10; 
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
 
-// Paginación para mostrar en la pagina actual
-const startIndex = (currentPage - 1) * pagination;
-const endIndex = startIndex + pagination;
 
 // Filtrado de usuarios //
 const filteredUsers = mechanics.filter((user) => {
@@ -30,34 +29,36 @@ const filteredUsers = mechanics.filter((user) => {
   );
 });
 
-//Filtrado segun pagina actual
-const userToDisplay = filteredUsers.slice(startIndex, endIndex)
+//Filtrado y paginado segun pagina actual
 
-const userActive = filteredUsers.filter((user) => user.isActive == true)
-
-//Paginación
-   const nextPage = () => {
-    if(mechanics.filter(us => us.name.includes(search)).length > currentPage + pagination ){
-      setCurrentPage(currentPage + pagination)
-    };   };
-
-   const prevPage = () => {
-    if(currentPage > 0){
-      setCurrentPage(currentPage - pagination)
-    }
-   }
+const userActive = filteredUsers.filter((user) => user.isActive == true);
+const userShow = userActive.slice(firstIndex, lastIndex);
+const npage = Math.ceil(userActive.length / recordsPerPage);
+const numbers: number[] = [];
+  for (let i = 1; i <= npage; i++) {
+    numbers.push(i);
+}
 
    const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setCurrentPage(0)); 
     setSearch(target.value);
     dispatch(setSearchResults(filteredUsers)); 
   };
   
-  const totalPage = search.length > 0
-  ? Math.ceil(filteredUsers.length / pagination)
-  : Math.ceil(mechanics.length / pagination);
+  const prevPage = () => {
+    if(currentPage !== 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }; 
 
-const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
+  const nextPage = () => {
+    if(currentPage !== npage) {
+      setCurrentPage(currentPage + 1)
+    }
+  };
+
+  const changePage = (id: number) => {
+    setCurrentPage(id)
+  };
 
     return (
             <div className="flex flex-col items-center">
@@ -81,7 +82,7 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                     </tr>
                 </thead>
                 <tbody>
-                  {userActive.map((user, index) => (
+                  {userShow.map((user, index) => (
                   <tr key={index} 
                     className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
@@ -103,33 +104,35 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                   </tbody>
                 </table>
               </List>
-              <div className="flex items-center justify-center mt-6 space-x-4">
-              <button
-                type="button"
-                onClick={prevPage}
-                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Anteriores
-              </button>
-              <div className='text-black flex items-center'>
-                {pageNumbers.map((pageNumber) => (
+                <div className="flex items-center justify-center mt-6 space-x-4">
                   <button
-                    key={pageNumber}
-                    onClick={() => setCurrentPage(pageNumber)}
-                    className="text-red mx-2"
+                    type="button"
+                    onClick={prevPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                   >
-                    {pageNumber}
+                    Anteriores
                   </button>
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={nextPage}
-                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Siguientes
-              </button>
-            </div>
+                    {
+                      numbers.map((n, i) => (
+                        <div className='text-black flex items-center'>
+                          <button
+                            key={i}
+                            onClick={() => changePage(n)}
+                            className="text-red mx-2"
+                          >
+                            {n}
+                          </button>
+                        </div>
+                      ))
+                    }
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Siguientes
+                  </button>
+                </div>
             </div>
     )
 }

@@ -6,15 +6,16 @@ import deleteTransaction from '@/src/components/requests/deleteTransaction';
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from "next/navigation";
 import { DateRange } from 'react-date-range'
 import format from 'date-fns/format'
 import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { isWithinInterval } from 'date-fns';
 
-const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
+const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const {finalTransactions, setFinalTransactions}= props;
   const [range, setRange] = useState([
     {
@@ -23,36 +24,47 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
       key: 'selection'
     }
   ]);
+  
   const [open, setOpen] = useState(false);
   const refOne = useRef<HTMLDivElement | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
   const [filteredByMechanic, setFilteredByMechanic ] = useState<TransactionInterface[]>([]);
   const [searchByClient, setSearchByClient ] = useState<string>("");
   const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 7; 
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
   
-   
-    const applyFilters = () => {
-      let filteredResult = [...finalTransactions];
+  const applyFilters = () => {
+    let filteredResult = [...finalTransactions];
   
-      if (searchByMechanic.trim() !== "") {
-        filteredResult = filteredResult.filter((transaction) =>
-          transaction.userAssociatedName.toLowerCase().includes(searchByMechanic.toLowerCase())
-        );
-      }
- 
-      if (searchByClient.trim() !== "") {
-        filteredResult = filteredResult.filter((transaction) =>
-          transaction.finalCustomerName.toLowerCase().includes(searchByClient.toLowerCase())
-        );
-      }
-      
-      filteredResult = filteredResult.filter((transaction) => transaction.status === true);
-      setFilteredTransactions(filteredResult);
-    };
-
+    if (searchByMechanic.trim() !== "") {
+      filteredResult = filteredResult.filter((transaction) =>
+        transaction.userAssociatedName.toLowerCase().includes(searchByMechanic.toLowerCase())
+      );
+    }
+  
+    if (searchByClient.trim() !== "") {
+      filteredResult = filteredResult.filter((transaction) =>
+        transaction.finalCustomerName.toLowerCase().includes(searchByClient.toLowerCase())
+      );
+    }
+  
+    if (range[0].startDate && range[0].endDate) {
+      filteredResult = filteredResult.filter((transaction) =>
+        new Date(transaction.created).getTime() >= range[0].startDate.getTime() &&
+        new Date(transaction.created).getTime() <= range[0].endDate.getTime()
+      );
+    }
+  
+    filteredResult = filteredResult.filter((transaction) => transaction.status === true);
+    console.log("Filtered Result:", filteredResult);
+    setFilteredTransactions(filteredResult);
+  };
+  
     const searchClient = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
       setSearchByClient(target.value);
@@ -82,7 +94,33 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
   }
 }
 
+const rangeChange = (item: any) => {
+  console.log("Date Range Changed", item);
+  setRange([item.selection]);
+}
+ 
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
+    const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
+    const npage = Math.ceil(aceptedTransaction.length / recordsPerPage);
+    const numbers: number[] = [];
+      for (let i = 1; i <= npage; i++) {
+        numbers.push(i);
+    }
+    const prevPage = () => {
+      if(currentPage !== 1) {
+        setCurrentPage(currentPage - 1)
+      }
+    }; 
+
+    const nextPage = () => {
+      if(currentPage !== npage) {
+        setCurrentPage(currentPage + 1)
+      }
+    };
+
+    const changePage = (id: number) => {
+      setCurrentPage(id)
+    };
 
     return (
       <div className='w-full'>
@@ -120,6 +158,7 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
                     const { startDate, endDate } = item.selection;
                     if (startDate !== undefined && endDate !== undefined) {
                       setRange([{ startDate, endDate, key: 'selection' }]);
+                      applyFilters();
                     }
                   }}
                   editableDateInputs={true}
@@ -151,9 +190,9 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredTransactions.length > 0 ? (
-                        filteredTransactions.map((transaction, index) => (
-                          <tr
+                      {transactionShow.length > 0 ? (
+                        transactionShow.map((transaction, index) => (
+                          <tr key={index}
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                         <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
@@ -199,6 +238,35 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
                     </tbody>
                   </table>
                 </List>
+                <div className="flex items-center justify-center mt-6 space-x-4">
+                      <button
+                        type="button"
+                        onClick={prevPage}
+                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                      >
+                        Anteriores
+                      </button>
+                      {
+                        numbers.map((n, i) => (
+                          <div className='text-black flex items-center'>
+                            <button
+                              key={i}
+                              onClick={() => changePage(n)}
+                              className="text-red mx-2"
+                            >
+                              {n}
+                            </button>
+                          </div>
+                        ))
+                      }
+                      <button
+                        type="button"
+                        onClick={nextPage}
+                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                      >
+                        Siguientes
+                      </button>
+                    </div>
               </div>
             </div>
           </div>
@@ -207,4 +275,4 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
     );
 }
 
-export default FinalTransacions;
+export default FinalTransactions;

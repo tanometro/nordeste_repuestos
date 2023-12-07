@@ -6,15 +6,7 @@ import { useState} from "react";
 import postUser from "@/src/components/requests/postUser";
 import validations from "@/src/components/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
-
-interface User {
-  roleId: number | null,
-  dni: string,
-  username: string,
-  password: string,
-  name: string,
-  commission: number | null,
-} 
+import { UserPost } from "@/src/components/interfaces";
 
 export default function CreateUser () {
   const storedToken = localStorage.getItem('token');
@@ -27,7 +19,7 @@ export default function CreateUser () {
     dni: "",
 });
 
-const [userData, setUserData] = useState<User>({
+const [userData, setUserData] = useState<UserPost>({
     dni: "",
     username: "",
     password: "",        
@@ -61,14 +53,20 @@ const [userData, setUserData] = useState<User>({
         const commissionPercentage =
           userData.commission !== null ? userData.commission / 100 : null;
   
-        const userWithPercentage: User = {
+        const userWithPercentage: UserPost = {
           ...userData,
           commission: commissionPercentage,
         };
   
         try {
-          await postUser(userWithPercentage);
-          router.push('/allUsers');
+          const response = await postUser(userWithPercentage);
+        
+          if (response && response.status === 200) {
+            router.push('/allUsers');
+          } else if (response) {
+            const apiErrors = await response.json();
+            window.alert(`Errores de la API:\n${apiErrors.join('\n')}`);
+          }
         } catch (error: any) {
           if (error.response) {
             const apiErrors = await error.response.json();
@@ -76,7 +74,8 @@ const [userData, setUserData] = useState<User>({
           } else {
             console.error("Error desconocido:", error);
           }
-        }
+        }        
+        
       }
     };
     

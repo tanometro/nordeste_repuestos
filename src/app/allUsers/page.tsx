@@ -17,7 +17,7 @@ export default function Users(){
   const router = useRouter();
   const [admins, setAdmins] = useState<UserInterface[]>([]);
   const [mechanics, setMechanics] = useState<UserInterface[]>([]);
-
+  
 
   useEffect(() => {
     async function fetchData() {

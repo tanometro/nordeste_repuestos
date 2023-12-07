@@ -12,8 +12,10 @@ const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   // const users = useAppSelector(state => state.userReducer.users)
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
-  const valorPaginacion = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10; 
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
 
  // Filtrado de usuarios //
 
@@ -25,20 +27,31 @@ const filteredUsers = admins.filter((user) => {
   );
 });
 
-const userActive = filteredUsers.filter((user) => user.isActive == false)
 
 //Paginación
-
-   const nextPage = () => {
-    if(admins.filter(us => us.name.includes(search)).length > currentPage + valorPaginacion ){
-      setCurrentPage(currentPage + valorPaginacion)
-    };   };
-
-   const prevPage = () => {
-    if(currentPage > 0){
-      setCurrentPage(currentPage - valorPaginacion)
+const userActive = filteredUsers.filter((user) => user.isActive == false);
+  const userShow = userActive.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(userActive.length / recordsPerPage);
+  const numbers: number[] = [];
+    for (let i = 1; i <= npage; i++) {
+      numbers.push(i);
+  }
+  const prevPage = () => {
+    if(currentPage !== 1) {
+      setCurrentPage(currentPage - 1)
     }
-   }
+  }; 
+
+  const nextPage = () => {
+    if(currentPage !== npage) {
+      setCurrentPage(currentPage + 1)
+    }
+  };
+
+  const changePage = (id: number) => {
+    setCurrentPage(id)
+  };
+  
    const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
       setSearch(target.value)
@@ -67,7 +80,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == false)
                     </tr>
                   </thead>
                   <tbody>
-          {userActive.map((user, index) => (
+          {userShow.map((user, index) => (
       <tr key={index} 
       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
         <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>

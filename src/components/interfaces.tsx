@@ -1,16 +1,25 @@
 export interface UserInterface {
-  dni: string;
-  username: string;
-  password: string;
-  name: string;
-  roleId: number;
-  commission: number | null;
+  dni: string; //
+  username: string; //
+  password: string; //
+  name: string; //
+  roleId: number; //
+  commission: number | null; //
   id: number;
   balance: number | null; 
   isActive: boolean;
 }
 
-  
+export interface UserPost {
+  roleId: number | null,
+  dni: string,
+  username: string,
+  password: string,
+  name: string,
+  commission: number | null,
+
+}
+
 export interface SellInterface {
   finalCustomerName: string,
   finalCustomerDni: string,
@@ -107,4 +116,16 @@ export interface BalanceListInterface {
     userDni: string,
     userName: string,
     userCommissionAtTheTime: number
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  filteredData: any[]; 
+  renderData: (data: any[]) => React.ReactNode; 
+  onPageChange: (newPage: number) => void;
+}
+
+export interface CustomResponse extends Response {
+  status: number;
 }
