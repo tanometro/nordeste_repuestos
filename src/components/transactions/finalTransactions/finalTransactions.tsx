@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react'
-import List from '@/src/components/lists';
-import deleteTransaction from '@/src/components/requests/deleteTransaction';
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
@@ -14,6 +12,8 @@ import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { isWithinInterval } from 'date-fns';
+import deleteTransaction from '../../requests/deleteTransaction';
+import List from '../../lists';
 
 const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const {finalTransactions, setFinalTransactions}= props;
@@ -28,11 +28,13 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const [open, setOpen] = useState(false);
   const refOne = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
   const [filteredByMechanic, setFilteredByMechanic ] = useState<TransactionInterface[]>([]);
   const [searchByClient, setSearchByClient ] = useState<string>("");
   const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 7; 
   const lastIndex = currentPage * recordsPerPage;
@@ -61,12 +63,12 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
     }
   
     filteredResult = filteredResult.filter((transaction) => transaction.status === true);
-    console.log("Filtered Result:", filteredResult);
+    
     setFilteredTransactions(filteredResult);
   };
   
     const searchClient = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrentPage(0);
+      setCurrentPage(1);
       setSearchByClient(target.value);
       const client = await filterByFinalCustomer(searchByClient);
       setFilteredByClient(client);
@@ -74,7 +76,7 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
    };
 
   const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentPage(0);
+    setCurrentPage(1);
     setSearchByMechanic(target.value);
     const mechanic = await filterByMechanic(searchByMechanic);
     setFilteredByMechanic(mechanic);
@@ -123,7 +125,7 @@ const rangeChange = (item: any) => {
     };
 
     return (
-      <div className='w-full'>
+      <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
           <div className="flex justify-center mt-12 w-7/12">
             <input
@@ -153,9 +155,9 @@ const rangeChange = (item: any) => {
               />
               <div ref={refOne} >
                 {open && 
-                  <DateRange
+                <DateRange
                   onChange={(item) => {
-                    const { startDate, endDate } = item.selection;
+                  const { startDate, endDate } = item.selection;
                     if (startDate !== undefined && endDate !== undefined) {
                       setRange([{ startDate, endDate, key: 'selection' }]);
                       applyFilters();
@@ -181,7 +183,7 @@ const rangeChange = (item: any) => {
                   <table className="min-w-full text-left text-sm font-light">
                     <thead className="border-b font-medium dark:border-neutral-500">
                       <tr>
-                        <th scope="col" className="px-6 py-4">Número</th>
+                        <th scope="col" className="px-6 py-4">Numero</th>
                         <th scope="col" className="px-6 py-4">Usuario</th>
                         <th scope="col" className="px-6 py-4">Cliente</th>
                         <th scope="col" className="px-6 py-4">Fecha</th>
@@ -190,83 +192,59 @@ const rangeChange = (item: any) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {transactionShow.length > 0 ? (
-                        transactionShow.map((transaction, index) => (
-                          <tr key={index}
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
+                      {transactionShow.map((transaction, index) => (
+                    <tr
+                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
+                        <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}$</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
-                    <td>
-                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
-                    <a className="text-custom-red px-3">Ver detalles</a>
-                      </button>
-                    </td>
-                    <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
-                      </button>
-                    </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleTotalAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
+                      <td>
+                        <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
+                          <a className="text-custom-red px-3">Ver detalles</a>
+                        </button>
+                      </td>
+                      <td>
+                        <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
+                          <a className="text-custom-red px-3">Eliminar</a>
+                        </button>
+                      </td>
                     </tr>
-                        ))
-                      ) : (
-                        aceptedTransaction.map((transaction, index) => (
-                          <tr
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}$</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
-                    <td>
-                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
-                    <a className="text-custom-red px-3">Ver detalles</a>
-                      </button>
-                    </td>
-                    <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
-                      </button>
-                    </td>
-                    </tr>
-                        ))
-                      )}
+                      ))}
                     </tbody>
                   </table>
                 </List>
                 <div className="flex items-center justify-center mt-6 space-x-4">
-                      <button
-                        type="button"
-                        onClick={prevPage}
-                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
-                        Anteriores
-                      </button>
-                      {
-                        numbers.map((n, i) => (
-                          <div className='text-black flex items-center'>
-                            <button
-                              key={i}
-                              onClick={() => changePage(n)}
-                              className="text-red mx-2"
-                            >
-                              {n}
-                            </button>
-                          </div>
+                  <button
+                    type="button"
+                    onClick={prevPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Anteriores
+                  </button>
+                  {
+                    numbers.map((n, i) => (
+                      <div className='text-black flex items-center'>
+                        <button
+                          key={i}
+                          onClick={() => changePage(n)}
+                          className="text-red mx-2"
+                        >
+                          {n}
+                        </button>
+                      </div>
                         ))
                       }
-                      <button
-                        type="button"
-                        onClick={nextPage}
-                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
-                        Siguientes
-                      </button>
-                    </div>
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Siguientes
+                  </button>
+                </div>
               </div>
             </div>
           </div>

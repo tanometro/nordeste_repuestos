@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SellInterface } from './interfaces';
 import { UserInterface } from './interfaces';
 import postTransaction from './requests/postTransaction';
@@ -44,11 +44,9 @@ function NewSell() {
     }
   };
   
-
   const onSubmit = () => {
-    postTransaction(sellData)
+    postTransaction(sellData);
   }
-
 
   return (
     <div className="w-full flex items-center justify-center mt-2">
@@ -74,7 +72,7 @@ function NewSell() {
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
-         <label className='text-black'>Concepto de la venta</label>
+        <label className='text-black'>Concepto de la venta</label>
         <input
           type="text"
           placeholder="Concepto / nº factura"

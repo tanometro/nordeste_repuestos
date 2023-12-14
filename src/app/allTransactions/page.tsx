@@ -23,7 +23,8 @@ function AllTransacions() {
     useEffect(() => {
       async function fetchData() {
         try {
-          const transList = await getAllTransactions();
+          const transList = await getAllTransactions(20, 10);
+          
           const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
           const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
           
@@ -46,11 +47,11 @@ function AllTransacions() {
       <div className="flex flex-col items-center w-full">
         {component ? (
           active ? 
-          <FinalTransactions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/> : <DelFinalTransactions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/>
+          <FinalTransactions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/> : <DelFinalTransactions finalTransactions={finalTransactions}/>
           ) 
             : 
           (
-          active ? <MechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/> : <DelMechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/>
+          active ? <MechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/> : <DelMechanicsTransactions mechanicTransactions={mechanicTransactions}/>
           )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 mx-auto mb-4 flex justify-center">

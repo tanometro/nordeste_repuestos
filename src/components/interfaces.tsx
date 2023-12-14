@@ -88,10 +88,16 @@ export interface FinalTransactionsProps {
   finalTransactions: TransactionInterface[];
   setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
 }
+export interface DeletedTransactionsProps {
+  finalTransactions: TransactionInterface[];
+}
 
 export interface MechanicsTransactionsProps {
   mechanicTransactions: TransactionInterface[];
   setMechhanicTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+}
+export interface DeletedMechanicsTransactionsProps {
+  mechanicTransactions: TransactionInterface[];
 }
 
 export interface FilterByClientProps {
@@ -128,4 +134,9 @@ export interface PaginationProps {
 
 export interface CustomResponse extends Response {
   status: number;
+}
+
+export interface TransactionProps {
+  data: TransactionInterface[],
+  
 }

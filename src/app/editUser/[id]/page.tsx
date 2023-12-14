@@ -73,7 +73,7 @@ export default function EditUserForm () {
       }
       <div className="flex justify-center items-center">
     {isEditing ? (
-      <form onSubmit={handleSubmit} className="flex items-center w-1/2">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2 mt-12">
         <label className="text-clip text-black">Nombre:</label>
         <input
           name="name"

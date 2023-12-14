@@ -102,7 +102,7 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base"> -{transaction.saleTotalAmount}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
                     <td>
                       <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
                     <a className="text-custom-red px-3">Ver detalles</a>

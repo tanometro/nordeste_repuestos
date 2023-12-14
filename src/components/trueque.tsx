@@ -34,18 +34,11 @@ function Trueque() {
     setSellData({ ...sellData, [property]: value });
     //setErrors(validations({...dataDriver, [property] : value}));
   };
-
-  const calculateCommission = () => {
-    if (user.commission !== null) {
-      const total = sellData.totalAmount * user.commission;
-      return total;
-    } else {
-      return 0;
-    }
-  };
   
   const onSubmit = () => {
-    postTransaction(sellData)
+    postTransaction(sellData);
+    console.log(sellData);
+    
   }
 
 

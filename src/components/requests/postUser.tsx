@@ -1,6 +1,5 @@
 import { UserPost } from "../interfaces";
 
-
 const postUser = async (user: UserPost) => {
   const storedToken = localStorage.getItem('token');
   try {
