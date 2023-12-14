@@ -8,15 +8,13 @@ import { ActiveAdminsProps } from "@/src/components/interfaces";
 
 const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
-  
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10; 
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
   
-
 // Filtrado de usuarios //
 const filteredUsers = admins.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
@@ -29,7 +27,7 @@ const filteredUsers = admins.filter((user) => {
 //Paginacion 
   const userActive = filteredUsers.filter((user) => user.isActive == true);
   const userShow = userActive.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(userActive.length / recordsPerPage);
+  const npage = Math.ceil(userActive.length / pagination);
   const numbers: number[] = [];
     for (let i = 1; i <= npage; i++) {
       numbers.push(i);

@@ -16,7 +16,6 @@ const postTransaction = async (transaction: SellInterface) => {
 
       if (!response.ok) {
         const errorMessage = await response.text();
-
         if (response.status === 401) {
           window.location.href = '/';
         } else {
@@ -29,7 +28,8 @@ const postTransaction = async (transaction: SellInterface) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      window.alert(error.message);
+      console.log(error);
+      
     } else {
       window.alert("Error desconocido al crear la transacción");
     }

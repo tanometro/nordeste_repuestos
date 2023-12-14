@@ -23,7 +23,7 @@ function AllTransacions() {
     useEffect(() => {
       async function fetchData() {
         try {
-          const transList = await getAllTransactions(20, 10);
+          const transList = await getAllTransactions(200, 0);
           
           const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
           const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);

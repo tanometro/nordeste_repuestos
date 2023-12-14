@@ -1,20 +1,19 @@
 "use client";
 
 import List from "@/src/components/lists";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import activateUser from "@/src/components/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveMechanicsProps } from "@/src/components/interfaces";
-// import { useAppSelector } from "@/redux/hooks";
+import { ActiveMechanicsProps } from "@/src/components/interfaces";
 
 const InactiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
   const {mechanics, setMechanics} = props;
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10; 
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
 
  // Filtrado de usuarios //
 
@@ -29,7 +28,7 @@ const filteredUsers = mechanics.filter((user) => {
   //Paginación
   const userActive = filteredUsers.filter((user) => user.isActive == false);
   const userShow = userActive.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(userActive.length / recordsPerPage);
+  const npage = Math.ceil(userActive.length / pagination);
   const numbers: number[] = [];
     for (let i = 1; i <= npage; i++) {
       numbers.push(i);
@@ -50,11 +49,10 @@ const filteredUsers = mechanics.filter((user) => {
     setCurrentPage(id)
   };
 
-
    const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
       setSearch(target.value)
-   }
+   };
 
     return (
           <div className="flex flex-col items-center">
@@ -68,30 +66,32 @@ const filteredUsers = mechanics.filter((user) => {
               />
             </div>
             <List>
-              <table cellSpacing="10">
-                <thead>
+            <table className="min-w-full text-left text-sm font-light">
+                <thead className="border-b font-medium dark:border-neutral-500">
                   <tr className="border-b border-gray">
-                    <th className="px-5">Nombre</th>
-                    <th className="px-5">Dni</th>
-                    <th className="px-5">Tipo</th>
-                    <th className="px-5">Saldo</th>
-                  </tr>
+                      <th scope="col" className="px-6 py-4">Nombre</th>
+                      <th scope="col" className="px-6 py-4">Dni</th>
+                      <th scope="col" className="px-6 py-4">Tipo</th>
+                      <th scope="col" className="px-6 py-4">Saldo</th>
+                    </tr>
                 </thead>
                 <tbody>
+              
                   {userShow.map((user, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="">{user.name}</td>
-                      <td className="">{user.dni}</td>
-                      <td className=""> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                      <td className=""> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+                    <tr key={index} 
+                    className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+                    <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
+                     <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
+                     <td className="whitespace-nowrap px-6 py-4">{user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
+                     <td className="whitespace-nowrap px-6 py-4">{user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
                       <td>
                         <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                          <a className="text-blue-500 px-3">Ver usuario</a>
+                          <a className="text-custom-red px-3">Ver usuario</a>
                         </button>
                       </td>
                       <td>
                         <button onClick={() => activateUser(user.id, setMechanics)}>
-                          <a className="text-blue-500 px-3">Re activar</a>
+                          <a className="text-custom-red px-3">Re activar</a>
                         </button>
                       </td>
                     </tr>

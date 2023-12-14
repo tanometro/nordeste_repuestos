@@ -2,10 +2,9 @@
 
 import List from "@/src/components/lists";
 import { useState } from "react";
-
 import activateUser from "@/src/components/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveAdminsProps } from "@/src/components/interfaces";
+import {ActiveAdminsProps } from "@/src/components/interfaces";
 
 const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
@@ -13,9 +12,9 @@ const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10; 
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
 
  // Filtrado de usuarios //
 
@@ -31,7 +30,7 @@ const filteredUsers = admins.filter((user) => {
 //Paginación
 const userActive = filteredUsers.filter((user) => user.isActive == false);
   const userShow = userActive.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(userActive.length / recordsPerPage);
+  const npage = Math.ceil(userActive.length / pagination);
   const numbers: number[] = [];
     for (let i = 1; i <= npage; i++) {
       numbers.push(i);

@@ -46,6 +46,8 @@ function NewSell() {
   
   const onSubmit = () => {
     postTransaction(sellData);
+    console.log(sellData);
+    
   }
 
   return (

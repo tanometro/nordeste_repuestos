@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
@@ -30,61 +30,48 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const router = useRouter();
 
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
-  const [filteredByMechanic, setFilteredByMechanic ] = useState<TransactionInterface[]>([]);
   const [searchByClient, setSearchByClient ] = useState<string>("");
-  const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
   
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 7; 
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  
-  const applyFilters = () => {
-    let filteredResult = [...finalTransactions];
-  
-    if (searchByMechanic.trim() !== "") {
-      filteredResult = filteredResult.filter((transaction) =>
-        transaction.userAssociatedName.toLowerCase().includes(searchByMechanic.toLowerCase())
-      );
-    }
-  
-    if (searchByClient.trim() !== "") {
-      filteredResult = filteredResult.filter((transaction) =>
-        transaction.finalCustomerName.toLowerCase().includes(searchByClient.toLowerCase())
-      );
-    }
-  
-    if (range[0].startDate && range[0].endDate) {
-      filteredResult = filteredResult.filter((transaction) =>
-        new Date(transaction.created).getTime() >= range[0].startDate.getTime() &&
-        new Date(transaction.created).getTime() <= range[0].endDate.getTime()
-      );
-    }
-  
-    filteredResult = filteredResult.filter((transaction) => transaction.status === true);
-    
-    setFilteredTransactions(filteredResult);
-  };
-  
-    const searchClient = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrentPage(1);
-      setSearchByClient(target.value);
-      const client = await filterByFinalCustomer(searchByClient);
-      setFilteredByClient(client);
-      applyFilters();
-   };
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
 
-  const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
+  // const fetchData = async () => {
+  //   const mechanic = await filterByMechanic(searchByMechanic);
+  //   console.log(searchByMechanic);
+    
+  //   const client = await filterByFinalCustomer(searchByClient);
+  //   console.log(client);
+    
+  //   const toShow = [...mechanic, ...client];
+  //   setFilteredTransactions(toShow);    
+    
+  // };
+
+  const searchMechanic = async () => {
     setCurrentPage(1);
-    setSearchByMechanic(target.value);
     const mechanic = await filterByMechanic(searchByMechanic);
-    setFilteredByMechanic(mechanic);
-    applyFilters();
- };
+    setFilteredTransactions(mechanic);     
+    console.log(filteredTransactions);
+      
+  }
+  const searchClient = async () => {
+    setCurrentPage(1);
+    const client = await filterByFinalCustomer(searchByClient);
+    setFilteredTransactions(client);  
+  }
+  
+  useEffect(() => {
+    searchMechanic();
+  }, [searchByMechanic]);
+  useEffect(() => {
+    searchClient();
+  }, [searchByClient]);
+  
 
  const hideOnEscape = (e: React.KeyboardEvent) => {
-  
   if( e.key === "Escape" ) {
     setOpen(false)
   }
@@ -100,10 +87,10 @@ const rangeChange = (item: any) => {
   console.log("Date Range Changed", item);
   setRange([item.selection]);
 }
- 
+
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
     const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
-    const npage = Math.ceil(aceptedTransaction.length / recordsPerPage);
+    const npage = Math.ceil(aceptedTransaction.length / pagination);
     const numbers: number[] = [];
       for (let i = 1; i <= npage; i++) {
         numbers.push(i);
@@ -124,6 +111,8 @@ const rangeChange = (item: any) => {
       setCurrentPage(id)
     };
 
+    const toShow = searchByClient || searchByMechanic? filteredTransactions : transactionShow
+
     return (
       <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
@@ -133,7 +122,7 @@ const rangeChange = (item: any) => {
               placeholder="Busca por NOMBRE o DNI de mecánico"
               type="text"
               value={searchByMechanic}
-              onChange={searchMechanic}
+              onChange={(e) => setSearchByMechanic(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12 w-7/12">
@@ -142,7 +131,7 @@ const rangeChange = (item: any) => {
               placeholder="Busca por NOMBRE o DNI de cliente"
               type="text"
               value={searchByClient}
-              onChange={searchClient}
+              onChange={(e) => setSearchByClient(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12 w-6/12">
@@ -160,7 +149,6 @@ const rangeChange = (item: any) => {
                   const { startDate, endDate } = item.selection;
                     if (startDate !== undefined && endDate !== undefined) {
                       setRange([{ startDate, endDate, key: 'selection' }]);
-                      applyFilters();
                     }
                   }}
                   editableDateInputs={true}
@@ -185,6 +173,7 @@ const rangeChange = (item: any) => {
                       <tr>
                         <th scope="col" className="px-6 py-4">Numero</th>
                         <th scope="col" className="px-6 py-4">Usuario</th>
+                        <th scope="col" className="px-6 py-4">DNI</th>
                         <th scope="col" className="px-6 py-4">Cliente</th>
                         <th scope="col" className="px-6 py-4">Fecha</th>
                         <th scope="col" className="px-6 py-4">Total</th>
@@ -192,11 +181,12 @@ const rangeChange = (item: any) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {transactionShow.map((transaction, index) => (
-                    <tr
+                      {toShow.map((transaction, index) => (
+                    <tr key={index}
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
                         <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedDni}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleTotalAmount}</td>

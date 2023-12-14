@@ -5,20 +5,15 @@ import { useState } from "react";
 import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveMechanicsProps } from "@/src/components/interfaces";
-import { useAppSelector, useAppDispatch } from "@/src/app/redux/hooks";
-import { setCurrentPage, setSearchResults } from "@/src/app/redux/features/paginationSlice";
-
 
 const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
 const {mechanics, setMechanics} = props;
-  const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10; 
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
 
 // Filtrado de usuarios //
 const filteredUsers = mechanics.filter((user) => {
@@ -33,7 +28,7 @@ const filteredUsers = mechanics.filter((user) => {
 
 const userActive = filteredUsers.filter((user) => user.isActive == true);
 const userShow = userActive.slice(firstIndex, lastIndex);
-const npage = Math.ceil(userActive.length / recordsPerPage);
+const npage = Math.ceil(userActive.length / pagination);
 const numbers: number[] = [];
   for (let i = 1; i <= npage; i++) {
     numbers.push(i);
@@ -41,7 +36,6 @@ const numbers: number[] = [];
 
    const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(target.value);
-    dispatch(setSearchResults(filteredUsers)); 
   };
   
   const prevPage = () => {
@@ -57,7 +51,7 @@ const numbers: number[] = [];
   };
 
   const changePage = (id: number) => {
-    setCurrentPage(id)
+    setCurrentPage(id);
   };
 
     return (
@@ -87,8 +81,8 @@ const numbers: number[] = [];
                     className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
-                    <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
-                    <td className="whitespace-nowrap px-6 py-4"> {user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
+                    <td className="whitespace-nowrap px-6 py-4">{user.roleId === 3 ? 'Mecánico' : ''}</td>
+                    <td className="whitespace-nowrap px-6 py-4">{user.balance === 0 ? '0' : user.balance}</td>
                     <td>
                       <button onClick={() => router.push(`/editUser/${user.id}`)}>
                         <a className="text-custom-red px-3">Ver usuario</a>
@@ -133,6 +127,7 @@ const numbers: number[] = [];
                     Siguientes
                   </button>
                 </div>
+                
             </div>
     )
 }

@@ -4,14 +4,14 @@ interface RootState {
     pagination: {
         currentPage: number;
         usersPerPage: number;
-        searchResults: any[];
+        nPage: any[];
       };
   }
 
 const initialState = {
     currentPage: 1,
     usersPorPage: 9,
-    searchResults: [],
+    nPage: [2, 5, 10, 20, 50],
 }
 
 export const paginationSlice = createSlice({
@@ -21,8 +21,8 @@ export const paginationSlice = createSlice({
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload;
         },
-        setSearchResults: (state, action) => {
-            state.searchResults = action.payload;
+        nPage: (state, action) => {
+            state.nPage = action.payload;
         },
         
     }
@@ -32,10 +32,10 @@ export default paginationSlice.reducer;
 
 export const {
     setCurrentPage,
-    setSearchResults
+    nPage
 } = paginationSlice.actions;
 
 
 export const selectPagination = (state: RootState) => state.pagination.currentPage;
-export const selectSearch = (state: RootState) => state.pagination.searchResults;
+export const selectSearch = (state: RootState) => state.pagination.nPage;
 export const selectUsersPerPage = (state: RootState) => state.pagination.usersPerPage;

@@ -1,10 +1,10 @@
 export interface UserInterface {
-  dni: string; //
-  username: string; //
-  password: string; //
-  name: string; //
-  roleId: number; //
-  commission: number | null; //
+  dni: string;
+  username: string;
+  password: string;
+  name: string;
+  roleId: number;
+  commission: number | null;
   id: number;
   balance: number | null; 
   isActive: boolean;
@@ -17,7 +17,6 @@ export interface UserPost {
   password: string,
   name: string,
   commission: number | null,
-
 }
 
 export interface SellInterface {
@@ -34,7 +33,6 @@ export interface SelectUserProps {
   sellData: SellInterface,
   setUser: React.Dispatch<React.SetStateAction<UserInterface>>;
 }
-
 
 export interface HeaderProps {
   title: string;
@@ -138,5 +136,4 @@ export interface CustomResponse extends Response {
 
 export interface TransactionProps {
   data: TransactionInterface[],
-  
 }
