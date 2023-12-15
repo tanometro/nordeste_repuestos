@@ -6,7 +6,7 @@ import getAllTransactions from '@/src/components/requests/allTransactions';
 import { TransactionInterface } from '@/src/components/interfaces';
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
-import FinalTransacions from '@/src/components/transactions/finalTransactions/finalTransactions';
+import FinalTransactions from '@/src/components/transactions/finalTransactions/finalTransactions';
 import MechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/mechanicsTransactions';
 import DelFinalTransactions from '@/src/components/transactions/finalTransactions/delFinalTransactions';
 import DelMechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/delMechanicsTransactions';
@@ -17,13 +17,14 @@ function AllTransacions() {
   const [active, setActive] = useState(true);
   const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
   const [mechanicTransactions, setMechhanicTransactions] = useState<TransactionInterface[]>([]);
-    const router = useRouter();
+  const router = useRouter();
 
     // Cuando monta el componente //
     useEffect(() => {
       async function fetchData() {
         try {
-          const transList = await getAllTransactions();
+          const transList = await getAllTransactions(200, 0);
+          
           const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
           const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
           
@@ -46,11 +47,11 @@ function AllTransacions() {
       <div className="flex flex-col items-center w-full">
         {component ? (
           active ? 
-          <FinalTransacions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/> : <DelFinalTransactions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/>
+          <FinalTransactions finalTransactions={finalTransactions} setFinalTransactions={setFinalTransactions}/> : <DelFinalTransactions finalTransactions={finalTransactions}/>
           ) 
             : 
           (
-          active ? <MechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/> : <DelMechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/>
+          active ? <MechanicsTransactions mechanicTransactions={mechanicTransactions} setMechhanicTransactions={setMechhanicTransactions}/> : <DelMechanicsTransactions mechanicTransactions={mechanicTransactions}/>
           )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 mx-auto mb-4 flex justify-center">

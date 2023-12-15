@@ -10,7 +10,15 @@ export interface UserInterface {
   isActive: boolean;
 }
 
-  
+export interface UserPost {
+  roleId: number | null,
+  dni: string,
+  username: string,
+  password: string,
+  name: string,
+  commission: number | null,
+}
+
 export interface SellInterface {
   finalCustomerName: string,
   finalCustomerDni: string,
@@ -25,7 +33,6 @@ export interface SelectUserProps {
   sellData: SellInterface,
   setUser: React.Dispatch<React.SetStateAction<UserInterface>>;
 }
-
 
 export interface HeaderProps {
   title: string;
@@ -79,10 +86,16 @@ export interface FinalTransactionsProps {
   finalTransactions: TransactionInterface[];
   setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
 }
+export interface DeletedTransactionsProps {
+  finalTransactions: TransactionInterface[];
+}
 
 export interface MechanicsTransactionsProps {
   mechanicTransactions: TransactionInterface[];
   setMechhanicTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+}
+export interface DeletedMechanicsTransactionsProps {
+  mechanicTransactions: TransactionInterface[];
 }
 
 export interface FilterByClientProps {
@@ -107,4 +120,20 @@ export interface BalanceListInterface {
     userDni: string,
     userName: string,
     userCommissionAtTheTime: number
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  filteredData: any[]; 
+  renderData: (data: any[]) => React.ReactNode; 
+  onPageChange: (newPage: number) => void;
+}
+
+export interface CustomResponse extends Response {
+  status: number;
+}
+
+export interface TransactionProps {
+  data: TransactionInterface[],
 }

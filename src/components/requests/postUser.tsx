@@ -1,15 +1,6 @@
-// import { BASE_URL } from "../constants";
+import { UserPost } from "../interfaces";
 
-interface User {
-  roleId: number | null,
-  dni: string,
-  username: string,
-  password: string,
-  name: string,
-  commission: number | null,
-}
-
-const postUser = async (user: User) => {
+const postUser = async (user: UserPost) => {
   const storedToken = localStorage.getItem('token');
   try {
     if (storedToken !== null) {
@@ -31,7 +22,7 @@ const postUser = async (user: User) => {
           throw new Error(`Error al crear el usuario: ${errorMessage}`);
         }
       }
-      window.alert("Usuario creado exitosamente");
+      return response;
     } else {
       throw new Error("No se pudo crear el usuario: Token no disponible");
     }

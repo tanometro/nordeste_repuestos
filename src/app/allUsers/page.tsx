@@ -11,13 +11,11 @@ import InactiveAdmins from "../../components/users/admins/inactiveAdmins";
 import InactiveMechanics from "../../components/users/mechanics/inactiveMechanics";
 
 export default function Users(){
-  
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);
   const router = useRouter();
   const [admins, setAdmins] = useState<UserInterface[]>([]);
   const [mechanics, setMechanics] = useState<UserInterface[]>([]);
-
 
   useEffect(() => {
     async function fetchData() {

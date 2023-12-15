@@ -1,8 +1,6 @@
 "use client";
 import { useState} from "react";
-import { BASE_URL } from "./constants";
 import { useRouter } from "next/navigation";
-// import {useAppSelector} from "@/redux/hooks";
 
 interface User {
     roleId: number | null,
@@ -19,7 +17,6 @@ interface UserFormParams {
   }
 
 export default function UserForm({ params }: { params: UserFormParams }){
-//const token = useAppSelector(state => state.tokenReducer.token);
 const storedToken = localStorage.getItem('token');
 const router = useRouter();
  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -48,7 +45,7 @@ const [userData, setUserData] = useState<User>({
     const postUser = async (user: User) => {
         try {
             if (storedToken !== null) {
-            const response = await fetch(`${BASE_URL}/user/add`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json', 

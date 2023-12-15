@@ -44,19 +44,19 @@ function DetailTransaction() {
     <div>
         <Header title={`Detalle de transacción número ${transactionData.id}`}/>
         <div className="flex justify-center items-center">
-          <div className="flex flex-col items-center w-1/2 mt-12">
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl ">Numero: {transactionData.id}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Cliente: {transactionData.finalCustomerName}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">DNI cliente: {transactionData.updatedByUserDni}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Vendedor: {transactionData.userSellerName}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Mecánico: {transactionData.userAssociatedName}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">DNI mecánico: {transactionData.userAssociatedDni}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Total de la venta: {transactionData.saleTotalAmount}$</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión %: {transactionData.userAssociatedCommision * 100}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión $: {transactionData.saleCommissionedAmount}$</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Concepto: {transactionData.saleConcept}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Estado: {transactionData.status ? 'Válida' : 'Eliminada'}</h1>
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Es un/a {transactionData.isFinalCustomerTransaction === true ? 'Venta' : 'Intercambio' }</h1>
+          <div className="flex flex-col items-center w-[80%] mt-12">
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl ">Numero: {transactionData.id}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Cliente: {transactionData.finalCustomerName}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">DNI cliente: {transactionData.updatedByUserDni}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Vendedor: {transactionData.userSellerName}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Mecánico: {transactionData.userAssociatedName}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">DNI mecánico: {transactionData.userAssociatedDni}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Total de la venta: {transactionData.saleTotalAmount}$</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión %: {transactionData.userAssociatedCommision * 100}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Comisión $: {transactionData.saleCommissionedAmount}$</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Concepto: {transactionData.saleConcept}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Estado: {transactionData.status ? 'Válida' : 'Eliminada'}</h1>
+            <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4 text-xl">Es un/a {transactionData.isFinalCustomerTransaction === true ? 'Venta' : 'Intercambio' }</h1>
           </div>
           <div className="fixed bottom-0 left-0 right-0 mx-auto mb-4 flex justify-center">
             <button

@@ -17,7 +17,7 @@ export default function Login (){
   const [errors, setErrors] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) =>{
-    await e.preventDefault();
+    e.preventDefault();
     try {
       await logReq(userData);
       router.replace('/dashboard');
@@ -90,14 +90,14 @@ export default function Login (){
         {errors}
       </div>
         )}
-      <div className="flex items-start">
+      {/* <div className="flex items-start">
         <div className="flex items-center h-5">
           <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
         </div>
         <div className="ml-3 text-sm">
           <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Recordarme</label>
         </div>
-      </div>
+      </div> */}
       <button type="submit" className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
         Ingresar
       </button>

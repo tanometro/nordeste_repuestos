@@ -4,25 +4,17 @@ import List from "@/src/components/lists";
 import { useState } from "react";
 import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { UserInterface, ActiveAdminsProps } from "@/src/components/interfaces";
-import { useAppSelector, useAppDispatch } from "@/src/app/redux/hooks";
-import { setCurrentPage, setSearchResults } from "@/src/app/redux/features/paginationSlice";
-
+import { ActiveAdminsProps } from "@/src/components/interfaces";
 
 const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
-  // const users = useAppSelector(state => state.userReducer.users)
-  const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
   const router = useRouter();
-  // const [currentPage, setCurrentPage] = useState(0);
-  const pagination = useAppSelector(state => state.paginationReducer.usersPorPage);
-  const currentPage = useAppSelector(state => state.paginationReducer.currentPage);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
   
-// Paginación para mostrar en la pagina actual
-const startIndex = (currentPage - 1) * pagination;
-const endIndex = startIndex + pagination;
-
 // Filtrado de usuarios //
 const filteredUsers = admins.filter((user) => {
   const lowercaseSearchTerm = search.toLowerCase();
@@ -32,34 +24,36 @@ const filteredUsers = admins.filter((user) => {
   );
 });
 
-//Filtrado segun pagina actual
-const userToDisplay = filteredUsers.slice(startIndex, endIndex)
-
-const userActive = filteredUsers.filter((user) => user.isActive == true)
-
-//Paginación
-   const nextPage = () => {
-    if(admins.filter(us => us.name.includes(search)).length > currentPage + pagination ){
-      setCurrentPage(currentPage + pagination)
-    };   };
-
-   const prevPage = () => {
-    if(currentPage > 0){
-      setCurrentPage(currentPage - pagination)
+//Paginacion 
+  const userActive = filteredUsers.filter((user) => user.isActive == true);
+  const userShow = userActive.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(userActive.length / pagination);
+  const numbers: number[] = [];
+    for (let i = 1; i <= npage; i++) {
+      numbers.push(i);
+  }
+  const prevPage = () => {
+    if(currentPage !== 1) {
+      setCurrentPage(currentPage - 1)
     }
-   }
+  }; 
 
-   const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setCurrentPage(0)); 
-    setSearch(target.value);
-    dispatch(setSearchResults(filteredUsers)); 
+  const nextPage = () => {
+    if(currentPage !== npage) {
+      setCurrentPage(currentPage + 1)
+    }
   };
-  
-  const totalPage = search.length > 0
-  ? Math.ceil(filteredUsers.length / pagination)
-  : Math.ceil(admins.length / pagination);
 
-const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
+  const changePage = (id: number) => {
+    setCurrentPage(id)
+  };
+
+
+   const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrentPage(0);
+      setSearch(target.value)
+   }
+  
 
     return (
       <div className="flex flex-col items-center">
@@ -83,7 +77,7 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                     </tr>
                   </thead>
                   <tbody>
-                  {userActive.map((user, index) => (
+                  {userShow.map((user, index) => (
               <tr key={index} 
               className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                 <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
@@ -106,33 +100,35 @@ const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1);
                 </table>
               </List>
               <div className="flex items-center justify-center mt-6 space-x-4">
-                <button
-                  type="button"
-                  onClick={prevPage}
-                  className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                  Anteriores
-                </button>
-              <div className='text-black flex items-center'>
-                {pageNumbers.map((pageNumber) => (
-                  <button
-                    key={pageNumber}
-                    onClick={() => setCurrentPage(pageNumber)}
-                    className="text-red mx-2"
-                  >
-                    {pageNumber}
-                  </button>
-                ))}
-              </div>
-                <button
-                  type="button"
-                  onClick={nextPage}
-                  className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                  Siguientes
-                </button>
+              <button
+                type="button"
+                onClick={prevPage}
+                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Anteriores
+              </button>
+              {
+                numbers.map((n, i) => (
+                  <div className='text-black flex items-center'>
+                    <button
+                      key={i}
+                      onClick={() => changePage(n)}
+                      className="text-red mx-2"
+                    >
+                      {n}
+                    </button>
+                  </div>
+                ))
+              }
+              <button
+                type="button"
+                onClick={nextPage}
+                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Siguientes
+              </button>
+            </div>  
         </div>
-      </div>
     )
 }
 

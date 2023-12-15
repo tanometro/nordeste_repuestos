@@ -1,12 +1,16 @@
 import axios, { AxiosError } from "axios";
 
-const getAllTransactions = async () => {
+const getAllTransactions = async (limit?: number, offset?: number) => {
   const storedToken = localStorage.getItem('token');
 
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/list`, {
       headers: {
         Authorization: storedToken, 
+      },
+      params: {
+        limit, 
+        offset, 
       },
     });
 

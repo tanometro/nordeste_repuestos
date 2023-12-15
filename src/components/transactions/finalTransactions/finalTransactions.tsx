@@ -1,20 +1,21 @@
 'use client';
 
-import React from 'react'
-import List from '@/src/components/lists';
-import deleteTransaction from '@/src/components/requests/deleteTransaction';
+import React, {useEffect} from 'react'
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from "next/navigation";
 import { DateRange } from 'react-date-range'
 import format from 'date-fns/format'
 import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { isWithinInterval } from 'date-fns';
+import deleteTransaction from '../../requests/deleteTransaction';
+import List from '../../lists';
 
-const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
+const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const {finalTransactions, setFinalTransactions}= props;
   const [range, setRange] = useState([
     {
@@ -23,54 +24,54 @@ const FinalTransacions: React.FC<FinalTransactionsProps> = (props) => {
       key: 'selection'
     }
   ]);
+  
   const [open, setOpen] = useState(false);
   const refOne = useRef<HTMLDivElement | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
+
   const [searchByMechanic, setSearchByMechanic] = useState<string>("");
-  const [filteredByMechanic, setFilteredByMechanic ] = useState<TransactionInterface[]>([]);
   const [searchByClient, setSearchByClient ] = useState<string>("");
-  const [filteredByClient, setFilteredByClient ] = useState<TransactionInterface[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
   
-   
-    const applyFilters = () => {
-      let filteredResult = [...finalTransactions];
-  
-      if (searchByMechanic.trim() !== "") {
-        filteredResult = filteredResult.filter((transaction) =>
-          transaction.userAssociatedName.toLowerCase().includes(searchByMechanic.toLowerCase())
-        );
-      }
- 
-      if (searchByClient.trim() !== "") {
-        filteredResult = filteredResult.filter((transaction) =>
-          transaction.finalCustomerName.toLowerCase().includes(searchByClient.toLowerCase())
-        );
-      }
-      
-      filteredResult = filteredResult.filter((transaction) => transaction.status === true);
-      setFilteredTransactions(filteredResult);
-    };
+  const [currentPage, setCurrentPage] = useState(1);
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+  const firstIndex = lastIndex - pagination;
 
-    const searchClient = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrentPage(0);
-      setSearchByClient(target.value);
-      const client = await filterByFinalCustomer(searchByClient);
-      setFilteredByClient(client);
-      applyFilters();
-   };
+  // const fetchData = async () => {
+  //   const mechanic = await filterByMechanic(searchByMechanic);
+  //   console.log(searchByMechanic);
+    
+  //   const client = await filterByFinalCustomer(searchByClient);
+  //   console.log(client);
+    
+  //   const toShow = [...mechanic, ...client];
+  //   setFilteredTransactions(toShow);    
+    
+  // };
 
-  const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentPage(0);
-    setSearchByMechanic(target.value);
+  const searchMechanic = async () => {
+    setCurrentPage(1);
     const mechanic = await filterByMechanic(searchByMechanic);
-    setFilteredByMechanic(mechanic);
-    applyFilters();
- };
+    setFilteredTransactions(mechanic);     
+    console.log(filteredTransactions);
+      
+  }
+  const searchClient = async () => {
+    setCurrentPage(1);
+    const client = await filterByFinalCustomer(searchByClient);
+    setFilteredTransactions(client);  
+  }
+  
+  useEffect(() => {
+    searchMechanic();
+  }, [searchByMechanic]);
+  useEffect(() => {
+    searchClient();
+  }, [searchByClient]);
+  
 
  const hideOnEscape = (e: React.KeyboardEvent) => {
-  
   if( e.key === "Escape" ) {
     setOpen(false)
   }
@@ -82,10 +83,38 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
   }
 }
 
+const rangeChange = (item: any) => {
+  console.log("Date Range Changed", item);
+  setRange([item.selection]);
+}
+
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
+    const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
+    const npage = Math.ceil(aceptedTransaction.length / pagination);
+    const numbers: number[] = [];
+      for (let i = 1; i <= npage; i++) {
+        numbers.push(i);
+    }
+    const prevPage = () => {
+      if(currentPage !== 1) {
+        setCurrentPage(currentPage - 1)
+      }
+    }; 
+
+    const nextPage = () => {
+      if(currentPage !== npage) {
+        setCurrentPage(currentPage + 1)
+      }
+    };
+
+    const changePage = (id: number) => {
+      setCurrentPage(id)
+    };
+
+    const toShow = searchByClient || searchByMechanic? filteredTransactions : transactionShow
 
     return (
-      <div className='w-full'>
+      <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
           <div className="flex justify-center mt-12 w-7/12">
             <input
@@ -93,7 +122,7 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
               placeholder="Busca por NOMBRE o DNI de mecánico"
               type="text"
               value={searchByMechanic}
-              onChange={searchMechanic}
+              onChange={(e) => setSearchByMechanic(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12 w-7/12">
@@ -102,7 +131,7 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
               placeholder="Busca por NOMBRE o DNI de cliente"
               type="text"
               value={searchByClient}
-              onChange={searchClient}
+              onChange={(e) => setSearchByClient(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12 w-6/12">
@@ -115,9 +144,9 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
               />
               <div ref={refOne} >
                 {open && 
-                  <DateRange
+                <DateRange
                   onChange={(item) => {
-                    const { startDate, endDate } = item.selection;
+                  const { startDate, endDate } = item.selection;
                     if (startDate !== undefined && endDate !== undefined) {
                       setRange([{ startDate, endDate, key: 'selection' }]);
                     }
@@ -142,8 +171,9 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
                   <table className="min-w-full text-left text-sm font-light">
                     <thead className="border-b font-medium dark:border-neutral-500">
                       <tr>
-                        <th scope="col" className="px-6 py-4">Número</th>
+                        <th scope="col" className="px-6 py-4">Numero</th>
                         <th scope="col" className="px-6 py-4">Usuario</th>
+                        <th scope="col" className="px-6 py-4">DNI</th>
                         <th scope="col" className="px-6 py-4">Cliente</th>
                         <th scope="col" className="px-6 py-4">Fecha</th>
                         <th scope="col" className="px-6 py-4">Total</th>
@@ -151,54 +181,60 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredTransactions.length > 0 ? (
-                        filteredTransactions.map((transaction, index) => (
-                          <tr
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
+                      {toShow.map((transaction, index) => (
+                    <tr key={index}
+                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
+                        <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedDni}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}$</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
-                    <td>
-                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
-                    <a className="text-custom-red px-3">Ver detalles</a>
-                      </button>
-                    </td>
-                    <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
-                      </button>
-                    </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleTotalAmount}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
+                      <td>
+                        <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
+                          <a className="text-custom-red px-3">Ver detalles</a>
+                        </button>
+                      </td>
+                      <td>
+                        <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
+                          <a className="text-custom-red px-3">Eliminar</a>
+                        </button>
+                      </td>
                     </tr>
-                        ))
-                      ) : (
-                        aceptedTransaction.map((transaction, index) => (
-                          <tr
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base"> {transaction.saleTotalAmount}$</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
-                    <td>
-                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
-                    <a className="text-custom-red px-3">Ver detalles</a>
-                      </button>
-                    </td>
-                    <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setFinalTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
-                      </button>
-                    </td>
-                    </tr>
-                        ))
-                      )}
+                      ))}
                     </tbody>
                   </table>
                 </List>
+                <div className="flex items-center justify-center mt-6 space-x-4">
+                  <button
+                    type="button"
+                    onClick={prevPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Anteriores
+                  </button>
+                  {
+                    numbers.map((n, i) => (
+                      <div className='text-black flex items-center'>
+                        <button
+                          key={i}
+                          onClick={() => changePage(n)}
+                          className="text-red mx-2"
+                        >
+                          {n}
+                        </button>
+                      </div>
+                        ))
+                      }
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Siguientes
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -207,4 +243,4 @@ const hideOnClickOutside = (e: React.MouseEvent) => {
     );
 }
 
-export default FinalTransacions;
+export default FinalTransactions;
