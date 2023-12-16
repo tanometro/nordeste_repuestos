@@ -4,7 +4,7 @@ import Header from "@/src/components/header";
 import { useRouter } from 'next/navigation';
 import { useState} from "react";
 import postUser from "@/src/components/requests/postUser";
-import validations from "@/src/components/validations";
+import validations from "@/src/components/validations/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
 import { UserPost } from "@/src/components/interfaces";
 

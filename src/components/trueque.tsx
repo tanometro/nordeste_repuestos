@@ -89,7 +89,7 @@ function Trueque() {
           placeholder="Monto"
           name="totalAmount"
           onChange={onChange}
-          value={sellData.totalAmount}
+          value={-sellData.totalAmount}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />

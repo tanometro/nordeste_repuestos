@@ -64,6 +64,11 @@ export interface ValidationsInterface {
   dni: string,
   password: string
 }
+export interface ValidationsTransaction {
+  finalCustomerName: string,
+  concept: string,
+  finalCustomerDni: string,
+}
 
 export interface ErrorType {
   name: string;
