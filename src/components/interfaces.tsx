@@ -20,8 +20,8 @@ export interface UserPost {
 }
 
 export interface SellInterface {
-  finalCustomerName: string,
-  finalCustomerDni: string,
+  finalCustomerName: string | null,
+  finalCustomerDni: string | null,
   mechanicUserId: number,
   totalAmount: number,
   concept: string,
