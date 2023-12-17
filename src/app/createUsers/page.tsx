@@ -93,7 +93,7 @@ let roles = [2, 3];
           <div className="flex justify-center mt-32 h-screen">
             <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
               <select
-                className="rounded-2xl border border-custom-red w-1/2 h-8 text-center text-black mb-4"
+                className="rounded-2xl border border-custom-red w-1/2 h-8 text-center text-black"
                 onChange={handleChange}
                 required
                 name="roleId"
@@ -111,7 +111,7 @@ let roles = [2, 3];
                 <input
                 name="name"
                 placeholder="Nombre" 
-                className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+                className="rounded-2xl border border-custom-red w-1/2 text-center text-black mt-4"
                 value={userData.name}
                 onChange={handleChange}
                 required/>
@@ -119,7 +119,7 @@ let roles = [2, 3];
                 <input 
                 name="username"
                 placeholder="Username" 
-                className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+                className="rounded-2xl border border-custom-red w-1/2 text-center text-black mt-4"
                 value={userData.username}
                 onChange={handleChange}
                 required/>
@@ -127,7 +127,7 @@ let roles = [2, 3];
                 <input 
                 name="dni"
                 type="number"
-                placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+                placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mt-4"
                 value={userData.dni}
                 onChange={handleChange}
                 required/>
@@ -135,7 +135,7 @@ let roles = [2, 3];
                 <input 
                 name="password"
                 placeholder="Contraseña"
-                className={userData.roleId == 3 ? "rounded-2xl border border-custom-red w-1/2 text-center text-black " : "rounded-2xl border border-custom-red w-1/2 text-center text-black mb-2"}
+                className={userData.roleId == 3 ? "rounded-2xl border border-custom-red w-1/2 text-center text-black mt-4" : "rounded-2xl border border-custom-red w-1/2 text-center text-black mt-4"}
                 value={userData.password}
                 onChange={handleChange}
                 required/>
@@ -150,11 +150,11 @@ let roles = [2, 3];
                 {passwordError && <p className="text-red-500">{passwordError}</p>} */}
                 {userData.roleId == 3 ? (
                 <>
-                <label className='text-black'>Comisión %:</label>
+                <label className='text-black mt-2'>Comisión %:</label>
                 <input 
                 name="commission"
                 placeholder="% comisión"
-                className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+                className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
                 value={userData.commission !== null ? userData.commission.toString() : ""}
                 onChange={handleChange}/>
                 </>
@@ -162,7 +162,7 @@ let roles = [2, 3];
                   ""
                 )}
                 <button type="submit" 
-                className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-4">
                     Crear usuario
                 </button>
         </form>

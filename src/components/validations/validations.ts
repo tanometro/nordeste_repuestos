@@ -2,7 +2,7 @@ import { ValidationsInterface } from "../interfaces";
 
 export default function validations(inputs: ValidationsInterface) {
   const regexName = /^[a-zA-Z\s]*$/;
-  const regexUsername = /^\S*$/; // No permite espacios
+  const regexUsername = /^[a-zA-Z]+$/; // No permite espacios y solo string
   const regexDNI = /^\d+$/; // Asume que el DNI debe contener solo dígitos
 
   let errors = {
@@ -21,7 +21,7 @@ export default function validations(inputs: ValidationsInterface) {
 
   // Validación del username
   if (!regexUsername.test(inputs.username)) {
-    errors.username = "El nombre de usuario no puede contener espacios";
+    errors.username = "El nombre de usuario solo puede contener letras y no puede tener espacios ni números";
   } else {
     errors.username = "";
   }
