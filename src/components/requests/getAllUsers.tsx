@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
 
-// Obtiene todos los usuarios //
 const getAllUsers = async () => {
   const storedToken = localStorage.getItem('token');
 
@@ -13,8 +12,7 @@ const getAllUsers = async () => {
 
     if (response.status !== 200) {
       if (response.status === 401) {
-       
-        window.location.href = '/'; 
+        window.location.href = '/login?tokenExpired=true';
       } else {
         throw new Error(`Error en la solicitud: ${response.status}`);
       }
@@ -39,5 +37,3 @@ const getAllUsers = async () => {
 };
 
 export default getAllUsers;
-
-

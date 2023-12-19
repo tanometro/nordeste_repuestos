@@ -19,6 +19,11 @@ export interface UserPost {
   commission: number | null,
 }
 
+export interface PrimaryButtonProps {
+  title: string,
+  onClickfunction: () => void;
+}
+
 export interface SellInterface {
   finalCustomerName: string | null,
   finalCustomerDni: string | null,
@@ -65,9 +70,9 @@ export interface ValidationsInterface {
   password: string
 }
 export interface ValidationsTransaction {
-  finalCustomerName: string,
-  concept: string,
-  finalCustomerDni: string,
+  finalCustomerName: string | null;
+  concept: string | null;
+  finalCustomerDni: string | null;
 }
 
 export interface ErrorType {
@@ -128,11 +133,10 @@ export interface BalanceListInterface {
 }
 
 export interface PaginationProps {
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  filteredData: any[]; 
-  renderData: (data: any[]) => React.ReactNode; 
-  onPageChange: (newPage: number) => void;
+  data: any[];
+  recordsPerPage: number,
+  currentPage: number,
+  setCurrentPage: (pageNumber: number) => void;
 }
 
 export interface CustomResponse extends Response {
@@ -141,4 +145,10 @@ export interface CustomResponse extends Response {
 
 export interface TransactionProps {
   data: TransactionInterface[],
+}
+
+export interface SearchParameters {
+  dni_or_name: string | number;
+  from_date?: string;
+  to_date?: string;
 }

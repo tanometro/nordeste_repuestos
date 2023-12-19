@@ -10,6 +10,7 @@ import FinalTransactions from '@/src/components/transactions/finalTransactions/f
 import MechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/mechanicsTransactions';
 import DelFinalTransactions from '@/src/components/transactions/finalTransactions/delFinalTransactions';
 import DelMechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/delMechanicsTransactions';
+import PrimaryButton from '@/src/components/buttons/primaryButton';
 
 
 function AllTransacions() {
@@ -43,7 +44,6 @@ function AllTransacions() {
   return (
     <div className='w-full'>
       <Header title='Todas las transacciones'/>
-    
       <div className="flex flex-col items-center w-full">
         {component ? (
           active ? 
@@ -55,34 +55,10 @@ function AllTransacions() {
           )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 mx-auto mb-4 flex justify-center">
-        <button
-          type="button"
-          onClick={() => setComponent(!component)}
-          className="w-48 mr-1 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          {component ? "Ver intercambio" : "Ver ventas"}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/createTransaction')}
-          className="w-48 mx-1 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          Crear nueva
-        </button>
-        <button
-          type="button"
-          onClick={toggleActive}
-          className="w-48 mx-1 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          {active ? "Oper. eliminadas" : "Opera. confirmadas"}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/dashboard')}
-          className="w-48 ml-1 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        >
-          Ir al inicio
-        </button>
+        <PrimaryButton title={component ? "Ver intercambio" : "Ver ventas"} onClickfunction={() => setComponent(!component)}/>
+        <PrimaryButton title='Crear nueva' onClickfunction={() => router.push('/createTransaction')}/>
+        <PrimaryButton title={active ? "Oper. eliminadas" : "Opera. confirmadas"} onClickfunction={toggleActive}/>
+        <PrimaryButton title='Ir al inicio' onClickfunction={() => router.push('/dashboard')}/>
       </div>
     </div>
   )

@@ -5,6 +5,8 @@ import { useState } from "react";
 import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveMechanicsProps } from "@/src/components/interfaces";
+import Pagination from "../../pagination";
+import EditButton from "../../buttons/editButton";
 
 const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
 const {mechanics, setMechanics} = props;
@@ -28,107 +30,55 @@ const filteredUsers = mechanics.filter((user) => {
 
 const userActive = filteredUsers.filter((user) => user.isActive == true);
 const userShow = userActive.slice(firstIndex, lastIndex);
-const npage = Math.ceil(userActive.length / pagination);
-const numbers: number[] = [];
-  for (let i = 1; i <= npage; i++) {
-    numbers.push(i);
-}
 
-   const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const searchUser = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(target.value);
-  };
-  
-  const prevPage = () => {
-    if(currentPage !== 1) {
-      setCurrentPage(currentPage - 1)
-    }
-  }; 
-
-  const nextPage = () => {
-    if(currentPage !== npage) {
-      setCurrentPage(currentPage + 1)
-    }
-  };
-
-  const changePage = (id: number) => {
-    setCurrentPage(id);
   };
 
     return (
-            <div className="flex flex-col items-center">
-              <div className="flex justify-center mt-6 w-full">
-                  <input 
-                  className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
-                  placeholder="Busca por NOMBRE o DNI"
-                  type="text"
-                  value={search}
-                  onChange={searchUser}
-                  />
-              </div>
-              <List>
-              <table className="min-w-full text-left text-sm font-light">
-                <thead className="border-b font-medium dark:border-neutral-500">
-                  <tr className="border-b border-gray">
-                      <th scope="col" className="px-6 py-4">Nombre</th>
-                      <th scope="col" className="px-6 py-4">Dni</th>
-                      <th scope="col" className="px-6 py-4">Tipo</th>
-                      <th scope="col" className="px-6 py-4">Saldo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {userShow.map((user, index) => (
+      <div className="flex flex-col items-center mb-24">
+        <div className="flex justify-center mt-6 w-full">
+          <input 
+            className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
+            placeholder="Busca por NOMBRE o DNI"
+            type="text"
+            value={search}
+            onChange={searchUser}
+          />
+        </div>
+          <List>
+            <table className="min-w-full text-left text-sm font-light">
+              <thead className="border-b font-medium dark:border-neutral-500">
+                <tr className="border-b border-gray">
+                  <th scope="col" className="px-6 py-4">Nombre</th>
+                  <th scope="col" className="px-6 py-4">Dni</th>
+                  <th scope="col" className="px-6 py-4">Tipo</th>
+                  <th scope="col" className="px-6 py-4">Saldo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userShow.map((user, index) => (
                   <tr key={index} 
-                    className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.roleId === 3 ? 'Mecánico' : ''}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.balance === 0 ? '0' : user.balance}</td>
                     <td>
-                      <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                        <a className="text-custom-red px-3">Ver usuario</a>
-                      </button>
+                      <EditButton title='Ver usuario' onClickfunction={() => router.push(`/editUser/${user.id}`)}/>
                     </td>
                     <td>
-                      <button onClick={() => deleteUser(user.id, setMechanics)}>
-                        <a className="text-custom-red px-3">Desactivar</a>
-                      </button>
+                      <EditButton title='Desactivar' onClickfunction={() => deleteUser(user.id, setMechanics)}/>
                     </td>
                   </tr>
                 ))}
-                  </tbody>
-                </table>
-              </List>
-                <div className="flex items-center justify-center mt-6 space-x-4">
-                  <button
-                    type="button"
-                    onClick={prevPage}
-                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  >
-                    Anteriores
-                  </button>
-                    {
-                      numbers.map((n, i) => (
-                        <div className='text-black flex items-center'>
-                          <button
-                            key={i}
-                            onClick={() => changePage(n)}
-                            className="text-red mx-2"
-                          >
-                            {n}
-                          </button>
-                        </div>
-                      ))
-                    }
-                  <button
-                    type="button"
-                    onClick={nextPage}
-                    className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  >
-                    Siguientes
-                  </button>
-                </div>
-                
-            </div>
+              </tbody>
+            </table>
+          </List>
+            <div className="flex items-center justify-center space-x-4">
+              <Pagination data={userActive} recordsPerPage={pagination} currentPage={currentPage} setCurrentPage={setCurrentPage}/>    
+            </div>    
+      </div>
     )
 }
 

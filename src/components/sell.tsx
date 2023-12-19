@@ -41,16 +41,17 @@ function NewSell() {
     setSellData({ ...sellData, [property]: value });
 
   };
-  const validateAndSetError = (property: string, value: string) => {
-    const validationError = validateTransaction({ ...sellData, [property]: value });
+  const validateAndSetError = (property: keyof ValidationsTransaction, value: string) => {
+    const validationError = validateTransaction({ ...sellData, [property]: value as string });
     setErrors({ ...errors, [property]: validationError[property] });
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const property = e.target.name;
+    const property = e.target.name as keyof ValidationsTransaction;
     const value = e.target.value;
     validateAndSetError(property, value);
   };
+  
 
   const calculateCommission = () => {
     if (user.commission !== null) {
@@ -85,7 +86,7 @@ function NewSell() {
           name="finalCustomerName"
           onChange={onChange}
           onBlur={handleBlur}
-          value={sellData.finalCustomerName}
+          value={sellData.finalCustomerName ?? ''}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
@@ -96,7 +97,7 @@ function NewSell() {
           placeholder="DNI sin puntos ni guiones"
           name="finalCustomerDni"
           onChange={onChange}
-          value={sellData.finalCustomerDni}
+          value={sellData.finalCustomerDni ?? ''}
           onBlur={handleBlur}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"

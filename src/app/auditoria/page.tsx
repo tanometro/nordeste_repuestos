@@ -7,6 +7,7 @@ import List from "@/src/components/lists";
 import filterByMechanic from "@/src/components/requests/filterByMechanic";
 import { BalanceListInterface } from '@/src/components/interfaces';
 import balanceList from '@/src/components/requests/balanceList';
+import EditButton from '@/src/components/buttons/editButton';
 
 
 const Auditoría = () => {
@@ -79,9 +80,7 @@ const Auditoría = () => {
                     <td className="whitespace-nowrap px-6 py-4"> {user.currentBalance}</td>
                     <td className="whitespace-nowrap px-6 py-4"> {user.userCommissionAtTheTime}</td>
                     <td>
-                        <button onClick={() => router.push(`/detailBalance/${user.id}`)}>
-                            <a className="text-custom-red px-3">Ver registro</a>
-                        </button>
+                      <EditButton title='Ver registro' onClickfunction={() => router.push(`/detailBalance/${user.id}`)}/>
                     </td>
                 </tr>
                 ))}
