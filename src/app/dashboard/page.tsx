@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from 'next/navigation';
-import Header from '@/src/app/components/header';
+import Header from '@/src/components/header';
 import { signOut, useSession } from "next-auth/react";
 
 export default function Dashboard() {
@@ -20,10 +20,10 @@ export default function Dashboard() {
   return (
     <div>
       <Header title="Dashboard" />
-      {/* <h1 className='text-black'>hola {storedToken}</h1> */}
-      <pre>
+      {/* <h1 className='text-black'>{storedToken}</h1> */}
+      {/* <pre>
         <code className='text-black'>{JSON.stringify(session, null, 2)}</code>
-      </pre>
+      </pre> */}
       <div className="h-full w-full my-6">
         <div className='flex flex-col mt-32 items-center'>
           <div className='justify-arround '>
@@ -37,7 +37,7 @@ export default function Dashboard() {
             </button>
           </div>
           <div className='flex justify-arround'>
-            <button onClick={() => router.push('/transactions')}
+            <button onClick={() => router.push('/allTransactions')}
               className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               Transacciones
             </button>
@@ -47,8 +47,12 @@ export default function Dashboard() {
             </button>
           </div>
           <div className='flex justify-arround '>
+            <button onClick={() => router.push('/auditoria')}
+              className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              Auditoría
+            </button>
             <button onClick={logOut}
-              className="w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              className="mr-10 mb-10 w-60 h-20 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               Salir
             </button>
           </div>
@@ -70,5 +74,4 @@ export default function Dashboard() {
       </div>
     </div>
   )
-}
-
+};

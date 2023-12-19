@@ -20,3 +20,10 @@ body {
   color: rgb(var(--foreground-rgb));
   background: var(--foreground-rgb)
 }
+
+.input-with-sign::before {
+  content: '-';
+  position: absolute;
+  margin-left: 5px;  
+  color: #000;  
+}

@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import getOneUser from '@/src/app/components/requests/getOneuser';
-import patchUser from '@/src/app/components/requests/patchUser';
-import Header from '@/src/app/components/header';
-
+import getOneUser from '@/src/components/requests/getOneuser';
+import patchUser from '@/src/components/requests/patchUser';
+import deleteTransaction from '@/src/components/requests/deleteTransaction';
+import Header from '@/src/components/header';
+import filterByMechanic from '@/src/components/requests/filterByMechanic';
+import { TransactionInterface } from '@/src/components/interfaces';
 
 export default function EditUserForm () {
-  const storedToken = localStorage.getItem('token');
   const params = useParams();
   const userId = Array.isArray(params.id) ? parseInt(params.id[0], 10) : parseInt(params.id, 10);
   const router = useRouter();
@@ -25,11 +26,17 @@ export default function EditUserForm () {
     id: 0,
     isActive: true,
   });
+
+
+  const [transactions, setTransactions] = useState<TransactionInterface[]>([])
+
   useEffect(() => {
     async function fetchData() {
       try {
         const user = await getOneUser(userId);
+        const transactions = await filterByMechanic(userId);
         setUserData(user);
+        setTransactions(transactions);
       } catch (error) {
         console.error("Error en render componente", error);
       }
@@ -54,13 +61,8 @@ export default function EditUserForm () {
       router.push('/allUsers')
     };
 
-  const { balance, commission, dni, name, roleId, username, id } = userData;
-
   return (
     <div>
-      <div>
-        
-      </div>
       {
         isEditing ? (
           <Header title="Editando usuario"/>
@@ -71,7 +73,7 @@ export default function EditUserForm () {
       }
       <div className="flex justify-center items-center">
     {isEditing ? (
-      <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2 mt-12">
         <label className="text-clip text-black">Nombre:</label>
         <input
           name="name"
@@ -91,33 +93,33 @@ export default function EditUserForm () {
           required
         />
         <label className="text-clip text-black">DNI:</label>
-        <input 
-          name="dni"
-          type="number"
-          placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.dni}
-          onChange={handleChange}
-          required
-        />
+          <input 
+            name="dni"
+            type="number"
+            placeholder="DNI" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+            value={userData.dni}
+            onChange={handleChange}
+            required
+          />
         <label className="text-clip text-black">Password:</label>
-        <input 
-          name="password"
-          placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.password}
-          onChange={handleChange}
-          required
-        />
+          <input 
+            name="password"
+            placeholder="Contraseña" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+            value={userData.password}
+            onChange={handleChange}
+            required
+          />
         {
           userData.roleId == 3 ? (
           <div>
           <label className="text-clip text-black">Comisión %:</label>
             <input 
-          name="commission"
-          placeholder="Comisión %" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
-          value={userData.commission || ""} 
-          onChange={handleChange}
-          required
-        />
+              name="commission"
+              placeholder="Comisión %" className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4"
+              value={userData.commission || ""} 
+              onChange={handleChange}
+              required
+            />
         </div>
           ) : null
         }
@@ -131,22 +133,22 @@ export default function EditUserForm () {
     ) : (
       <div className="flex flex-col items-center w-1/2">
         {isEditing ? (
-          <h1 className="text-center text-black mb-4">Editando el usuario {name}</h1>
+          <h1 className="text-center text-black mb-4">Editando el usuario {userData.name}</h1>
         ) :
         (
-          <h1 className="text-center text-black mb-4">Detalle del usuario {name}</h1>
+          <h1 className="text-center text-black mb-4">Detalle del usuario {userData.name}</h1>
         )}
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {name}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">ID: {id}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {username}</h1>
-        {roleId == 3 ? (
-          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {balance}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Nombre: {userData.name}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">ID: {userData.id}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Username: {userData.username}</h1>
+        {userData.roleId == 3 ? (
+          <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Saldo: {userData.balance}</h1>
         ) : ""
         }
         <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">
-        Rol: {roleId == 1 ? "SúperAdmin" : roleId == 2 ? "Admin" : roleId == 3 ? "Mecánico" : ""}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {dni}</h1>
-        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión %: {commission? commission : "No tiene comisiones"}</h1>
+        Rol: {userData.roleId == 1 ? "SúperAdmin" : userData.roleId == 2 ? "Admin" : userData.roleId == 3 ? "Mecánico" : ""}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Dni: {userData.dni}</h1>
+        <h1 className="rounded-2xl border border-custom-red w-1/2 text-center text-black mb-4">Comisión: {userData.commission? `${userData.commission * 100}%` : "No tiene comisiones"}</h1>
           <button
           className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           onClick={handleEditClick}>
@@ -154,7 +156,53 @@ export default function EditUserForm () {
           </button>
       </div>
     )}
-  </div>
+      </div>
+      <div className="flex justify-center items-center">
+        <h3 className="mt-14 text-3xl font-bold mb-1 text-black">Transacciones del usuario</h3>
+      </div>
+      <div>
+      <div className="flex items-center justify-center mt-1 p-8 ">
+            <div className="shadow-xl rounded-2xl border-custom-red border-2 p-8 text-black">
+            <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-4">Número</th>
+                        <th scope="col" className="px-6 py-4">Cliente</th>
+                        <th scope="col" className="px-6 py-4">Fecha</th>
+                        <th scope="col" className="px-6 py-4">Total</th>
+                        <th scope="col" className="px-6 py-4">Comisión</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {transactions.map((transaction, index) => (
+                          <tr
+                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
+                        <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">
+                          {transaction.isFinalCustomerTransaction == true ? transaction.finalCustomerName : "Intercambio"}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base"> 
+                        {transaction.isFinalCustomerTransaction == true ? transaction.saleTotalAmount : `-${transaction.saleTotalAmount}`}$
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.saleCommissionedAmount}$</td>
+                    <td>
+                      <button onClick={() => router.push(`/detailtransaction/${transaction.id}`)}>
+                    <a className="text-custom-red px-3">Ver detalles</a>
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => deleteTransaction(transaction.id, setTransactions)}>
+                    <a className="text-custom-red px-3">Eliminar</a>
+                      </button>
+                    </td>
+                    </tr>
+                  ))}
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+      </div>
     </div>
   )
 }
