@@ -21,7 +21,6 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
     
-
     const searchUser = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentPage(0);
         setSearch(target.value);

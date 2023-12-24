@@ -44,9 +44,8 @@ const Auditoría = () => {
   return (
     <div>
        <Header title='Auditoría de transacciones'/>
-   
-    <div className="flex flex-col items-center">
-        <div className="flex justify-center mt-6 w-full">
+        <div className="flex flex-col items-center">
+          <div className="flex justify-center mt-6 w-full">
             <input 
               className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
               placeholder="Busca por NOMBRE o DNI de mecánico"
@@ -56,9 +55,9 @@ const Auditoría = () => {
             />
         </div>
         <List>
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b font-medium dark:border-neutral-500">
-                <tr>
+          <table className="min-w-full text-left text-sm font-light">
+            <thead className="border-b font-medium dark:border-neutral-500">
+              <tr>
                   <th scope="col" className="px-6 py-4">Número</th>
                   <th scope="col" className="px-6 py-4">Nombre</th>
                   <th scope="col" className="px-6 py-4">DNI</th>

@@ -4,6 +4,7 @@ import postTransaction from './requests/postTransaction';
 import SelectUser from './selectUser';
 import validateTransaction from './validations/transactionValidations';
 import { useRouter } from 'next/navigation';
+import SubmitButton from './buttons/submitButton';
 
 function NewSell() {
   const router = useRouter();
@@ -52,7 +53,6 @@ function NewSell() {
     validateAndSetError(property, value);
   };
   
-
   const calculateCommission = () => {
     if (user.commission !== null) {
       const total = sellData.totalAmount * user.commission;
@@ -125,14 +125,11 @@ function NewSell() {
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
-         <label className='text-black'>Comisión para el usuario:</label>
+         <label className='text-black'>Comisión para el usuario: {comisionUser()}%</label>
          <label className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black flex items-center justify-center mb-2">
-          {comisionUser()}% / {calculateCommission()}$
-        </label>
-        <button type="submit" 
-         className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            Crear transacción
-         </button>
+          {calculateCommission()}$
+          </label>
+          <SubmitButton title='Crear transacción'/>
       </form>
     </div>
   );

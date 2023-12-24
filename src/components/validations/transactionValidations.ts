@@ -30,4 +30,3 @@ const validateTransaction = (inputs: ValidationsTransaction) => {
 };
 
 export default validateTransaction;
-

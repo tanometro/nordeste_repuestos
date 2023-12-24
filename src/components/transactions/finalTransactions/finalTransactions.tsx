@@ -5,17 +5,15 @@ import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { FinalTransactionsProps, TransactionInterface, SearchParameters } from '@/src/components/interfaces';
 import { useState, useRef } from 'react';
-import { useRouter } from "next/navigation";
 import { DateRange } from 'react-date-range'
 import format from 'date-fns/format'
 import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { isWithinInterval } from 'date-fns';
-import deleteTransaction from '../../requests/deleteTransaction';
 import List from '../../lists';
 import Pagination from '../../pagination';
-import EditButton from '../../buttons/editButton';
+import RenderResult from '../../renderResult';
 
 const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   const {finalTransactions, setFinalTransactions}= props;
@@ -29,7 +27,6 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   
   const [open, setOpen] = useState(false);
   const refOne = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
 
   const [searchByMechanic, setSearchByMechanic] = useState<SearchParameters>({
     dni_or_name: "",
@@ -38,23 +35,11 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
     dni_or_name: "",
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const pagination = 10;
   const lastIndex = currentPage * pagination;
   const firstIndex = lastIndex - pagination;
-
-  // const fetchData = async () => {
-  //   const mechanic = await filterByMechanic(searchByMechanic);
-  //   console.log(searchByMechanic);
-    
-  //   const client = await filterByFinalCustomer(searchByClient);
-  //   console.log(client);
-    
-  //   const toShow = [...mechanic, ...client];
-  //   setFilteredTransactions(toShow);    
-    
-  // };
 
   const searchMechanic = async () => {
     setCurrentPage(1);
@@ -95,7 +80,7 @@ const rangeChange = (item: any) => {
     const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
     const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
 
-    const toShow = searchByClient || searchByMechanic? filteredTransactions : transactionShow
+    // const toShow = searchByClient || searchByMechanic? filteredTransactions : transactionShow
 
     return (
       <div className='w-full mb-24'>
@@ -165,24 +150,13 @@ const rangeChange = (item: any) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {transactionShow.map((transaction) => (
-                    <tr key={transaction.id}
-                        className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100">
-                        <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedDni}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleTotalAmount}</td>
-                        <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
-                        <td>
-                          <EditButton title='Ver detalles' onClickfunction={() => router.push(`/detailtransaction/${transaction.id}`)}/>
-                        </td>
-                        <td>
-                          <EditButton title='Eliminar' onClickfunction={() => deleteTransaction(transaction.id, setFinalTransactions)}/>
-                        </td>  
-                    </tr>
-                      ))}
+                      <RenderResult 
+                        data={transactionShow} 
+                        filtered={filteredTransactions} 
+                        setFinalTransactions={setFinalTransactions} 
+                        searchByClient={searchByClient} 
+                        searchByMechanic={searchByMechanic}
+                      />
                     </tbody>
                   </table>
                 </List>

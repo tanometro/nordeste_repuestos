@@ -23,6 +23,9 @@ export interface PrimaryButtonProps {
   title: string,
   onClickfunction: () => void;
 }
+export interface SubmitButtonProps {
+  title: string,
+}
 
 export interface SellInterface {
   finalCustomerName: string | null,
@@ -151,4 +154,12 @@ export interface SearchParameters {
   dni_or_name: string | number;
   from_date?: string;
   to_date?: string;
+}
+
+export interface RenderProps {
+  data: TransactionInterface[],
+  filtered: TransactionInterface[],
+  setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+  searchByClient: SearchParameters,
+  searchByMechanic: SearchParameters
 }
