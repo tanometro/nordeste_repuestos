@@ -1,3 +1,6 @@
+import React, { ChangeEvent } from 'react';
+import { DateRange } from 'react-date-range';
+
 export interface UserInterface {
   dni: string;
   username: string;
@@ -158,8 +161,20 @@ export interface SearchParameters {
 
 export interface RenderProps {
   data: TransactionInterface[],
-  filtered: TransactionInterface[],
-  setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
-  searchByClient: SearchParameters,
-  searchByMechanic: SearchParameters
+  setFinalTransactions?: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+  eliminar: string,
 }
+
+export interface SearchInputProps {
+  placeholder: string,
+  value: string | number;
+  onChangeFunction: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+// export interface DateInputProps {
+//   onClickFunction: () => void;
+//   range: DateRange[];
+//   setRange: React.Dispatch<React.SetStateAction<DateRange[]>>;
+//   open: boolean;
+//   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+// }

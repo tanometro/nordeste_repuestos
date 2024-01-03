@@ -1,22 +1,42 @@
 'use client';
 
-import React, {useEffect} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
-import { FinalTransactionsProps, TransactionInterface, SearchParameters } from '@/src/components/interfaces';
-import { useState, useRef } from 'react';
+import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
 import { DateRange } from 'react-date-range'
 import format from 'date-fns/format'
 import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { isWithinInterval } from 'date-fns';
-import List from '../../lists';
-import Pagination from '../../pagination';
 import RenderResult from '../../renderResult';
+import SearchInput from '../../inputs/searchInput';
+import getAllTransactions from '../../requests/allTransactions';
+import PrimaryButton from '../../buttons/primaryButton';
 
-const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
-  const {finalTransactions, setFinalTransactions}= props;
+const FinalTransactions = () => {
+  
+  const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pagination = 10;
+  const lastIndex = currentPage * pagination;
+
+  // Cuando monta el componente //
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const transList = await getAllTransactions();
+        const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
+        setFinalTransactions(finalTransList); 
+        
+      } catch (error) {
+        console.error("Error en render componente", error);
+      }
+    }
+    fetchData();
+  }, []);
+  
   const [range, setRange] = useState([
     {
       startDate: new Date(),
@@ -36,22 +56,52 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pagination = 10;
-  const lastIndex = currentPage * pagination;
-  const firstIndex = lastIndex - pagination;
-
+  const loadMore = async () => {
+    try {
+      const next = await getAllTransactions(pagination, currentPage * pagination);
+      setFinalTransactions((prevTransactions) => [...prevTransactions, ...next]);
+      setCurrentPage((prevPage) => prevPage + 1);
+    } catch (error) {
+      console.error("Error al cargar la siguiente página", error);
+    }
+  };
+  
+  // const prevPage = async () => {
+  //   try {
+  //     if (currentPage > 1) {
+  //       const prev = await getAllTransactions(pagination, (currentPage - 2) * pagination);
+  //       setFinalTransactions(prev);
+  //       setCurrentPage((prevPage) => prevPage - 1);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al cargar la página anterior", error);
+  //   }
+  // }
+  
   const searchMechanic = async () => {
-    setCurrentPage(1);
-    const mechanic = await filterByMechanic(searchByMechanic);
-    setFilteredTransactions(mechanic); 
-      
-  }
+    try {
+      const mechanic = await filterByMechanic(searchByMechanic);
+      const filtered = mechanic.filter(
+        (transaction) => transaction.status === true
+      );
+      setFilteredTransactions(filtered);
+    } catch (error) {
+      console.error("Error en búsqueda de mecánico", error);
+    }
+  };
+  
   const searchClient = async () => {
-    setCurrentPage(1);
-    const client = await filterByFinalCustomer(searchByClient);
-    setFilteredTransactions(client);  
-  }
+    try {
+      const client = await filterByFinalCustomer(searchByClient);
+      const filtered = client.filter(
+        (transaction) => transaction.status === true
+      );
+      setFilteredTransactions(filtered);
+    } catch (error) {
+      console.error("Error en búsqueda de cliente", error);
+    }
+  };
+  
   
   useEffect(() => {
     searchMechanic();
@@ -59,7 +109,6 @@ const FinalTransactions: React.FC<FinalTransactionsProps> = (props) => {
   useEffect(() => {
     searchClient();
   }, [searchByClient]);
-  
 
  const hideOnEscape = (e: React.KeyboardEvent) => {
   if( e.key === "Escape" ) {
@@ -77,31 +126,24 @@ const rangeChange = (item: any) => {
   setRange([item.selection]);
 }
 
-    const aceptedTransaction = finalTransactions.filter((transaction) => transaction.status == true);
-    const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
+const transactionShow =
+(searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
+  ? filteredTransactions
+  : finalTransactions;
 
-    // const toShow = searchByClient || searchByMechanic? filteredTransactions : transactionShow
-
+  
     return (
       <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
           <div className="flex justify-center mt-12 w-7/12">
-            <input
-              className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"
-              placeholder="Busca por NOMBRE o DNI de mecánico"
-              type="text"
-              value={searchByMechanic.dni_or_name}
-              onChange={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}
+            <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
+            onChangeFunction={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}
             />
           </div>
           <div className="flex justify-center mt-12 w-7/12">
-            <input
-              className="rounded-2xl border border-custom-red h-10 w-8/12 text-center text-black"
-              placeholder="Busca por NOMBRE o DNI de cliente"
-              type="text"
-              value={searchByClient.dni_or_name}
-              onChange={(e) => setSearchByClient({...searchByClient, dni_or_name: e.target.value})}
-            />
+            <SearchInput placeholder='Busca por NOMBRE o DNI de cliente' value={searchByClient.dni_or_name}
+            onChangeFunction={(e) => setSearchByClient({...searchByClient, dni_or_name: e.target.value})}
+          />
           </div>
           <div className="flex justify-center mt-12 w-6/12">
             <div className="calendarWrap">
@@ -136,32 +178,10 @@ const rangeChange = (item: any) => {
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
-                <List>
-                  <table className="min-w-full text-left text-sm font-light">
-                    <thead className="border-b font-medium dark:border-neutral-500">
-                      <tr>
-                        <th scope="col" className="px-6 py-4">Numero</th>
-                        <th scope="col" className="px-6 py-4">Usuario</th>
-                        <th scope="col" className="px-6 py-4">DNI</th>
-                        <th scope="col" className="px-6 py-4">Cliente</th>
-                        <th scope="col" className="px-6 py-4">Fecha</th>
-                        <th scope="col" className="px-6 py-4">Total</th>
-                        <th scope="col" className="px-6 py-4">Comisión</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <RenderResult 
-                        data={transactionShow} 
-                        filtered={filteredTransactions} 
-                        setFinalTransactions={setFinalTransactions} 
-                        searchByClient={searchByClient} 
-                        searchByMechanic={searchByMechanic}
-                      />
-                    </tbody>
-                  </table>
-                </List>
+                <RenderResult data={transactionShow} setFinalTransactions={setFinalTransactions} eliminar='Eliminar'/>
                 <div className="flex items-center justify-center space-x-4">
-                 <Pagination data={aceptedTransaction} recordsPerPage={pagination} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+                  {/* <PrimaryButton title='Atrás' onClickfunction={prevPage}/> */}
+                  <PrimaryButton title='Cargar más' onClickfunction={loadMore}/>
                 </div>
               </div>
             </div>
