@@ -28,7 +28,7 @@ const postTransaction = async (transaction: SellInterface) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error);
+      window.alert(error);
       
     } else {
       window.alert("Error desconocido al crear la transacción");

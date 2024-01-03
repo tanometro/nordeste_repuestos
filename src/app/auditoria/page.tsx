@@ -7,6 +7,7 @@ import List from "@/src/components/lists";
 import filterByMechanic from "@/src/components/requests/filterByMechanic";
 import { BalanceListInterface } from '@/src/components/interfaces';
 import balanceList from '@/src/components/requests/balanceList';
+import EditButton from '@/src/components/buttons/editButton';
 
 
 const Auditoría = () => {
@@ -43,9 +44,8 @@ const Auditoría = () => {
   return (
     <div>
        <Header title='Auditoría de transacciones'/>
-   
-    <div className="flex flex-col items-center">
-        <div className="flex justify-center mt-6 w-full">
+        <div className="flex flex-col items-center">
+          <div className="flex justify-center mt-6 w-full">
             <input 
               className="rounded-2xl border border-custom-red w-1/2 text-center text-black"
               placeholder="Busca por NOMBRE o DNI de mecánico"
@@ -55,9 +55,9 @@ const Auditoría = () => {
             />
         </div>
         <List>
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b font-medium dark:border-neutral-500">
-                <tr>
+          <table className="min-w-full text-left text-sm font-light">
+            <thead className="border-b font-medium dark:border-neutral-500">
+              <tr>
                   <th scope="col" className="px-6 py-4">Número</th>
                   <th scope="col" className="px-6 py-4">Nombre</th>
                   <th scope="col" className="px-6 py-4">DNI</th>
@@ -79,9 +79,7 @@ const Auditoría = () => {
                     <td className="whitespace-nowrap px-6 py-4"> {user.currentBalance}</td>
                     <td className="whitespace-nowrap px-6 py-4"> {user.userCommissionAtTheTime}</td>
                     <td>
-                        <button onClick={() => router.push(`/detailBalance/${user.id}`)}>
-                            <a className="text-custom-red px-3">Ver registro</a>
-                        </button>
+                      <EditButton title='Ver registro' onClickfunction={() => router.push(`/detailBalance/${user.id}`)}/>
                     </td>
                 </tr>
                 ))}

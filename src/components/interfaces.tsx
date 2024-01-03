@@ -1,3 +1,6 @@
+import React, { ChangeEvent } from 'react';
+import { DateRange } from 'react-date-range';
+
 export interface UserInterface {
   dni: string;
   username: string;
@@ -19,9 +22,17 @@ export interface UserPost {
   commission: number | null,
 }
 
+export interface PrimaryButtonProps {
+  title: string,
+  onClickfunction: () => void;
+}
+export interface SubmitButtonProps {
+  title: string,
+}
+
 export interface SellInterface {
-  finalCustomerName: string,
-  finalCustomerDni: string,
+  finalCustomerName: string | null,
+  finalCustomerDni: string | null,
   mechanicUserId: number,
   totalAmount: number,
   concept: string,
@@ -63,6 +74,11 @@ export interface ValidationsInterface {
   username: string,
   dni: string,
   password: string
+}
+export interface ValidationsTransaction {
+  finalCustomerName: string | null;
+  concept: string | null;
+  finalCustomerDni: string | null;
 }
 
 export interface ErrorType {
@@ -123,11 +139,10 @@ export interface BalanceListInterface {
 }
 
 export interface PaginationProps {
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  filteredData: any[]; 
-  renderData: (data: any[]) => React.ReactNode; 
-  onPageChange: (newPage: number) => void;
+  data: any[];
+  recordsPerPage: number,
+  currentPage: number,
+  setCurrentPage: (pageNumber: number) => void;
 }
 
 export interface CustomResponse extends Response {
@@ -137,3 +152,29 @@ export interface CustomResponse extends Response {
 export interface TransactionProps {
   data: TransactionInterface[],
 }
+
+export interface SearchParameters {
+  dni_or_name: string | number;
+  from_date?: string;
+  to_date?: string;
+}
+
+export interface RenderProps {
+  data: TransactionInterface[],
+  setFinalTransactions?: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
+  eliminar: string,
+}
+
+export interface SearchInputProps {
+  placeholder: string,
+  value: string | number;
+  onChangeFunction: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+// export interface DateInputProps {
+//   onClickFunction: () => void;
+//   range: DateRange[];
+//   setRange: React.Dispatch<React.SetStateAction<DateRange[]>>;
+//   open: boolean;
+//   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+// }

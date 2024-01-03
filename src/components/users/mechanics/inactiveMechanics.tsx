@@ -5,6 +5,8 @@ import { useState } from "react";
 import activateUser from "@/src/components/requests/activateUser";
 import { useRouter } from "next/navigation";
 import { ActiveMechanicsProps } from "@/src/components/interfaces";
+import Pagination from "../../pagination";
+import EditButton from "../../buttons/editButton";
 
 const InactiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
   const {mechanics, setMechanics} = props;
@@ -28,26 +30,6 @@ const filteredUsers = mechanics.filter((user) => {
   //Paginación
   const userActive = filteredUsers.filter((user) => user.isActive == false);
   const userShow = userActive.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(userActive.length / pagination);
-  const numbers: number[] = [];
-    for (let i = 1; i <= npage; i++) {
-      numbers.push(i);
-  }
-  const prevPage = () => {
-    if(currentPage !== 1) {
-      setCurrentPage(currentPage - 1)
-    }
-  }; 
-
-  const nextPage = () => {
-    if(currentPage !== npage) {
-      setCurrentPage(currentPage + 1)
-    }
-  };
-
-  const changePage = (id: number) => {
-    setCurrentPage(id)
-  };
 
    const searchUser = ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
@@ -76,7 +58,6 @@ const filteredUsers = mechanics.filter((user) => {
                     </tr>
                 </thead>
                 <tbody>
-              
                   {userShow.map((user, index) => (
                     <tr key={index} 
                     className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
@@ -85,48 +66,18 @@ const filteredUsers = mechanics.filter((user) => {
                      <td className="whitespace-nowrap px-6 py-4">{user.roleId === 1 ? 'SúperAdmin' : user.roleId === 2 ? 'Admin' : user.roleId === 3 ? 'Mecánico' : ''}</td>
                      <td className="whitespace-nowrap px-6 py-4">{user.roleId === 1 || user.roleId === 2 ? 'Sin saldo' : user.roleId === 3 && user.balance === 0 ? '0' : user.balance}</td>
                       <td>
-                        <button onClick={() => router.push(`/editUser/${user.id}`)}>
-                          <a className="text-custom-red px-3">Ver usuario</a>
-                        </button>
+                        <EditButton title='Ver usuario' onClickfunction={() => router.push(`/editUser/${user.id}`)}/>
                       </td>
                       <td>
-                        <button onClick={() => activateUser(user.id, setMechanics)}>
-                          <a className="text-custom-red px-3">Re activar</a>
-                        </button>
+                        <EditButton title='Re activar' onClickfunction={() => activateUser(user.id, setMechanics)}/>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </List>
-            <div className="flex items-center justify-center mt-6 space-x-4">
-              <button
-                type="button"
-                onClick={prevPage}
-                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Anteriores
-              </button>
-              {
-                numbers.map((n, i) => (
-                  <div className='text-black flex items-center'>
-                    <button
-                      key={i}
-                      onClick={() => changePage(n)}
-                      className="text-red mx-2"
-                    >
-                      {n}
-                    </button>
-                  </div>
-                ))
-              }
-              <button
-                type="button"
-                onClick={nextPage}
-                className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Siguientes
-              </button>
+            <div className="flex items-center justify-center space-x-4">
+              <Pagination data={userActive} recordsPerPage={pagination} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
             </div>  
           </div>
     )

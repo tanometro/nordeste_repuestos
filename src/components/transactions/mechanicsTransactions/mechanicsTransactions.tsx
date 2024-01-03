@@ -1,85 +1,93 @@
 'use client';
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import List from '@/src/components/lists';
 import deleteTransaction from '@/src/components/requests/deleteTransaction';
-import { MechanicsTransactionsProps, TransactionInterface } from '@/src/components/interfaces';
-import { useState } from 'react';
+import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
 import { useRouter } from "next/navigation";
 import filterByMechanic from '../../requests/filterByMechanic';
+import Pagination from '../../pagination';
+import EditButton from '../../buttons/editButton';
+import SearchInput from '../../inputs/searchInput';
+import getAllTransactions from '../../requests/allTransactions';
+import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 
-const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
-  const {mechanicTransactions, setMechhanicTransactions}= props;
+const MechanicsTransactions = () => {
+  const [mechanicTransactions, setMechhanicTransactions] = useState<TransactionInterface[]>([]);
+
+   // Cuando monta el componente //
+   useEffect(() => {
+    async function fetchData() {
+      try {
+        const transList = await getAllTransactions(200, 0);
+        const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
+    
+        setMechhanicTransactions(mechTransList);
+      } catch (error) {
+        console.error("Error en render componente", error);
+      }
+    }
+    fetchData();
+  }, []);
+  
   const router = useRouter();
-  const [search, setSearch] = useState("");
-  const [mechanicFind, setMechanicFind] = useState<TransactionInterface[]>([]);
+ 
+  const [searchByMechanic, setSearchByMechanic] = useState<SearchParameters>({
+    dni_or_name: "",
+  });
+  const [searchByClient, setSearchByClient] = useState<SearchParameters>({
+    dni_or_name: "",
+  });
+  const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
+
   const [date, setDate] = useState("")
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10; 
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
     
-
-    const searchUser = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
-        setCurrentPage(0);
-        setSearch(target.value);
-
-        const usersFind = await filterByMechanic(search);
-        setMechanicFind(usersFind);
-     }
+  const searchMechanic = async () => {
+    setCurrentPage(1);
+    const mechanic = await filterByMechanic(searchByMechanic);
+    const filtered = mechanic.filter((transaction) => transaction.status === true);
+    setFilteredTransactions(filtered); 
+      
+  }
+  const searchClient = async () => {
+    setCurrentPage(1);
+    const client = await filterByFinalCustomer(searchByClient);
+    const filtered = client.filter((transaction) => transaction.status === true);
+    setFilteredTransactions(filtered);  
+  }
+  
+  useEffect(() => {
+    searchMechanic();
+  }, [searchByMechanic]);
+  useEffect(() => {
+    searchClient();
+  }, [searchByClient]);
     
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
         setDate(target.value);
     }
 
-    const aceptedTransaction = mechanicTransactions.filter((transaction) => transaction.status == true);
-    const transactionShow = aceptedTransaction.slice(firstIndex, lastIndex);
-    const npage = Math.ceil(aceptedTransaction.length / recordsPerPage);
-    const numbers: number[] = [];
-      for (let i = 1; i <= npage; i++) {
-        numbers.push(i);
-    }
-    const prevPage = () => {
-      if(currentPage !== 1) {
-        setCurrentPage(currentPage - 1)
-      }
-    }; 
-
-    const nextPage = () => {
-      if(currentPage !== npage) {
-        setCurrentPage(currentPage + 1)
-      }
-    };
-
-    const changePage = (id: number) => {
-      setCurrentPage(id)
-    };
-
+    const transactionShow = mechanicTransactions.slice(firstIndex, lastIndex);
 
   return (
-    <div className='w-full'>
       <div className="flex flex-col items-center h-screen w-full">
         <div className='flex items-center w-full'>
-            <div className="flex justify-center mt-12 w-1/2">
-              <input 
-              className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black"
-              placeholder="Busca por NOMBRE o DNI"
-              type="text"
-              value={search}
-              onChange={searchUser}
-              />
-            </div>
-            <div className="flex justify-center mt-12 w-1/2">
-              <input 
-              className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black"
-              placeholder="Desde"
-              type="date"
-              value={date}
-              onChange={searchDate}
-              />
-            </div>
+          <div className="flex justify-center mt-12 w-1/2">
+          <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
+            onChangeFunction={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}
+            />
           </div>
-          <div className="flex flex-col">
+          <div className="flex justify-center mt-12 w-1/2">
+          <SearchInput placeholder='Busca por NOMBRE o DNI de cliente' value={searchByClient.dni_or_name}
+            onChangeFunction={(e) => setSearchByClient({...searchByClient, dni_or_name: e.target.value})}
+          />
+          </div>
+        </div>
+        <div className="flex flex-col">
             <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="overflow-hidden">
@@ -104,14 +112,10 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
                         <td className="whitespace-nowrap px-6 py-4 text-base"> -{transaction.saleTotalAmount}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
                     <td>
-                      <button onClick={() => router.push(`/transaction/detail/${transaction.id}`)}>
-                    <a className="text-custom-red px-3">Ver detalles</a>
-                      </button>
+                      <EditButton title='Ver detalles' onClickfunction={() => router.push(`/detailtransaction/${transaction.id}`)}/>
                     </td>
                     <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setMechhanicTransactions)}>
-                    <a className="text-custom-red px-3">Eliminar</a>
-                      </button>
+                      <EditButton title='Eliminar' onClickfunction={() => deleteTransaction(transaction.id, setMechhanicTransactions)}/>
                     </td>
                     </tr>
                       ))}
@@ -119,40 +123,13 @@ const MechanicsTransactions: React.FC<MechanicsTransactionsProps> = (props) => {
                     </table>
                   </List>
                   <div className="flex items-center justify-center mt-6 space-x-4">
-                      <button
-                        type="button"
-                        onClick={prevPage}
-                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
-                        Anteriores
-                      </button>
-                      {
-                        numbers.map((n, i) => (
-                          <div className='text-black flex items-center'>
-                            <button
-                              key={i}
-                              onClick={() => changePage(n)}
-                              className="text-red mx-2"
-                            >
-                              {n}
-                            </button>
-                          </div>
-                        ))
-                      }
-                      <button
-                        type="button"
-                        onClick={nextPage}
-                        className="w-24 text-white bg-blue-600 hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
-                        Siguientes
-                      </button>
-                    </div>
+                    <Pagination data={mechanicTransactions} recordsPerPage={recordsPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+                  </div>
             </div>
            </div>
           </div>
         </div>
       </div>
-    </div>
   )
 }
 

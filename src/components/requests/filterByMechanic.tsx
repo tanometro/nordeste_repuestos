@@ -1,26 +1,33 @@
 import axios from "axios";
 import { TransactionInterface } from "../interfaces";
 
-const filterByMechanic = async (parameters: string | number): Promise<TransactionInterface[]> => {
-    
-    const storedToken = localStorage.getItem('token');
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByMechanic/?dni_or_name=${parameters}`, {
-        headers: {
-          Authorization: storedToken, 
-        },
-      });
+interface FilterParameters {
+  dni_or_name: string | number;
+  from_date?: string; 
+  to_date?: string;   
+}
+
+const filterByMechanic = async (parameters: FilterParameters): Promise<TransactionInterface[]> => {
+  const storedToken = localStorage.getItem('token');
   
-      if (response.status !== 200) {
-        throw new Error(`Error en la solicitud: ${response.status}`);
-      }
-  
-      const data = response.data;
-  
-      return data;
-    } catch (error) {
-      throw new Error("Error en obtener transacciones");
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByMechanic`, {
+      headers: {
+        Authorization: storedToken,
+      },
+      params: parameters, 
+    });
+
+    if (response.status !== 200) {
+      throw new Error(`Error en la solicitud: ${response.status}`);
     }
-  };
+
+    const data = response.data;
+
+    return data;
+  } catch (error) {
+    throw new Error("Error en obtener transacciones");
+  }
+};
 
 export default filterByMechanic;

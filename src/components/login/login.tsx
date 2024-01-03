@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import logReq from "../requests/login";
 import { signIn } from "next-auth/react";
 
-
 export default function Login (){
   const router = useRouter();
+  const { tokenExpired } = useParams();
+
   const [userData, setUserData] = useState({
       username: "", 
       password: "",
@@ -84,6 +85,9 @@ export default function Login (){
         onClick={() => handleView()}>
           {viewPass ? <FaEyeSlash /> : <FaEye />}
       </button>
+      <div>
+      {tokenExpired && <p>El token ha expirado. Por favor, inicia sesión nuevamente.</p>}
+      </div>
     </div>
         {errors && (
       <div className="error-message text-white">

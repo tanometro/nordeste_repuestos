@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { SellInterface } from './interfaces';
-import { UserInterface } from './interfaces';
+import { SellInterface, UserInterface, ValidationsTransaction } from './interfaces';
 import postTransaction from './requests/postTransaction';
 import SelectUser from './selectUser';
+import validateTransaction from './validations/transactionValidations';
+import { useRouter } from 'next/navigation';
+import SubmitButton from './buttons/submitButton';
 
 function NewSell() {
+  const router = useRouter();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({
+    finalCustomerName: '',
+    finalCustomerDni: '',
+    concept: '',
+  });
 
   const [sellData, setSellData] = useState<SellInterface>({
       finalCustomerName: '',
@@ -32,9 +40,19 @@ function NewSell() {
     const value = (e.target as HTMLInputElement).value;
 
     setSellData({ ...sellData, [property]: value });
-    //setErrors(validations({...dataDriver, [property] : value}));
+
+  };
+  const validateAndSetError = (property: keyof ValidationsTransaction, value: string) => {
+    const validationError = validateTransaction({ ...sellData, [property]: value as string });
+    setErrors({ ...errors, [property]: validationError[property] });
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const property = e.target.name as keyof ValidationsTransaction;
+    const value = e.target.value;
+    validateAndSetError(property, value);
+  };
+  
   const calculateCommission = () => {
     if (user.commission !== null) {
       const total = sellData.totalAmount * user.commission;
@@ -44,10 +62,17 @@ function NewSell() {
     }
   };
   
-  const onSubmit = () => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     postTransaction(sellData);
-    console.log(sellData);
-    
+    router.push('/allTransactions');
+  };
+  
+  const comisionUser = () => {
+    if(user.commission){
+      const userComm = user.commission * 100
+      return userComm;
+    }
   }
 
   return (
@@ -60,20 +85,24 @@ function NewSell() {
           placeholder="Nombre cliente"
           name="finalCustomerName"
           onChange={onChange}
-          value={sellData.finalCustomerName}
+          onBlur={handleBlur}
+          value={sellData.finalCustomerName ?? ''}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
+        <p className='text-custom-red'>{errors.finalCustomerName}</p>
         <label className='text-black'>DNI del cliente</label>
         <input
           type="text"
           placeholder="DNI sin puntos ni guiones"
           name="finalCustomerDni"
           onChange={onChange}
-          value={sellData.finalCustomerDni}
+          value={sellData.finalCustomerDni ?? ''}
+          onBlur={handleBlur}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
+        <p className='text-custom-red'>{errors.finalCustomerDni}</p>
         <label className='text-black'>Concepto de la venta</label>
         <input
           type="text"
@@ -81,9 +110,11 @@ function NewSell() {
           name="concept"
           onChange={onChange}
           value={sellData.concept}
+          onBlur={handleBlur}
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
+        <p className='text-custom-red'>{errors.concept}</p>
          <label className='text-black'>Monto de la venta</label>
         <input
           type="number"
@@ -94,14 +125,11 @@ function NewSell() {
           required
           className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black mb-2"
         />
-         <label className='text-black'>Comisión para el usuario:</label>
+         <label className='text-black'>Comisión para el usuario: {comisionUser()}%</label>
          <label className="rounded-2xl border border-custom-red h-10 w-1/2 text-center text-black flex items-center justify-center mb-2">
           {calculateCommission()}$
-        </label>
-        <button type="submit" 
-         className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            Crear transacción
-         </button>
+          </label>
+          <SubmitButton title='Crear transacción'/>
       </form>
     </div>
   );
