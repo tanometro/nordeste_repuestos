@@ -2,8 +2,23 @@
 import { useRouter } from 'next/navigation';
 import Header from '@/src/components/header';
 import { signOut, useSession } from "next-auth/react";
+// import {isAuthenticated} from '@/Utils/Auth';
+// import { isAuthenticated } from '@/app/AuthWellDone';
+// import { isAuthenticated } from '@/app/AuthWellDone';
+import { redirect } from 'next/navigation';
+import { useLayoutEffect } from 'react';
+import { isAuthenticated } from '../AuthWellDone';
+
 
 export default function Dashboard() {
+
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+
   const storedToken = localStorage.getItem('token');
   const router = useRouter();
   const defaultCommission = 5
@@ -57,18 +72,18 @@ export default function Dashboard() {
             </button>
           </div>
           <div className='mt-12 flex flex-row'>
-          <span className='text-black mr-3'>Comisión por defecto:</span>
-          <button className="mb-10 w-6 h-6 flex items-center justify-center text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            -
-          </button>
+            <span className='text-black mr-3'>Comisión por defecto:</span>
+            <button className="mb-10 w-6 h-6 flex items-center justify-center text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              -
+            </button>
 
-          <div className='text-black items-center justify-center mx-4'>
-            {defaultCommission}
-          </div>
+            <div className='text-black items-center justify-center mx-4'>
+              {defaultCommission}
+            </div>
 
-          <button className="mb-10 w-6 h-6 flex items-center justify-center text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            +
-          </button>
+            <button className="mb-10 w-6 h-6 flex items-center justify-center text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              +
+            </button>
           </div>
         </div>
       </div>

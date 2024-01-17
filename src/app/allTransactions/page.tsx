@@ -1,19 +1,28 @@
 'use client';
 
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import Header from '@/src/components/header';
 import getAllTransactions from '@/src/components/requests/allTransactions';
 import { TransactionInterface } from '@/src/components/interfaces';
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import FinalTransactions from '@/src/components/transactions/finalTransactions/finalTransactions';
 import MechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/mechanicsTransactions';
 import DelFinalTransactions from '@/src/components/transactions/finalTransactions/delFinalTransactions';
 import DelMechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/delMechanicsTransactions';
 import PrimaryButton from '@/src/components/buttons/primaryButton';
+import { isAuthenticated } from '../AuthWellDone';
 
 
 function AllTransacions() {
+
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+  
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);
   //const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);

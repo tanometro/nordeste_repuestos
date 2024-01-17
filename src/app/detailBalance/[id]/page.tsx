@@ -1,10 +1,19 @@
 'use client';
-import React, {useEffect, useState} from 'react'
-import { useParams, useRouter } from "next/navigation";
+import React, {useEffect, useLayoutEffect, useState} from 'react'
+import { redirect, useParams, useRouter } from "next/navigation";
 import Header from '@/src/components/header';
 import getOneTransaction from '@/src/components/requests/getOneTransaction';
+import { isAuthenticated } from '../../AuthWellDone';
 
 function DetailBalance() {
+
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+  
     const params = useParams();
     const router = useRouter();
 

@@ -1,14 +1,23 @@
 "use client";
 
 import Header from "@/src/components/header";
-import { useRouter } from 'next/navigation';
-import { useState} from "react";
+import { redirect, useRouter } from 'next/navigation';
+import { useLayoutEffect, useState} from "react";
 import postUser from "@/src/components/requests/postUser";
 import validations from "@/src/components/validations/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
 import { UserPost } from "@/src/components/interfaces";
+import { isAuthenticated } from "../AuthWellDone";
 
 export default function CreateUser () {
+
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+
   const storedToken = localStorage.getItem('token');
   const router = useRouter();
   const defaultCommission = useAppSelector(state => state.userReducer.defaultCommission);

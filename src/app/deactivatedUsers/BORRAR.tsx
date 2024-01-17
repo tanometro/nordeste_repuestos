@@ -2,11 +2,12 @@
 
 import Header from "@/src/components/header";
 import List from "@/src/components/lists";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import getAllUsers from "@/src/components/requests/getAllUsers";
 import activateUser from "@/src/components/requests/activateUser";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { UserInterface } from "@/src/components/interfaces";
+import { isAuthenticated } from "../AuthWellDone";
 // import { useAppSelector } from "@/redux/hooks";
 
 
@@ -20,6 +21,14 @@ interface User {
 }
 
 export default function Users(){
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+
+  
   // const users = useAppSelector(state => state.userReducer.users)
   const [users, setUsers] = useState<UserInterface[]>([]);
   const [search, setSearch] = useState("");

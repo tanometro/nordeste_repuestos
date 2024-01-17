@@ -3,15 +3,23 @@
 import Header from "../../components/header";
 import getAllUsers from "../../components/requests/getAllUsers";
 import { UserInterface } from "../../components/interfaces";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 import ActiveMechanics from "../../components/users/mechanics/activeMechanics";
 import ActiveAdmins from "../../components/users/admins/activeAdmins";
 import InactiveAdmins from "../../components/users/admins/inactiveAdmins";
 import InactiveMechanics from "../../components/users/mechanics/inactiveMechanics";
 import PrimaryButton from "@/src/components/buttons/primaryButton";
+import { isAuthenticated } from "../AuthWellDone";
 
 export default function Users(){
+  useLayoutEffect(() => {
+    const isAuth = isAuthenticated;
+    if (!isAuth) {
+      redirect("/Unauthorized")
+    }
+  }, [])
+
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);
   const router = useRouter();
