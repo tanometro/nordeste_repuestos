@@ -4,12 +4,8 @@ import React, {useEffect, useState, useRef} from 'react'
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../requests/filterByMechanic';
 import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
-import { DateRange } from 'react-date-range'
-import format from 'date-fns/format'
-import { addDays } from 'date-fns'
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import { isWithinInterval } from 'date-fns';
+import DateRange from '../../inputs/dateRangeInput';
+
 import RenderResult from '../../renderResult';
 import SearchInput from '../../inputs/searchInput';
 import getAllTransactions from '../../requests/allTransactions';
@@ -20,7 +16,20 @@ const FinalTransactions = () => {
   const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pagination = 10;
-  const lastIndex = currentPage * pagination;
+  const [searchByMechanic, setSearchByMechanic] = useState<SearchParameters>({
+    dni_or_name: "",
+    from_date: '',
+    to_date: '',
+  });
+  
+  const [searchByClient, setSearchByClient] = useState<SearchParameters>({
+    dni_or_name: "",
+    from_date: '',
+    to_date: '',
+  });
+  const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
+  const [range, setRange] = useState('');
+
 
   // Cuando monta el componente //
   useEffect(() => {
@@ -37,25 +46,6 @@ const FinalTransactions = () => {
     fetchData();
   }, []);
   
-  const [range, setRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: 'selection'
-    }
-  ]);
-  
-  const [open, setOpen] = useState(false);
-  const refOne = useRef<HTMLDivElement | null>(null);
-
-  const [searchByMechanic, setSearchByMechanic] = useState<SearchParameters>({
-    dni_or_name: "",
-  });
-  const [searchByClient, setSearchByClient] = useState<SearchParameters>({
-    dni_or_name: "",
-  });
-  const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-
   const loadMore = async () => {
     try {
       const next = await getAllTransactions(pagination, currentPage * pagination);
@@ -66,24 +56,16 @@ const FinalTransactions = () => {
     }
   };
   
-  // const prevPage = async () => {
-  //   try {
-  //     if (currentPage > 1) {
-  //       const prev = await getAllTransactions(pagination, (currentPage - 2) * pagination);
-  //       setFinalTransactions(prev);
-  //       setCurrentPage((prevPage) => prevPage - 1);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al cargar la página anterior", error);
-  //   }
-  // }
-  
   const searchMechanic = async () => {
     try {
-      const mechanic = await filterByMechanic(searchByMechanic);
-      const filtered = mechanic.filter(
-        (transaction) => transaction.status === true
-      );
+      const parameters: FilterParameters = {
+        dni_or_name: searchByMechanic.dni_or_name,
+        from_date: searchByMechanic.from_date || undefined,  
+        to_date: searchByMechanic.to_date || undefined,      
+      };
+  
+      const mechanic = await filterByMechanic(parameters);
+      const filtered = mechanic.filter((transaction) => transaction.status === true);
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de mecánico", error);
@@ -92,16 +74,19 @@ const FinalTransactions = () => {
   
   const searchClient = async () => {
     try {
-      const client = await filterByFinalCustomer(searchByClient);
-      const filtered = client.filter(
-        (transaction) => transaction.status === true
-      );
+      const parameters: FilterParameters = {
+        dni_or_name: searchByClient.dni_or_name,
+        from_date: searchByClient.from_date || undefined,  
+        to_date: searchByClient.to_date || undefined,      
+      };
+  
+      const client = await filterByFinalCustomer(parameters);
+      const filtered = client.filter((transaction) => transaction.status === true);
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de cliente", error);
     }
   };
-  
   
   useEffect(() => {
     searchMechanic();
@@ -110,31 +95,19 @@ const FinalTransactions = () => {
     searchClient();
   }, [searchByClient]);
 
- const hideOnEscape = (e: React.KeyboardEvent) => {
-  if( e.key === "Escape" ) {
-    setOpen(false)
-  }
-}
-
-const hideOnClickOutside = (e: React.MouseEvent) => {
-  if (refOne.current && !refOne.current.contains(e.target as Node)) {
-    setOpen(false);
-  }
-}
-
-const rangeChange = (item: any) => {
-  setRange([item.selection]);
-}
 
 const transactionShow =
 (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
   ? filteredTransactions
   : finalTransactions;
-
   
     return (
       <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
+          <div className="flex justify-center mt-12 w-7/12">
+            <DateRange value={range}
+            onChangeFunction={setRange} />
+          </div>
           <div className="flex justify-center mt-12 w-7/12">
             <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
             onChangeFunction={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}
@@ -145,34 +118,6 @@ const transactionShow =
             onChangeFunction={(e) => setSearchByClient({...searchByClient, dni_or_name: e.target.value})}
           />
           </div>
-          <div className="flex justify-center mt-12 w-6/12">
-            <div className="calendarWrap">
-              <input
-                value={`${format(range[0].startDate, 'dd/MM/yyyy')} a ${format(range[0].endDate, "dd/MM/yyyy")}`}
-                readOnly
-                className="rounded-2xl border border-custom-red h-10 w-full text-center text-black"
-                onClick={ () => setOpen(open => !open) }
-              />
-              <div ref={refOne} >
-                {open && 
-                <DateRange
-                  onChange={(item) => {
-                  const { startDate, endDate } = item.selection;
-                    if (startDate !== undefined && endDate !== undefined) {
-                      setRange([{ startDate, endDate, key: 'selection' }]);
-                    }
-                  }}
-                  editableDateInputs={true}
-                  moveRangeOnFirstSelection={false}
-                  ranges={range}
-                  months={1}
-                  direction="horizontal"
-                  className="calendarElement"
-                />
-                }
-              </div>
-            </div>
-          </div>
         </div>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -180,7 +125,6 @@ const transactionShow =
               <div className="overflow-hidden">
                 <RenderResult data={transactionShow} setFinalTransactions={setFinalTransactions} eliminar='Eliminar'/>
                 <div className="flex items-center justify-center space-x-4">
-                  {/* <PrimaryButton title='Atrás' onClickfunction={prevPage}/> */}
                   <PrimaryButton title='Cargar más' onClickfunction={loadMore}/>
                 </div>
               </div>

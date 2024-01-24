@@ -9,7 +9,6 @@ interface FilterParameters {
 
 const filterByMechanic = async (parameters: FilterParameters): Promise<TransactionInterface[]> => {
   const storedToken = localStorage.getItem('token');
-  
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByMechanic`, {
       headers: {

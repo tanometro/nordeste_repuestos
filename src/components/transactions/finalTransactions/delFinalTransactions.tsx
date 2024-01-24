@@ -1,40 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
-import { useRouter } from 'next/navigation';
-import Pagination from '@/src/components/pagination';
+import PrimaryButton from '../../buttons/primaryButton';
 import filterByMechanic from '@/src/components/requests/filterByMechanic';
 import filterByFinalCustomer from '@/src/components/requests/filterByFinalCustomer';
 import SearchInput from '@/src/components/inputs/searchInput';
 import RenderResult from '@/src/components/renderResult';
-import EditButton from '@/src/components/buttons/editButton';
-import List from '@/src/components/lists';
 import getAllTransactions from '@/src/components/requests/allTransactions';
+import { addDays } from 'date-fns'
 
 const DelFinalTransactions = () => {
   const [deletedFinalTransactions, setDeletedFinalTransactions] = useState<TransactionInterface[]>([]);
-
-  // Cuando monta el componente //
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const transList = await getAllTransactions();
-        
-        const delFinalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true)
-        .filter((transaction: TransactionInterface) => transaction.status == false); 
-        
-        setDeletedFinalTransactions(delFinalTransList);
-        
- 
-      } catch (error) {
-        console.error("Error en render componente", error);
-      }
-    }
-    fetchData();
-  }, []);
-
-  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pagination = 10;
   const [searchByMechanic, setSearchByMechanic] = useState<SearchParameters>({
     dni_or_name: "",
   });
@@ -42,27 +21,66 @@ const DelFinalTransactions = () => {
     dni_or_name: "",
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
+  const [range, setRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: 'selection'
+    }
+  ]);
+  const [open, setOpen] = useState(false);
+  const refOne = useRef<HTMLDivElement | null>(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pagination = 10;
-  const lastIndex = currentPage * pagination;
-  const firstIndex = lastIndex - pagination;
+  // Cuando monta el componente //
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const transList = await getAllTransactions(undefined, undefined, false);
+        const delFinalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true);
+        setDeletedFinalTransactions(delFinalTransList);
+      } catch (error) {
+        console.error("Error en render componente", error);
+      }
+    }
+    fetchData();
+  }, []);
 
+  
+
+  const loadMore = async () => {
+    try {
+      const next = await getAllTransactions(pagination, currentPage * pagination, false);
+      const deletedNext = next.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true);
+      setDeletedFinalTransactions((prevTransactions) => [...prevTransactions, ...deletedNext]); 
+      setCurrentPage((prevPage) => prevPage + 1);
+    } catch (error) {
+      console.error("Error al cargar la siguiente página", error);
+    }
+  };
+  
   const searchMechanic = async () => {
-    setCurrentPage(1);
-    const mechanic = await filterByMechanic(searchByMechanic);    
-    const filtered = mechanic.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true)
-    .filter((transaction: TransactionInterface) => transaction.status === false);
-    console.log(filtered);
-    
-    setFilteredTransactions(filtered);   
-  }
+    try {
+      const mechanic = await filterByMechanic(searchByMechanic);
+      const filtered = mechanic.filter(
+        (transaction) => transaction.status === false
+      );
+      setFilteredTransactions(filtered);
+    } catch (error) {
+      console.error("Error en búsqueda de mecánico", error);
+    }
+  };
+  
   const searchClient = async () => {
-    setCurrentPage(1);
-    const client = await filterByFinalCustomer(searchByClient);
-    const filtered = client.filter((transaction: TransactionInterface) => transaction.status === false);
-    setFilteredTransactions(filtered);  
-  }
+    try {
+      const client = await filterByFinalCustomer(searchByClient);
+      const filtered = client.filter(
+        (transaction) => transaction.status === false
+      );
+      setFilteredTransactions(filtered);
+    } catch (error) {
+      console.error("Error en búsqueda de cliente", error);
+    }
+  };
   
   useEffect(() => {
     searchMechanic();
@@ -71,11 +89,27 @@ const DelFinalTransactions = () => {
     searchClient();
   }, [searchByClient]);
 
-  const transactionShow = searchByClient || searchByMechanic ? filteredTransactions : deletedFinalTransactions;
-  
-  const render = transactionShow.slice(firstIndex, lastIndex);
-  
-  
+ const hideOnEscape = (e: React.KeyboardEvent) => {
+  if( e.key === "Escape" ) {
+    setOpen(false)
+  }
+}
+
+const hideOnClickOutside = (e: React.MouseEvent) => {
+  if (refOne.current && !refOne.current.contains(e.target as Node)) {
+    setOpen(false);
+  }
+}
+
+const rangeChange = (item: any) => {
+  setRange([item.selection]);
+}
+
+  const transactionShow =
+    (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
+    ? filteredTransactions
+    : deletedFinalTransactions;
+
   return (
     <div className='w-full mb-24'>
       <div className='flex items-center w-full'>
@@ -94,43 +128,9 @@ const DelFinalTransactions = () => {
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full sm:px-6 lg:px-8">
             <div className="overflow-hidden">
-            <RenderResult data={render} eliminar='Eliminar'/>
-            {/* <List>
-                  <table className="min-w-full text-left text-sm font-light">
-                    <thead className="border-b font-medium dark:border-neutral-500">
-                      <tr>
-                        <th scope="col" className="px-6 py-4">Numero</th>
-                        <th scope="col" className="px-6 py-4">Usuario</th>
-                        <th scope="col" className="px-6 py-4">DNI</th>
-                        <th scope="col" className="px-6 py-4">Cliente</th>
-                        <th scope="col" className="px-6 py-4">Fecha</th>
-                        <th scope="col" className="px-6 py-4">Total</th>
-                        <th scope="col" className="px-6 py-4">Comisión</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {render.map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-100"
-                >
-                  <td className="whitespace-nowrap px-6 py-4 text-base font-medium">{transaction.id}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedName}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.userAssociatedDni}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">{transaction.finalCustomerName}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">{new Date(transaction.created).toLocaleDateString()}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleTotalAmount}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-base">${transaction.saleCommissionedAmount}</td>
-                  <td>
-                    <EditButton title='Ver detalles' onClickfunction={() => router.push(`/detailtransaction/${transaction.id}`)} />
-                  </td>
-                </tr>
-              ))}
-                      </tbody>
-                  </table>
-             </List> */}
+            <RenderResult data={transactionShow}/>
               <div className="flex items-center justify-center space-x-4">
-                <Pagination data={deletedFinalTransactions} recordsPerPage={pagination} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+              <PrimaryButton title='Cargar más' onClickfunction={loadMore}/>
               </div>
             </div>
            </div>

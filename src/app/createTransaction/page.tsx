@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import Header from '@/src/components/header';
-import Trueque from '@/src/components/trueque';
-import NewSell from '@/src/components/sell';
+import Trueque from '@/src/components/forms/trueque';
+import NewSell from '@/src/components/forms/sell';
 import { useRouter } from 'next/navigation';
 import PrimaryButton from '@/src/components/buttons/primaryButton';
 

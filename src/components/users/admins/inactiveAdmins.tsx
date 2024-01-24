@@ -5,7 +5,7 @@ import { useState } from "react";
 import activateUser from "@/src/components/requests/activateUser";
 import { useRouter } from "next/navigation";
 import {ActiveAdminsProps } from "@/src/components/interfaces";
-import Pagination from "../../pagination";
+import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
 
 const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {

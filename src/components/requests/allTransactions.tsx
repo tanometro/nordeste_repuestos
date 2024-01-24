@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 
-const getAllTransactions = async (limit?: number, offset?: number) => {
+const getAllTransactions = async (limit?: number, offset?: number, status?: boolean) => {
   const storedToken = localStorage.getItem('token');
 
   try {
@@ -10,7 +10,8 @@ const getAllTransactions = async (limit?: number, offset?: number) => {
       },
       params: {
         limit, 
-        offset, 
+        offset,
+        status 
       },
     });
 

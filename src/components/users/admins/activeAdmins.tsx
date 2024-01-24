@@ -5,7 +5,7 @@ import { useState } from "react";
 import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveAdminsProps } from "@/src/components/interfaces";
-import Pagination from "../../pagination";
+import Pagination from "../../pagination/pagination";
 
 const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;

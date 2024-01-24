@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { DateRange } from 'react-date-range';
+
 
 export interface UserInterface {
   dni: string;
@@ -23,7 +23,7 @@ export interface UserPost {
 }
 
 export interface PrimaryButtonProps {
-  title: string,
+  title?: string,
   onClickfunction: () => void;
 }
 export interface SubmitButtonProps {
@@ -88,32 +88,6 @@ export interface ErrorType {
   password: string;
 }
 
-export interface ActiveMechanicsProps {
-  mechanics: UserInterface[];
-  setMechanics: React.Dispatch<React.SetStateAction<UserInterface[]>>;
-}
-
-export interface ActiveAdminsProps {
-  admins: UserInterface[];
-  setAdmins: React.Dispatch<React.SetStateAction<UserInterface[]>>;
-}
-
-export interface FinalTransactionsProps {
-  finalTransactions: TransactionInterface[];
-  setFinalTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
-}
-export interface DeletedTransactionsProps {
-  finalTransactions: TransactionInterface[];
-}
-
-export interface MechanicsTransactionsProps {
-  mechanicTransactions: TransactionInterface[];
-  setMechhanicTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
-}
-export interface DeletedMechanicsTransactionsProps {
-  mechanicTransactions: TransactionInterface[];
-}
-
 export interface FilterByClientProps {
   searchClient: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchByClient: string;
@@ -153,6 +127,7 @@ export interface TransactionProps {
   data: TransactionInterface[],
 }
 
+
 export interface SearchParameters {
   dni_or_name: string | number;
   from_date?: string;
@@ -162,7 +137,7 @@ export interface SearchParameters {
 export interface RenderProps {
   data: TransactionInterface[],
   setFinalTransactions?: React.Dispatch<React.SetStateAction<TransactionInterface[]>>;
-  eliminar: string,
+  eliminar?: string,
 }
 
 export interface SearchInputProps {
@@ -172,9 +147,16 @@ export interface SearchInputProps {
 }
 
 // export interface DateInputProps {
-//   onClickFunction: () => void;
-//   range: DateRange[];
-//   setRange: React.Dispatch<React.SetStateAction<DateRange[]>>;
-//   open: boolean;
-//   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+//   value?: DateRange | undefined;
+//   onChangeFunction?: (value: DateRange) => void;
 // }
+
+export interface ActiveMechanicsProps {
+  mechanics: UserInterface[];
+  setMechanics: React.Dispatch<React.SetStateAction<UserInterface[]>>;
+}
+
+export interface ActiveAdminsProps {
+  admins: UserInterface[];
+  setAdmins: React.Dispatch<React.SetStateAction<UserInterface[]>>;
+}

@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import logReq from "../requests/login";
 import { signIn } from "next-auth/react";
+import SubmitButton from "../buttons/submitButton";
 
 export default function Login (){
   const router = useRouter();
@@ -12,33 +13,29 @@ export default function Login (){
       username: "", 
       password: "",
     });
-  // const [username, setUsername] = useState('');
-  // const [password, setPassword] = useState('');
+
   const [viewPass, setViewPass] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) =>{
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await logReq(userData);
-      router.replace('/dashboard');
+      const response = await signIn("credentials", {
+        username: userData.username,
+        password: userData.password,
+      });
+      
+      console.log(response);
+      
     } catch (error) {
-      setErrors('Credenciales incorrectas');
+      console.error("Error en el inicio de sesión: ", error);
+      setErrors("Error en el inicio de sesión");
     }
-    }
-  // const handleSubmit = async (e: React.FormEvent) =>{
-  //   e.preventDefault();
-    
-  //   const responseNextAuth = await signIn('credentials', {
-  //     username: userData.username,
-  //     password: userData.password,
-  //     redirect: false,
-  //   })
-  //   if(responseNextAuth?.error) {
-  //     setErrors('Credenciales incorrectas');
-  //   }
-  //   router.push('/dashboard');
-  //   }
+  };
+  
+  
+
   const handleChange = (e: React.FormEvent) =>{
     const property = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;
@@ -94,16 +91,8 @@ export default function Login (){
         {errors}
       </div>
         )}
-      {/* <div className="flex items-start">
-        <div className="flex items-center h-5">
-          <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
-        </div>
-        <div className="ml-3 text-sm">
-          <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Recordarme</label>
-        </div>
-      </div> */}
-      <button type="submit" className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-        Ingresar
-      </button>
+      <SubmitButton
+      title='Ingresar'
+      />
   </form>
   )}

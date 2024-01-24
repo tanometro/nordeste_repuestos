@@ -1,10 +1,7 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '@/src/components/header';
-import getAllTransactions from '@/src/components/requests/allTransactions';
-import { TransactionInterface } from '@/src/components/interfaces';
-import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import FinalTransactions from '@/src/components/transactions/finalTransactions/finalTransactions';
 import MechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/mechanicsTransactions';
@@ -16,27 +13,7 @@ import PrimaryButton from '@/src/components/buttons/primaryButton';
 function AllTransacions() {
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);
-  //const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
-  //const [mechanicTransactions, setMechhanicTransactions] = useState<TransactionInterface[]>([]);
   const router = useRouter();
-
-    // // Cuando monta el componente //
-    // useEffect(() => {
-    //   async function fetchData() {
-    //     try {
-    //       const transList = await getAllTransactions(200, 0);
-          
-    //       const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
-    //       const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
-          
-    //       setFinalTransactions(finalTransList);
-    //       setMechhanicTransactions(mechTransList);
-    //     } catch (error) {
-    //       console.error("Error en render componente", error);
-    //     }
-    //   }
-    //   fetchData();
-    // }, []);
 
     const toggleActive = () => {
       setActive(!active);

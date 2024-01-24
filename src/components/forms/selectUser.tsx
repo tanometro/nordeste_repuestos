@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { SelectUserProps, UserInterface } from "./interfaces";
-import getOneMechanic from './requests/searchMechanic';
+import { SelectUserProps, UserInterface } from "../interfaces";
+import getOneMechanic from '../requests/searchMechanic';
 
 const SelectUser = (props: SelectUserProps) => {
     const { sellData, setSellData, setUser } = props;

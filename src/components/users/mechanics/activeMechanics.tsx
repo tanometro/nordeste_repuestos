@@ -5,7 +5,7 @@ import { useState } from "react";
 import deleteUser from "@/src/components/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveMechanicsProps } from "@/src/components/interfaces";
-import Pagination from "../../pagination";
+import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
 
 const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {

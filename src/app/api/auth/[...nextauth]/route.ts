@@ -6,7 +6,7 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "username", type: "text", placeholder: "username" },
+        username: { label: "Username", type: "text", placeholder: "test@test.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -22,11 +22,9 @@ const handler = NextAuth({
           }
         );
         const user = await res.json();
-        console.log(user);
         
-        if (res.status === 200) {
-          localStorage.setItem('token', user.token);
-        }
+        if (user.error) throw user;
+
         return user;
       },
     }),
@@ -45,4 +43,4 @@ const handler = NextAuth({
   },
 });
 
-export { handler as GET, handler as POST };
+  export { handler as GET, handler as POST };

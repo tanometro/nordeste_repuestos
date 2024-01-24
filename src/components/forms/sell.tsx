@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { SellInterface, UserInterface, ValidationsTransaction } from './interfaces';
-import postTransaction from './requests/postTransaction';
+import { SellInterface, UserInterface, ValidationsTransaction } from '../interfaces';
+import postTransaction from '../requests/postTransaction';
 import SelectUser from './selectUser';
-import validateTransaction from './validations/transactionValidations';
+import validateTransaction from '../validations/transactionValidations';
 import { useRouter } from 'next/navigation';
-import SubmitButton from './buttons/submitButton';
+import SubmitButton from '../buttons/submitButton';
 
 function NewSell() {
   const router = useRouter();
