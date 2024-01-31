@@ -1,13 +1,13 @@
 // import { BASE_URL } from "../constants";
 import axios from "axios";
-import { UserInterface } from "../interfaces";
+import { UserInterface } from "../components/interfaces";
 
-const getOneMechanic = async (parameter: string | number): Promise<UserInterface[]> => {
-  const storedToken = localStorage.getItem('token');
+const getOneMechanic = async (sessionToken: string | undefined, parameter: string | number): Promise<UserInterface[]> => {
+
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/search?nameOrDni=${parameter}`, {
       headers: {
-        Authorization: storedToken,
+        Authorization: sessionToken,
       },
     });
 

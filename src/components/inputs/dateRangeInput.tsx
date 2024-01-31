@@ -68,12 +68,12 @@ function CustomDateRange(props: CustomDateRangeProps) {
   return (
     <Stack direction="column" spacing={8} alignItems="flex-start">
       <DateRangePicker
-      value={value}
-      onChange={(nextValue) => onChangeFunction(nextValue)}
-      placeholder="Seleccionar fechas"
-      appearance="default"
-      showOneCalendar
-    />
+        value={value || [null, null]}
+        onChange={(nextValue) => onChangeFunction(nextValue)}
+        placeholder="Seleccionar fechas"
+        appearance="default"
+        showOneCalendar
+      />
     </Stack>
   );
 }

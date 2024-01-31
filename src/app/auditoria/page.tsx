@@ -4,9 +4,9 @@ import React, {useState, useEffect} from 'react';
 import { useRouter } from "next/navigation";
 import Header from '@/src/components/header';
 import List from "@/src/components/lists";
-import filterByMechanic from "@/src/components/requests/filterByMechanic";
+import filterByMechanic from "@/src/requests/filterByMechanic";
 import { BalanceListInterface } from '@/src/components/interfaces';
-import balanceList from '@/src/components/requests/balanceList';
+import balanceList from '@/src/requests/balanceList';
 import EditButton from '@/src/components/buttons/editButton';
 
 

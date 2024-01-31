@@ -3,13 +3,14 @@
 import Header from "@/src/components/header";
 import { useRouter } from 'next/navigation';
 import { useState} from "react";
-import postUser from "@/src/components/requests/postUser";
+import postUser from "@/src/requests/postUser";
 import validations from "@/src/components/validations/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
 import { UserPost } from "@/src/components/interfaces";
+import { useSession } from "next-auth/react";
 
 export default function CreateUser () {
-  const storedToken = localStorage.getItem('token');
+  const {data: session} = useSession();
   const router = useRouter();
   const defaultCommission = useAppSelector(state => state.userReducer.defaultCommission);
   const [errors, setErrors] = useState({
@@ -59,7 +60,7 @@ const [userData, setUserData] = useState<UserPost>({
         };
   
         try {
-          const response = await postUser(userWithPercentage);
+          const response = await postUser(session?.user.token, userWithPercentage);
         
           if (response && response.status === 200) {
             router.push('/allUsers');
@@ -85,11 +86,6 @@ let roles = [2, 3];
     <div>
       <Header title="Crear nuevo usuario" />
       <div className="justify-center">
-        {!storedToken ? (
-          <p className="text-black text-xl ">
-            No tenes permiso para crear usuarios
-          </p>
-                        ) : (
           <div className="flex justify-center mt-32 h-screen">
             <form onSubmit={handleSubmit} className="flex flex-col items-center w-1/2">
               <select
@@ -167,7 +163,6 @@ let roles = [2, 3];
                 </button>
         </form>
         </div>
-          )}
           </div>
     </div>
     )

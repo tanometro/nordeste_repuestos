@@ -1,48 +1,43 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useParams, useRouter, usePathname } from 'next/navigation';
-import logReq from "../requests/login";
+import logReq from "../../requests/login";
 import { signIn } from "next-auth/react";
 import SubmitButton from "../buttons/submitButton";
 
 export default function Login (){
   const router = useRouter();
   const { tokenExpired } = useParams();
-
-  const [userData, setUserData] = useState({
-      username: "", 
-      password: "",
-    });
-
+  const [errors, setErrors] = useState<string[]>([]);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('')
   const [viewPass, setViewPass] = useState(false);
-  const [errors, setErrors] = useState<string | null>(null);
 
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     try {
       const response = await signIn("credentials", {
-        username: userData.username,
-        password: userData.password,
+        username,
+        password,
+        redirect: false,
       });
-      
-      console.log(response);
-      
+  
+      if (response?.error) {
+        setErrors(response.error.split(","));
+      } else {
+        const userRole = response?.user?.user?.roleId;
+  
+        if (userRole === 3) {
+          router.push("/mechanicNotAuthorized");
+        } else {
+          router.push("/dashboard");
+        }
+      }
     } catch (error) {
-      console.error("Error en el inicio de sesión: ", error);
-      setErrors("Error en el inicio de sesión");
+      console.error("Error durante el inicio de sesión:", error);
     }
   };
-  
-  
-
-  const handleChange = (e: React.FormEvent) =>{
-    const property = (e.target as HTMLInputElement).name;
-    const value = (e.target as HTMLInputElement).value;
-    
-    setUserData({...userData, [property]: value});
-    // setErrors(validations({...userData, [property]: value}));
-  } 
   
   //Ver o desver la pass
   const handleView = () => {
@@ -59,11 +54,11 @@ export default function Login (){
     <div>
       <input type="text" 
         name="username" 
-        value={userData.username}
+        value={username}
         placeholder="Ingresar aquí su DNI o NOMBRE DE USUARIO" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        onChange={handleChange}/>
+        onChange={(event) => setUsername(event.target.value)}/>
     </div>
     <div>
       <input type={viewPass ? "text" : "password"} 
@@ -71,8 +66,8 @@ export default function Login (){
         placeholder="Ingresar aquí su contraseña" 
         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
         required
-        value={userData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
       />
     </div>
     <div>

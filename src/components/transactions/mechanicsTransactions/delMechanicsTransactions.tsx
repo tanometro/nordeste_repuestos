@@ -8,12 +8,12 @@ import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { isWithinInterval } from 'date-fns';
-import getAllTransactions from '../../requests/allTransactions';
+import getAllTransactions from '../../../requests/allTransactions';
 import SearchInput from '../../inputs/searchInput';
 import RenderResult from '../../renderResult';
 import PrimaryButton from '../../buttons/primaryButton';
-import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
-import filterByMechanic from '../../requests/filterByMechanic';
+import filterByFinalCustomer from '../../../requests/filterByFinalCustomer';
+import filterByMechanic from '../../../requests/filterByMechanic';
 
 const DelMechanicsTransactions = () => {
   

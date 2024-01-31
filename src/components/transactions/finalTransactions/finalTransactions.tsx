@@ -1,18 +1,17 @@
 'use client';
 
-import React, {useEffect, useState, useRef} from 'react'
-import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
-import filterByMechanic from '../../requests/filterByMechanic';
-import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
+import React, {useEffect, useState} from 'react'
+import filterByFinalCustomer from '../../../requests/filterByFinalCustomer';
+import filterByMechanic from '../../../requests/filterByMechanic';
+import { TransactionInterface, SearchParameters,  } from '@/src/components/interfaces';
 import DateRange from '../../inputs/dateRangeInput';
-
 import RenderResult from '../../renderResult';
 import SearchInput from '../../inputs/searchInput';
-import getAllTransactions from '../../requests/allTransactions';
+import getAllTransactions from '../../../requests/allTransactions';
 import PrimaryButton from '../../buttons/primaryButton';
+import { useSession } from 'next-auth/react';
 
-const FinalTransactions = () => {
-  
+function finalTransactions() {
   const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pagination = 10;
@@ -27,15 +26,15 @@ const FinalTransactions = () => {
     from_date: '',
     to_date: '',
   });
+  const [ranged, setRanged] = useState([])
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-  const [range, setRange] = useState('');
-
+  const {data: session} = useSession();
 
   // Cuando monta el componente //
   useEffect(() => {
     async function fetchData() {
       try {
-        const transList = await getAllTransactions();
+        const transList = await getAllTransactions(session?.user.token);
         const finalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true); 
         setFinalTransactions(finalTransList); 
         
@@ -48,7 +47,7 @@ const FinalTransactions = () => {
   
   const loadMore = async () => {
     try {
-      const next = await getAllTransactions(pagination, currentPage * pagination);
+      const next = await getAllTransactions(session?.user.token, pagination, currentPage * pagination);
       setFinalTransactions((prevTransactions) => [...prevTransactions, ...next]);
       setCurrentPage((prevPage) => prevPage + 1);
     } catch (error) {
@@ -58,7 +57,7 @@ const FinalTransactions = () => {
   
   const searchMechanic = async () => {
     try {
-      const parameters: FilterParameters = {
+      const parameters: SearchParameters = {
         dni_or_name: searchByMechanic.dni_or_name,
         from_date: searchByMechanic.from_date || undefined,  
         to_date: searchByMechanic.to_date || undefined,      
@@ -72,9 +71,21 @@ const FinalTransactions = () => {
     }
   };
   
+  const dateRange = (range: any) => {    
+    const startDate = range[0].toISOString();
+    setSearchByClient({...searchByClient, from_date: startDate});
+    setSearchByMechanic({...searchByMechanic, from_date: startDate});
+    const endDate = range[1].toISOString();
+    setSearchByClient({...searchByClient, to_date: endDate});
+    setSearchByMechanic({...searchByMechanic, to_date: endDate});
+
+    console.log(searchByClient);
+    console.log(searchByMechanic);
+}
+
   const searchClient = async () => {
     try {
-      const parameters: FilterParameters = {
+      const parameters: SearchParameters = {
         dni_or_name: searchByClient.dni_or_name,
         from_date: searchByClient.from_date || undefined,  
         to_date: searchByClient.to_date || undefined,      
@@ -105,8 +116,8 @@ const transactionShow =
       <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
           <div className="flex justify-center mt-12 w-7/12">
-            <DateRange value={range}
-            onChangeFunction={setRange} />
+            <DateRange value={ranged}
+            onChangeFunction={dateRange} />
           </div>
           <div className="flex justify-center mt-12 w-7/12">
             <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
@@ -135,4 +146,4 @@ const transactionShow =
     );
 }
 
-export default FinalTransactions;
+export default finalTransactions;

@@ -2,11 +2,12 @@
 
 import List from "@/src/components/lists";
 import { useState } from "react";
-import deleteUser from "@/src/components/requests/deleteUser";
+import deleteUser from "@/src/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveMechanicsProps } from "@/src/components/interfaces";
 import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
+import { useSession } from "next-auth/react";
 
 const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
 const {mechanics, setMechanics} = props;
@@ -16,6 +17,7 @@ const {mechanics, setMechanics} = props;
   const pagination = 10;
   const lastIndex = currentPage * pagination;
   const firstIndex = lastIndex - pagination;
+  const {data: session} = useSession();
 
 // Filtrado de usuarios //
 const filteredUsers = mechanics.filter((user) => {
@@ -57,8 +59,8 @@ const userShow = userActive.slice(firstIndex, lastIndex);
                 </tr>
               </thead>
               <tbody>
-                {userShow.map((user, index) => (
-                  <tr key={index} 
+                {userShow.map((user) => (
+                  <tr key={user.id} 
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
@@ -68,7 +70,7 @@ const userShow = userActive.slice(firstIndex, lastIndex);
                       <EditButton title='Ver usuario' onClickfunction={() => router.push(`/editUser/${user.id}`)}/>
                     </td>
                     <td>
-                      <EditButton title='Desactivar' onClickfunction={() => deleteUser(user.id, setMechanics)}/>
+                      <EditButton title='Desactivar' onClickfunction={() => deleteUser(session?.user?.token, user.id, setMechanics)}/>
                     </td>
                   </tr>
                 ))}

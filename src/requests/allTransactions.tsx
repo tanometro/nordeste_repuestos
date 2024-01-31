@@ -1,22 +1,26 @@
 import axios, { AxiosError } from "axios";
 
-const getAllUsers = async () => {
-  const storedToken = localStorage.getItem('token');
+async function allTransactions(sessionToken: string | undefined, limit?: number, offset?: number, status?: boolean) {
 
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/list`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/list`, {
       headers: {
-        Authorization: storedToken, 
+        Authorization: sessionToken, 
+      },
+      params: {
+        limit, 
+        offset,
+        status 
       },
     });
 
     if (response.status !== 200) {
       if (response.status === 401) {
-        window.location.href = '/login?tokenExpired=true';
+        window.location.href = '/'; 
       } else {
         throw new Error(`Error en la solicitud: ${response.status}`);
       }
-    } 
+    }
 
     const data = response.data;
 
@@ -25,15 +29,14 @@ const getAllUsers = async () => {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
       if (axiosError.response?.status === 401) {
-        
         window.location.href = '/'; 
       } else {
         throw new Error(`Error en la solicitud: ${axiosError.response?.status}`);
       }
     } else {
-      throw new Error("Error desconocido al obtener usuarios");
+      throw new Error("Error desconocido al obtener transacciones");
     }
   }
-};
+}
 
-export default getAllUsers;
+export default allTransactions;

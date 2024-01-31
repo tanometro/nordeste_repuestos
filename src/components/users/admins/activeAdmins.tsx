@@ -2,10 +2,11 @@
 
 import List from "@/src/components/lists";
 import { useState } from "react";
-import deleteUser from "@/src/components/requests/deleteUser";
+import deleteUser from "@/src/requests/deleteUser";
 import { useRouter } from "next/navigation";
 import { ActiveAdminsProps } from "@/src/components/interfaces";
 import Pagination from "../../pagination/pagination";
+import { useSession } from "next-auth/react";
 
 const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
@@ -15,6 +16,7 @@ const ActiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const pagination = 10;
   const lastIndex = currentPage * pagination;
   const firstIndex = lastIndex - pagination;
+  const {data: session} = useSession();
   
 // Filtrado de usuarios //
 const filteredUsers = admins.filter((user) => {
@@ -33,7 +35,6 @@ const filteredUsers = admins.filter((user) => {
       setCurrentPage(0);
       setSearch(target.value)
    }
-  
 
     return (
       <div className="flex flex-col items-center">
@@ -57,8 +58,8 @@ const filteredUsers = admins.filter((user) => {
                     </tr>
                   </thead>
                   <tbody>
-                  {userShow.map((user, index) => (
-              <tr key={index} 
+                  {userShow.map((user) => (
+              <tr key={user.id} 
               className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                 <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
                 <td className="whitespace-nowrap px-6 py-4">{user.dni}</td>
@@ -70,7 +71,7 @@ const filteredUsers = admins.filter((user) => {
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => deleteUser(user.id, setAdmins)}>
+                  <button onClick={() => deleteUser(session?.user.token, user.id, setAdmins)}>
                     <a className="text-custom-red px-3">Desactivar</a>
                   </button>
                 </td>

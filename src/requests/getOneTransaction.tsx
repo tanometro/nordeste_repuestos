@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const getOneUser = async (id: number) => {
-  const storedToken = localStorage.getItem('token');
+const getOneTransaction = async (sessionToken: string | undefined, id: number) => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/detail/${id}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/detail/${id}`, {
       headers: {
-        Authorization: storedToken, 
+        Authorization: sessionToken, 
       },
     });
 
@@ -21,8 +20,8 @@ const getOneUser = async (id: number) => {
 
     return data;
   } catch (error) {
-    throw new Error("Error en obtener el usuario");
+    throw new Error("Error en obtener la transacción");
   }
 };
 
-export default getOneUser;
+export default getOneTransaction;

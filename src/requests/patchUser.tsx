@@ -1,14 +1,13 @@
-import { UserInterface } from "../interfaces";
+import { UserInterface } from "../components/interfaces";
 
-const patchUser = async (user: UserInterface) => {
-  const storedToken = localStorage.getItem('token');
+const patchUser = async (sessionToken: string | undefined, user: UserInterface) => {
   try {
-    if (storedToken !== null) {
+    if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/update`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify(user),
       });

@@ -1,15 +1,14 @@
-import { SellInterface } from "../interfaces";
+import { SellInterface } from "../components/interfaces";
 
-const postTransaction = async (transaction: SellInterface) => {
-  const storedToken = localStorage.getItem('token');
+const postTransaction = async (sessionToken: string | undefined, transaction: SellInterface) => {
 
   try {
-    if (storedToken !== null) {
+    if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify(transaction),
       });

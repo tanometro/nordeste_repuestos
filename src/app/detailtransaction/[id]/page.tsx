@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react'
 import { useParams, useRouter } from "next/navigation";
 import Header from '@/src/components/header';
-import getOneTransaction from '@/src/components/requests/getOneTransaction';
+import getOneTransaction from '@/src/requests/getOneTransaction';
 import PrimaryButton from '@/src/components/buttons/primaryButton';
 
 function DetailTransaction() {

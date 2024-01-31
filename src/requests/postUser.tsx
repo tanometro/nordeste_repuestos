@@ -1,14 +1,13 @@
-import { UserPost } from "../interfaces";
+import { UserPost } from "../components/interfaces";
 
-const postUser = async (user: UserPost) => {
-  const storedToken = localStorage.getItem('token');
+const postUser = async (sessionToken: string | undefined, user: UserPost) => {
   try {
-    if (storedToken !== null) {
+    if (sessionToken ) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify(user),
       });

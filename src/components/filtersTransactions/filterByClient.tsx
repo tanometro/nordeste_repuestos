@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import filterByFinalCustomer from '../requests/filterByFinalCustomer';
+import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
 import { FilterByClientProps, TransactionInterface } from '../interfaces';
 
 const FilterByClient: React.FC<FilterByClientProps> = (props) => {

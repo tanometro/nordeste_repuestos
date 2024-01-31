@@ -1,6 +1,5 @@
 
 async function logReq(userData: { username: string; password: string }) {
-  //const router = useRouter();
 
   const formData = new FormData();
   formData.append('username', userData.username);
@@ -15,9 +14,6 @@ async function logReq(userData: { username: string; password: string }) {
     const data = await response.json();
     
     if (response.status === 200) {
-      // if(data.user.id === 1) {
-      //   router.push('/')
-      // }
       localStorage.setItem('token', data.token);
     } else {
       

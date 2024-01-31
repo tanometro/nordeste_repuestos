@@ -1,18 +1,18 @@
 import axios from "axios";
-import { TransactionInterface } from "../interfaces";
+import { TransactionInterface } from "../components/interfaces";
 
 interface FilterParameters {
+  sessionToken: string | undefined, 
   dni_or_name: string | number;
   from_date?: string; 
   to_date?: string;   
 }
 
 const filterByMechanic = async (parameters: FilterParameters): Promise<TransactionInterface[]> => {
-  const storedToken = localStorage.getItem('token');
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/filterByMechanic`, {
       headers: {
-        Authorization: storedToken,
+        Authorization: parameters.sessionToken,
       },
       params: parameters, 
     });

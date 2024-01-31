@@ -1,14 +1,13 @@
-import { UserInterface } from "../interfaces";
+import { UserInterface } from "../components/interfaces";
 
-const activateUser = async (id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
-    const storedToken = localStorage.getItem('token');
+const activateUser = async (sessionToken: string | undefined, id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
     try {
-      if (storedToken !== null) {
+      if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/activate`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json', 
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify({id: id.toString()}),
       });

@@ -127,11 +127,10 @@ export interface TransactionProps {
   data: TransactionInterface[],
 }
 
-
 export interface SearchParameters {
-  dni_or_name: string | number;
-  from_date?: string;
-  to_date?: string;
+  dni_or_name: string;
+  from_date?: string,
+  to_date?: string,
 }
 
 export interface RenderProps {

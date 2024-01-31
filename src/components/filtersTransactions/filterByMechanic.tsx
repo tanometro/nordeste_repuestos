@@ -1,6 +1,6 @@
 'use client';
 import React from 'react'
-import filterByMechanic from '../requests/filterByMechanic';
+import filterByMechanic from '../../requests/filterByMechanic';
 import { FilterByMechanicsProps } from '../interfaces';
 import { useEffect } from 'react';
 

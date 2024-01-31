@@ -1,7 +1,7 @@
 import React from 'react';
 import { RenderProps } from './interfaces';
 import EditButton from './buttons/editButton';
-import deleteTransaction from './requests/deleteTransaction';
+import deleteTransaction from '../requests/deleteTransaction';
 import { useRouter } from 'next/navigation';
 import List from './lists';
 

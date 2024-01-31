@@ -2,11 +2,12 @@
 
 import List from "@/src/components/lists";
 import { useState } from "react";
-import activateUser from "@/src/components/requests/activateUser";
+import activateUser from "@/src/requests/activateUser";
 import { useRouter } from "next/navigation";
 import {ActiveAdminsProps } from "@/src/components/interfaces";
 import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
+import { useSession } from "next-auth/react";
 
 const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
@@ -17,6 +18,7 @@ const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const pagination = 10;
   const lastIndex = currentPage * pagination;
   const firstIndex = lastIndex - pagination;
+  const {data: session} = useSession();
 
  // Filtrado de usuarios //
 
@@ -27,7 +29,6 @@ const filteredUsers = admins.filter((user) => {
     (user.name && user.name.toLowerCase().includes(lowercaseSearchTerm))
   );
 });
-
 
 //Paginación
 const userActive = filteredUsers.filter((user) => user.isActive == false);
@@ -72,7 +73,7 @@ const userActive = filteredUsers.filter((user) => user.isActive == false);
                       <EditButton title='Ver usuario' onClickfunction={() => router.push(`/editUser/${user.id}`)}/>
                     </td>
                     <td>
-                      <EditButton title='Re activar' onClickfunction={() => activateUser(user.id, setAdmins)}/>
+                      <EditButton title='Re activar' onClickfunction={() => activateUser(session?.user?.token, user.id, setAdmins)}/>
                     </td>
                   </tr>
                 ))}

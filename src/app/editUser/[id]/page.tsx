@@ -2,18 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import getOneUser from '@/src/components/requests/getOneuser';
-import patchUser from '@/src/components/requests/patchUser';
-import deleteTransaction from '@/src/components/requests/deleteTransaction';
+import getOneUser from '@/src/requests/getOneuser';
+import patchUser from '@/src/requests/patchUser';
+import deleteTransaction from '@/src/requests/deleteTransaction';
 import Header from '@/src/components/header';
-import filterByMechanic from '@/src/components/requests/filterByMechanic';
+import filterByMechanic from '@/src/requests/filterByMechanic';
 import { TransactionInterface } from '@/src/components/interfaces';
+import { useSession } from 'next-auth/react';
 
 export default function EditUserForm () {
   const params = useParams();
   const userId = Array.isArray(params.id) ? parseInt(params.id[0], 10) : parseInt(params.id, 10);
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const {data: session} = useSession();
 
   const [userData, setUserData] = useState({
     dni: "",
@@ -33,8 +35,15 @@ export default function EditUserForm () {
   useEffect(() => {
     async function fetchData() {
       try {
-        const user = await getOneUser(userId);
-        const transactions = await filterByMechanic(userId);
+        const user = await getOneUser(session?.user?.token, userId);
+        let parameters = {
+          dni_or_name: user.name,
+          sessionToken: session?.user?.token
+        }
+        console.log(userData.username);
+        const transactions = await filterByMechanic(parameters);
+        console.log(transactions);
+        
         setUserData(user);
         setTransactions(transactions);
       } catch (error) {
@@ -57,7 +66,7 @@ export default function EditUserForm () {
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      patchUser(userData);
+      patchUser(session?.user?.token, userData);
       router.push('/allUsers')
     };
 
@@ -174,8 +183,9 @@ export default function EditUserForm () {
                       </tr>
                     </thead>
                     <tbody>
-                    {transactions.map((transaction, index) => (
+                    {transactions.map((transaction) => (
                           <tr
+                          key={transaction.id}
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                         <td className="whitespace-nowrap px-6 py-4 font-medium text-base">{transaction.id}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-base">
@@ -206,4 +216,3 @@ export default function EditUserForm () {
     </div>
   )
 }
-

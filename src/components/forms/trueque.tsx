@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SellInterface } from '../interfaces';
 import { UserInterface } from '../interfaces';
-import postTransaction from '../requests/postTransaction';
+import postTransaction from '../../requests/postTransaction';
 import SelectUser from './selectUser';
 import { useRouter } from 'next/navigation';
 import SubmitButton from '../buttons/submitButton';

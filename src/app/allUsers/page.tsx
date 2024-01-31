@@ -1,7 +1,7 @@
 "use client";
 
 import Header from "../../components/header";
-import getAllUsers from "../../components/requests/getAllUsers";
+import getAllUsers from "../../requests/getAllUsers";
 import { UserInterface } from "../../components/interfaces";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import ActiveAdmins from "../../components/users/admins/activeAdmins";
 import InactiveAdmins from "../../components/users/admins/inactiveAdmins";
 import InactiveMechanics from "../../components/users/mechanics/inactiveMechanics";
 import PrimaryButton from "@/src/components/buttons/primaryButton";
+import { useSession } from "next-auth/react";
 
 export default function Users(){
   const [component, setComponent] = useState(true);
@@ -17,11 +18,11 @@ export default function Users(){
   const router = useRouter();
   const [admins, setAdmins] = useState<UserInterface[]>([]);
   const [mechanics, setMechanics] = useState<UserInterface[]>([]);
-
+  const {data: session} = useSession();
   useEffect(() => {
     async function fetchData() {
       try {
-        const userList = await getAllUsers();
+        const userList = await getAllUsers(session?.user.token);
         const admins = userList.filter((user: UserInterface)=> user.roleId === 1 || user.roleId === 2);
         const mechanics = userList.filter((user: UserInterface) => user.roleId == 3);
         

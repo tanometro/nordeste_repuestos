@@ -1,14 +1,14 @@
-import { UserInterface } from "../interfaces";
+import { UserInterface } from "../components/interfaces";
 
-const deleteUser = async (id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
-  const storedToken = localStorage.getItem('token');
+const deleteUser = async (sessionToken: string | undefined, id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
+  // const storedToken = localStorage.getItem('token');
   try {
-    if (storedToken !== null) {
+    if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/deactivate`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json', 
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify({ id: id.toString() }),
       });

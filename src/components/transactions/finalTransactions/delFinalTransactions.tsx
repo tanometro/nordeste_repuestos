@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
 import PrimaryButton from '../../buttons/primaryButton';
-import filterByMechanic from '@/src/components/requests/filterByMechanic';
-import filterByFinalCustomer from '@/src/components/requests/filterByFinalCustomer';
+import filterByMechanic from '@/src/requests/filterByMechanic';
+import filterByFinalCustomer from '@/src/requests/filterByFinalCustomer';
 import SearchInput from '@/src/components/inputs/searchInput';
 import RenderResult from '@/src/components/renderResult';
-import getAllTransactions from '@/src/components/requests/allTransactions';
+import getAllTransactions from '@/src/requests/allTransactions';
 import { addDays } from 'date-fns'
 
 const DelFinalTransactions = () => {

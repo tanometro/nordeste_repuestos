@@ -9,23 +9,23 @@ const handler = NextAuth({
         username: { label: "Username", type: "text", placeholder: "test@test.com" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
+        const formData = new FormData();
+        formData.append('username', credentials?.username ?? '');
+        formData.append('password', credentials?.password ?? '');
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
           {
             method: "POST",
-            body: JSON.stringify({
-              username: credentials?.username,
-              password: credentials?.password,
-            }),
-            headers: { "Content-Type": "application/json" },
+            body: formData,
           }
         );
         const user = await res.json();
-        
-        if (user.error) throw user;
-
-        return user;
+        if (res.status !== 200) {
+          throw new Error('Credenciales incorrectas');
+        } else {
+          return user
+        }
       },
     }),
   ],
@@ -39,7 +39,7 @@ const handler = NextAuth({
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/",
   },
 });
 

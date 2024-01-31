@@ -22,7 +22,6 @@
     "fetch": "^1.1.0",
     "jsonwebtoken": "^9.0.2",
     "next": "^13.5.6",
-    "next-auth": "^4.23.2",
     "postcss": "8.4.28",
     "react": "18.2.0",
     "react-date-range": "^1.4.0",
@@ -38,6 +37,7 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.3",
-    "@types/react-date-range": "^1.4.8"
+    "@types/react-date-range": "^1.4.8",
+    "next-auth": "^4.24.5"
   }
 }

@@ -1,14 +1,13 @@
-import { TransactionInterface } from "../interfaces";
+import { TransactionInterface } from "../components/interfaces";
 
-const deleteTransaction = async (id: number, setTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>) => {
-  const storedToken = localStorage.getItem('token');
+const deleteTransaction = async (sessionToken: string | undefined, id: number, setTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>) => {
   try {
-    if (storedToken !== null) {
+    if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/cancel`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json', 
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
         body: JSON.stringify({ id: id.toString() }),
       });

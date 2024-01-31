@@ -1,15 +1,14 @@
-import { BalanceListInterface } from "../interfaces";
+import { BalanceListInterface } from "../components/interfaces";
 
-const balanceList = async (): Promise<BalanceListInterface[]> => {
-  const storedToken = localStorage.getItem('token');
+const balanceList = async (sessionToken: string | undefined): Promise<BalanceListInterface[]> => {
 
   try {
-    if (storedToken !== null) {
+    if (sessionToken) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/audit/balance_list`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json', 
-          Authorization: storedToken,
+          Authorization: sessionToken,
         },
       });
 

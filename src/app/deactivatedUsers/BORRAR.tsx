@@ -3,8 +3,8 @@
 import Header from "@/src/components/header";
 import List from "@/src/components/lists";
 import { useEffect, useState } from "react";
-import getAllUsers from "@/src/components/requests/getAllUsers";
-import activateUser from "@/src/components/requests/activateUser";
+import getAllUsers from "@/src/requests/getAllUsers";
+import activateUser from "@/src/requests/activateUser";
 import { useRouter } from "next/navigation";
 import { UserInterface } from "@/src/components/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
