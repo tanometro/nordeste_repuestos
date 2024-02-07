@@ -1,12 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TransactionInterface, SearchParameters } from '@/src/types/interfaces';
-import { DateRange } from 'react-date-range'
-import format from 'date-fns/format'
-import { addDays } from 'date-fns'
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
+import DateRange from '../../inputs/dateRangeInput';
 import getAllTransactions from '../../../requests/allTransactions';
 import SearchInput from '../../inputs/searchInput';
 import RenderResult from '../../renderResult';
@@ -27,16 +23,7 @@ const MechanicsTransactions = () => {
     dni_or_name: "",
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-  const [range, setRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: 'selection'
-    }
-  ]);
-  
-  const [open, setOpen] = useState(false);
-  const refOne = useRef<HTMLDivElement | null>(null);
+  const [ranged, setRanged] = useState([])
 
    // Cuando monta el componente //
    useEffect(() => {
@@ -66,22 +53,44 @@ const MechanicsTransactions = () => {
     
   const searchMechanic = async () => {
     try {
-      const mechanic = await filterByMechanic(session?.user.token, searchByMechanic);
-      const filtered = mechanic.filter(
-        (transaction) => transaction.status === true
-      );
+      const parameters: SearchParameters = {
+        dni_or_name: searchByMechanic.dni_or_name,
+        from_date: searchByMechanic.from_date || undefined,  
+        to_date: searchByMechanic.to_date || undefined,      
+      };
+      
+      const mechanic = await filterByMechanic(session?.user.token, parameters);
+      const filtered = mechanic.filter((transaction) => transaction.status === true);
+      
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de mecánico", error);
     }
   };
   
+  const dateRange = (range: any) => {  
+    setRanged(range)
+    const startDate = range[0];
+    const endDate = range[1];
+    const formattedStartDate = startDate.toISOString();
+    const formattedEndDate = endDate.toISOString();
+     
+    setSearchByClient(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByMechanic(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByClient(prevState => ({...prevState, to_date: formattedEndDate}));
+    setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
+}
+
   const searchClient = async () => {
     try {
-      const client = await filterByFinalCustomer(session?.user.token, searchByClient);
-      const filtered = client.filter(
-        (transaction) => transaction.status === true
-      );
+      const parameters: SearchParameters = {
+        dni_or_name: searchByClient.dni_or_name,
+        from_date: searchByClient.from_date || undefined,  
+        to_date: searchByClient.to_date || undefined,      
+      };
+      
+      const client = await filterByFinalCustomer(session?.user.token, parameters);
+      const filtered = client.filter((transaction) => transaction.status === true);
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de cliente", error);
@@ -103,6 +112,10 @@ const MechanicsTransactions = () => {
   return (
       <div className="flex flex-col items-center h-screen w-full">
          <div className='flex items-center w-full'>
+            <div className="flex justify-center mt-12 w-7/12">
+              <DateRange value={ranged}
+              onChangeFunction={dateRange} />
+            </div>
           <div className="flex justify-center mt-12 w-7/12">
             <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
             onChangeFunction={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}
@@ -112,34 +125,6 @@ const MechanicsTransactions = () => {
             <SearchInput placeholder='Busca por NOMBRE o DNI de cliente' value={searchByClient.dni_or_name}
             onChangeFunction={(e) => setSearchByClient({...searchByClient, dni_or_name: e.target.value})}
           />
-          </div>
-          <div className="flex justify-center mt-12 w-6/12">
-            <div className="calendarWrap">
-              <input
-                value={`${format(range[0].startDate, 'dd/MM/yyyy')} a ${format(range[0].endDate, "dd/MM/yyyy")}`}
-                readOnly
-                className="rounded-2xl border border-custom-red h-10 w-full text-center text-black"
-                onClick={ () => setOpen(open => !open) }
-              />
-              <div ref={refOne} >
-                {open && 
-                <DateRange
-                  onChange={(item) => {
-                  const { startDate, endDate } = item.selection;
-                    if (startDate !== undefined && endDate !== undefined) {
-                      setRange([{ startDate, endDate, key: 'selection' }]);
-                    }
-                  }}
-                  editableDateInputs={true}
-                  moveRangeOnFirstSelection={false}
-                  ranges={range}
-                  months={1}
-                  direction="horizontal"
-                  className="calendarElement"
-                />
-                }
-              </div>
-            </div>
           </div>
         </div>
         <div className="flex flex-col">

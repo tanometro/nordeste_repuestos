@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TransactionInterface, SearchParameters } from '@/src/types/interfaces';
 import PrimaryButton from '../../buttons/primaryButton';
 import filterByMechanic from '@/src/requests/filterByMechanic';
 import filterByFinalCustomer from '@/src/requests/filterByFinalCustomer';
 import SearchInput from '@/src/components/inputs/searchInput';
+import DateRange from '../../inputs/dateRangeInput'
 import RenderResult from '@/src/components/renderResult';
 import getAllTransactions from '@/src/requests/allTransactions';
 import { addDays } from 'date-fns'
@@ -29,8 +30,7 @@ const DelFinalTransactions = () => {
       key: 'selection'
     }
   ]);
-  const [open, setOpen] = useState(false);
-  const refOne = useRef<HTMLDivElement | null>(null);
+  const [ranged, setRanged] = useState([])
   const {data: session} = useSession();
 
   // Cuando monta el componente //
@@ -57,17 +57,31 @@ const DelFinalTransactions = () => {
       console.error("Error al cargar la siguiente página", error);
     }
   };
+
+  const dateRange = (range: any) => {  
+    setRanged(range)
+    const startDate = range[0];
+    const endDate = range[1];
+    const formattedStartDate = startDate.toISOString();
+    const formattedEndDate = endDate.toISOString();
+     
+    setSearchByClient(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByMechanic(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByClient(prevState => ({...prevState, to_date: formattedEndDate}));
+    setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
+}
   
   const searchMechanic = async () => {
-    // let parameters = {
-    //   sessionToken: session?.user.token,
-    //   dni_or_name: searchByMechanic,
-    // }
     try {
-      const mechanic = await filterByMechanic(session?.user.token, searchByMechanic);
-      const filtered = mechanic.filter(
-        (transaction) => transaction.status === false
-      );
+      const parameters: SearchParameters = {
+        dni_or_name: searchByMechanic.dni_or_name,
+        from_date: searchByMechanic.from_date || undefined,  
+        to_date: searchByMechanic.to_date || undefined,      
+      };
+      
+      const mechanic = await filterByMechanic(session?.user.token, parameters);
+      const filtered = mechanic.filter((transaction) => transaction.status === true);
+      
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de mecánico", error);
@@ -76,10 +90,14 @@ const DelFinalTransactions = () => {
   
   const searchClient = async () => {
     try {
-      const client = await filterByFinalCustomer(session?.user.token, searchByClient);
-      const filtered = client.filter(
-        (transaction) => transaction.status === false
-      );
+      const parameters: SearchParameters = {
+        dni_or_name: searchByClient.dni_or_name,
+        from_date: searchByClient.from_date || undefined,  
+        to_date: searchByClient.to_date || undefined,      
+      };
+      
+      const client = await filterByFinalCustomer(session?.user.token, parameters);
+      const filtered = client.filter((transaction) => transaction.status === true);
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de cliente", error);
@@ -93,22 +111,6 @@ const DelFinalTransactions = () => {
     searchClient();
   }, [searchByClient]);
 
- const hideOnEscape = (e: React.KeyboardEvent) => {
-  if( e.key === "Escape" ) {
-    setOpen(false)
-  }
-}
-
-const hideOnClickOutside = (e: React.MouseEvent) => {
-  if (refOne.current && !refOne.current.contains(e.target as Node)) {
-    setOpen(false);
-  }
-}
-
-const rangeChange = (item: any) => {
-  setRange([item.selection]);
-}
-
   const transactionShow =
     (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
     ? filteredTransactions
@@ -117,6 +119,10 @@ const rangeChange = (item: any) => {
   return (
     <div className='w-full mb-24'>
       <div className='flex items-center w-full'>
+        <div className="flex justify-center mt-12 w-7/12">
+          <DateRange value={ranged}
+          onChangeFunction={dateRange} />
+        </div>
         <div className="flex justify-center mt-12 w-7/12">
           <SearchInput placeholder='Busca por NOMBRE o DNI de mecánico' value={searchByMechanic.dni_or_name} 
             onChangeFunction={(e) => setSearchByMechanic({ ...searchByMechanic, dni_or_name: e.target.value })}

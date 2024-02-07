@@ -62,7 +62,6 @@ function finalTransactions() {
         from_date: searchByMechanic.from_date || undefined,  
         to_date: searchByMechanic.to_date || undefined,      
       };
-      console.log('p', parameters);
       
       const mechanic = await filterByMechanic(session?.user.token, parameters);
       const filtered = mechanic.filter((transaction) => transaction.status === true);
@@ -75,7 +74,6 @@ function finalTransactions() {
   
   const dateRange = (range: any) => {  
     setRanged(range)
-    console.log('range', range);
     const startDate = range[0];
     const endDate = range[1];
     const formattedStartDate = startDate.toISOString();
@@ -115,11 +113,6 @@ const transactionShow =
   ? filteredTransactions
   : finalTransactions;
 
-  let message = null;
-
-  if (!searchByClient.dni_or_name && !searchByMechanic.dni_or_name && ranged.length === 0 && transactionShow.length === 0) {
-    message = "No hay resultados";
-  }
   
     return (
       <div className='w-full mb-24'>
@@ -144,7 +137,6 @@ const transactionShow =
             <div className="inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
                 <RenderResult data={transactionShow} setFinalTransactions={setFinalTransactions} eliminar='Eliminar'/>
-                {message && <p>{message}</p>}
                 <div className="flex items-center justify-center space-x-4">
                   <PrimaryButton title='Cargar más' onClickfunction={loadMore}/>
                 </div>
