@@ -4,7 +4,7 @@ import List from "@/src/components/lists";
 import { useState } from "react";
 import activateUser from "@/src/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { ActiveMechanicsProps } from "@/src/components/interfaces";
+import { ActiveMechanicsProps } from "@/src/types/interfaces";
 import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
 import { useSession } from "next-auth/react";

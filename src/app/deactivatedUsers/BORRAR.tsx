@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import getAllUsers from "@/src/requests/getAllUsers";
 import activateUser from "@/src/requests/activateUser";
 import { useRouter } from "next/navigation";
-import { UserInterface } from "@/src/components/interfaces";
+import { UserInterface } from "@/src/types/interfaces";
 // import { useAppSelector } from "@/redux/hooks";
 
 

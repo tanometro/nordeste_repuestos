@@ -4,10 +4,12 @@ import { useParams, useRouter } from "next/navigation";
 import Header from '@/src/components/header';
 import getOneTransaction from '@/src/requests/getOneTransaction';
 import PrimaryButton from '@/src/components/buttons/primaryButton';
+import { useSession } from 'next-auth/react';
 
 function DetailTransaction() {
     const params = useParams();
     const router = useRouter();
+    const {data: session} = useSession();
 
     const transactionId = Array.isArray(params.id) ? parseInt(params.id[0], 10) : parseInt(params.id, 10);
     const [transactionData, setTransactionData] = useState({
@@ -33,7 +35,7 @@ function DetailTransaction() {
     useEffect(() => {
         async function fetchData() {
           try {
-            const transaction = await getOneTransaction(transactionId);
+            const transaction = await getOneTransaction(session?.user.token, transactionId);
             setTransactionData(transaction);
           } catch (error) {
             console.error("Error en render componente de detalle transacción", error);

@@ -1,17 +1,19 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { SelectUserProps, UserInterface } from "../interfaces";
+import { SelectUserProps, UserInterface } from "../../types/interfaces";
 import getOneMechanic from '../../requests/searchMechanic';
+import { useSession } from "next-auth/react";
 
 const SelectUser = (props: SelectUserProps) => {
     const { sellData, setSellData, setUser } = props;
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState<UserInterface[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
+    const {data: session} = useSession();
   
     useEffect(() => {
       const fetchUsers = async () => {
         try {
-          const userFind = await getOneMechanic(searchTerm);
+          const userFind = await getOneMechanic(session?.user.token, searchTerm);
           setFilteredUsers(userFind);
         } catch (error) {
           console.error("Error en obtener usuario mecánico", error);
@@ -63,8 +65,7 @@ return (
       {selectedUser ? (
         <div className='cursor-pointer'>
           {selectedUser.name} {selectedUser.dni} {selectedUser.roleId === 3 ? "Mecánico" : "Admin"}
-        </div>
-        
+        </div>  
       ) : ""}
       {selectedUser && (
         <button onClick={handleDeselect} className="ml-auto mr-4 bg-gray-200 hover:bg-gray-400 w-6 h-6 rounded">X</button>

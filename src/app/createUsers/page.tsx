@@ -6,8 +6,9 @@ import { useState} from "react";
 import postUser from "@/src/requests/postUser";
 import validations from "@/src/components/validations/validations";
 import { useAppSelector } from "@/src/app/redux/hooks";
-import { UserPost } from "@/src/components/interfaces";
+import { UserPost } from "@/src/types/interfaces";
 import { useSession } from "next-auth/react";
+import SubmitButton from "@/src/components/buttons/submitButton";
 
 export default function CreateUser () {
   const {data: session} = useSession();
@@ -19,8 +20,7 @@ export default function CreateUser () {
     password: "",
     dni: "",
 });
-
-const [userData, setUserData] = useState<UserPost>({
+  const [userData, setUserData] = useState<UserPost>({
     dni: "",
     username: "",
     password: "",        
@@ -34,12 +34,6 @@ const [userData, setUserData] = useState<UserPost>({
       const value = (e.target as HTMLInputElement).value;
   
       setUserData({ ...userData, [property]: value });
-    };
-  
-    const handleBlur = () => {
-      // Validar el campo correspondiente y actualizar los errores
-      const validationErrors = validations(userData);
-      setErrors({ ...errors, ...validationErrors });
     };
   
     const handleSubmit = async (e: React.FormEvent) => {
@@ -64,6 +58,7 @@ const [userData, setUserData] = useState<UserPost>({
         
           if (response && response.status === 200) {
             router.push('/allUsers');
+            window.alert('Usuario creado')
           } else if (response) {
             const apiErrors = await response.json();
             window.alert(`Errores de la API:\n${apiErrors.join('\n')}`);
@@ -157,10 +152,7 @@ let roles = [2, 3];
                 ) : (
                   ""
                 )}
-                <button type="submit" 
-                className="w-2/4 text-white bg-custom-red hover:scale-105 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mt-4">
-                    Crear usuario
-                </button>
+                <SubmitButton title='Crear usuario' mt={4}/>
         </form>
         </div>
           </div>

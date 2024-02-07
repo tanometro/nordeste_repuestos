@@ -1,12 +1,14 @@
 import React from 'react';
-import { RenderProps } from './interfaces';
+import { RenderProps } from '../types/interfaces';
 import EditButton from './buttons/editButton';
 import deleteTransaction from '../requests/deleteTransaction';
 import { useRouter } from 'next/navigation';
 import List from './lists';
+import { useSession } from 'next-auth/react';
 
 function RenderResult(props: RenderProps) {
     const {data, setFinalTransactions, eliminar} = props;
+    const {data: session} = useSession();
 
     const router = useRouter();
 
@@ -45,7 +47,7 @@ function RenderResult(props: RenderProps) {
                       title={eliminar}
                       onClickfunction={() => {
                         if (setFinalTransactions) {
-                          deleteTransaction(transaction.id, setFinalTransactions);
+                          deleteTransaction(session?.user.token, transaction.id, setFinalTransactions);
                         }
                       }}
                     />

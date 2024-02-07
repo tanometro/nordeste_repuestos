@@ -1,5 +1,5 @@
 import React from 'react';
-import { PrimaryButtonProps } from '../interfaces';
+import { PrimaryButtonProps } from '../../types/interfaces';
 
 function PrimaryButton(props: PrimaryButtonProps) {
     const {onClickfunction, title} = props;

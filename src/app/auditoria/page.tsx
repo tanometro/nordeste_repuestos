@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import Header from '@/src/components/header';
 import List from "@/src/components/lists";
 import filterByMechanic from "@/src/requests/filterByMechanic";
-import { BalanceListInterface } from '@/src/components/interfaces';
+import { BalanceListInterface } from '@/src/types/interfaces';
 import balanceList from '@/src/requests/balanceList';
 import EditButton from '@/src/components/buttons/editButton';
-
+import { useSession } from 'next-auth/react';
 
 const Auditoría = () => {
     const [balances, setBalances]= useState<BalanceListInterface[]>([])
@@ -16,11 +16,12 @@ const Auditoría = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const router = useRouter();
     const [searchByMechanic, setSearchByMechanic] = useState<string>("");
+    const {data: session} = useSession();
 
     useEffect(() => {
         async function fetchData() {
           try {
-            const getAllBalances = await balanceList();
+            const getAllBalances = await balanceList(session?.user.token);
             setBalances(getAllBalances);
             
           } catch (error) {
@@ -34,7 +35,11 @@ const Auditoría = () => {
     const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
       setSearchByMechanic(target.value);
-      const mechanic = await filterByMechanic(searchByMechanic);
+      let parameters = {
+        dni_or_name: searchByMechanic,
+        sessionToken: session?.user?.token
+      }
+      const mechanic = await filterByMechanic(parameters);
    }
     
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,8 +73,8 @@ const Auditoría = () => {
                 </tr>
               </thead>
               <tbody>
-              {balances.map((user, index) => (
-                <tr key={index} 
+              {balances.map((user) => (
+                <tr key={user.id} 
                     className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-200">
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{user.transactionId}</td>
                     <td className="whitespace-nowrap px-6 py-4"> {user.userName}</td>

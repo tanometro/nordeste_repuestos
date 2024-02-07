@@ -9,7 +9,6 @@ import DelFinalTransactions from '@/src/components/transactions/finalTransaction
 import DelMechanicsTransactions from '@/src/components/transactions/mechanicsTransactions/delMechanicsTransactions';
 import PrimaryButton from '@/src/components/buttons/primaryButton';
 
-
 function AllTransacions() {
   const [component, setComponent] = useState(true);
   const [active, setActive] = useState(true);

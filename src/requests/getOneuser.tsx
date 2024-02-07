@@ -10,7 +10,7 @@ const getOneUser = async (sessionToken: string | undefined, id: number) => {
     });
 
     if (response.status !== 200) {
-      if (response.status === 401) {
+      if (!sessionToken) {
         window.location.href = '/';
       } else {
         throw new Error(`Error en la solicitud: ${response.status}`);

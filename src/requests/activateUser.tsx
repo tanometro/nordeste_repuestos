@@ -1,4 +1,4 @@
-import { UserInterface } from "../components/interfaces";
+import { UserInterface } from "../types/interfaces";
 
 const activateUser = async (sessionToken: string | undefined, id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
     try {
@@ -12,7 +12,7 @@ const activateUser = async (sessionToken: string | undefined, id: number, setUse
         body: JSON.stringify({id: id.toString()}),
       });
       if (!response.ok) {
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/login?tokenExpired=true';
         } else {
           throw new Error('Error al activar el usuario' + response);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchInputProps } from '../interfaces';
+import { SearchInputProps } from '../../types/interfaces';
 
 function SearchInput(props: SearchInputProps) {
     const {placeholder, value, onChangeFunction} = props;

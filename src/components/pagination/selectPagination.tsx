@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectProps } from '../interfaces';
+import { SelectProps } from '../../types/interfaces';
 
 function SelectPagination(props: SelectProps) {
     const {onChange, pagination, values} = props;

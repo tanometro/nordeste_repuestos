@@ -3,12 +3,14 @@ import React, {useEffect, useState} from 'react'
 import { useParams, useRouter } from "next/navigation";
 import Header from '@/src/components/header';
 import getOneTransaction from '@/src/requests/getOneTransaction';
+import { useSession } from 'next-auth/react';
 
 function DetailBalance() {
     const params = useParams();
     const router = useRouter();
-
+    const {data: session} = useSession();
     const transactionId = Array.isArray(params.id) ? parseInt(params.id[0], 10) : parseInt(params.id, 10);
+    
     const [transactionData, setTransactionData] = useState({
         id: 0,
         created: "2023-11-07T02:42:24.322Z",
@@ -32,7 +34,7 @@ function DetailBalance() {
     useEffect(() => {
         async function fetchData() {
           try {
-            const transaction = await getOneTransaction(transactionId);
+            const transaction = await getOneTransaction(session?.user.token, transactionId);
             setTransactionData(transaction);
           } catch (error) {
             console.error("Error en render componente de detalle transacción", error);

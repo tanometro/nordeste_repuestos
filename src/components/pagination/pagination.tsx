@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaginationProps } from '../interfaces';
+import { PaginationProps } from '../../types/interfaces';
 import PrimaryButton from '../buttons/primaryButton';
 
 function Pagination(props: PaginationProps) {
@@ -31,10 +31,10 @@ function Pagination(props: PaginationProps) {
     <div className="flex items-center justify-center mt-6 space-x-4">
         <PrimaryButton title='Anteriores' onClickfunction={prevPage}/>
         {
-            numbers.map((n, i) => (
+            numbers.map((n) => (
              <div className='text-black flex items-center'>
                 <button
-                    key={i}
+                    key={n.id}
                     onClick={() => changePage(n)}
                     className={`text-red mx-2 ${currentPage === n ? 'font-bold' : ''}`}
                 >

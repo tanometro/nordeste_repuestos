@@ -73,6 +73,7 @@ function CustomDateRange(props: CustomDateRangeProps) {
         placeholder="Seleccionar fechas"
         appearance="default"
         showOneCalendar
+        format="dd/MM/yyyy"
       />
     </Stack>
   );

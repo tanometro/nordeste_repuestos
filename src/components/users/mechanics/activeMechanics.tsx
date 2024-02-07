@@ -4,13 +4,13 @@ import List from "@/src/components/lists";
 import { useState } from "react";
 import deleteUser from "@/src/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { ActiveMechanicsProps } from "@/src/components/interfaces";
+import { ActiveMechanicsProps } from "@/src/types/interfaces";
 import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
 import { useSession } from "next-auth/react";
 
 const ActiveMechanics: React.FC<ActiveMechanicsProps> = (props) => {
-const {mechanics, setMechanics} = props;
+  const {mechanics, setMechanics} = props;
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);

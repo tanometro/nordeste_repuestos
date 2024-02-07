@@ -1,7 +1,7 @@
 'use client';
 
 import RoundedButton from "./buttons/roundedButton";
-import { HeaderProps } from "./interfaces";
+import { HeaderProps } from "../types/interfaces";
 import { useRouter } from "next/navigation";
 
 export default function Header(props: HeaderProps) {

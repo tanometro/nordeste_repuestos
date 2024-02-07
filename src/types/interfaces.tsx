@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react';
 
-
 export interface UserInterface {
   dni: string;
   username: string;
@@ -28,6 +27,7 @@ export interface PrimaryButtonProps {
 }
 export interface SubmitButtonProps {
   title: string,
+  mt?: number,
 }
 
 export interface SellInterface {
@@ -144,11 +144,6 @@ export interface SearchInputProps {
   value: string | number;
   onChangeFunction: (e: ChangeEvent<HTMLInputElement>) => void;
 }
-
-// export interface DateInputProps {
-//   value?: DateRange | undefined;
-//   onChangeFunction?: (value: DateRange) => void;
-// }
 
 export interface ActiveMechanicsProps {
   mechanics: UserInterface[];

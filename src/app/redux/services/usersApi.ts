@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // import { BASE_URL } from '@/app/components/constants';
-import { UserInterface } from '@/src/components/interfaces';
+import { UserInterface } from '@/src/types/interfaces';
 
 const getToken = () => {
   return localStorage.getItem('token');

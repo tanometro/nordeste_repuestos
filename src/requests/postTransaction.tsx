@@ -1,4 +1,4 @@
-import { SellInterface } from "../components/interfaces";
+import { SellInterface } from "../types/interfaces";
 
 const postTransaction = async (sessionToken: string | undefined, transaction: SellInterface) => {
 
@@ -15,7 +15,7 @@ const postTransaction = async (sessionToken: string | undefined, transaction: Se
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/';
         } else {
           throw new Error(`Error al crear la transacción: ${errorMessage}`);

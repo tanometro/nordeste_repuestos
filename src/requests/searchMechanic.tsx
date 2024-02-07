@@ -1,6 +1,6 @@
 // import { BASE_URL } from "../constants";
 import axios from "axios";
-import { UserInterface } from "../components/interfaces";
+import { UserInterface } from "../types/interfaces";
 
 const getOneMechanic = async (sessionToken: string | undefined, parameter: string | number): Promise<UserInterface[]> => {
 
@@ -14,9 +14,7 @@ const getOneMechanic = async (sessionToken: string | undefined, parameter: strin
     if (response.status !== 200) {
       throw new Error(`Error en la solicitud: ${response.status}`);
     }
-
     const data = response.data;
-
     return data; 
   } catch (error) {
     console.error("Error en obtener usuario mecánico", error);

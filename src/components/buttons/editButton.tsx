@@ -1,5 +1,5 @@
 import React from 'react';
-import { PrimaryButtonProps } from '../interfaces';
+import { PrimaryButtonProps } from '../../types/interfaces';
 
 function EditButton(props: PrimaryButtonProps) {
     const {title, onClickfunction} = props;

@@ -1,7 +1,7 @@
 'use client';
 import React from 'react'
 import filterByMechanic from '../../requests/filterByMechanic';
-import { FilterByMechanicsProps } from '../interfaces';
+import { FilterByMechanicsProps } from '../../types/interfaces';
 import { useEffect } from 'react';
 
 const FilterByMechanic: React.FC<FilterByMechanicsProps> = (props) => {

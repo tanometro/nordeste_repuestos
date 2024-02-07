@@ -1,4 +1,4 @@
-import { UserPost } from "../components/interfaces";
+import { UserPost } from "../types/interfaces";
 
 const postUser = async (sessionToken: string | undefined, user: UserPost) => {
   try {
@@ -15,7 +15,7 @@ const postUser = async (sessionToken: string | undefined, user: UserPost) => {
       if (!response.ok) {
         const errorMessage = await response.text();
 
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/';
         } else {
           throw new Error(`Error al crear el usuario: ${errorMessage}`);

@@ -1,21 +1,22 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react'
-import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
+import { TransactionInterface, SearchParameters } from '@/src/types/interfaces';
 import { DateRange } from 'react-date-range'
 import format from 'date-fns/format'
 import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { isWithinInterval } from 'date-fns';
 import getAllTransactions from '../../../requests/allTransactions';
 import SearchInput from '../../inputs/searchInput';
 import RenderResult from '../../renderResult';
 import PrimaryButton from '../../buttons/primaryButton';
 import filterByFinalCustomer from '../../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../../requests/filterByMechanic';
+import { useSession } from 'next-auth/react';
 
 const MechanicsTransactions = () => {
+  const {data: session} = useSession();
   const [mechanicTransactions, setMechhanicTransactions] = useState<TransactionInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pagination = 10;
@@ -41,7 +42,7 @@ const MechanicsTransactions = () => {
    useEffect(() => {
     async function fetchData() {
       try {
-        const transList = await getAllTransactions();
+        const transList = await getAllTransactions(session?.user.token);
         const mechTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
     
         setMechhanicTransactions(mechTransList);
@@ -54,7 +55,7 @@ const MechanicsTransactions = () => {
 
   const loadMore = async () => {
     try {
-      const next = await getAllTransactions(pagination, currentPage * pagination);
+      const next = await getAllTransactions(session?.user.token, pagination, currentPage * pagination);
       const mechanicTransactions = next.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === false);
       setMechhanicTransactions((prevTransactions) => [...prevTransactions, ...mechanicTransactions]);
       setCurrentPage((prevPage) => prevPage + 1);
@@ -65,7 +66,7 @@ const MechanicsTransactions = () => {
     
   const searchMechanic = async () => {
     try {
-      const mechanic = await filterByMechanic(searchByMechanic);
+      const mechanic = await filterByMechanic(session?.user.token, searchByMechanic);
       const filtered = mechanic.filter(
         (transaction) => transaction.status === true
       );
@@ -77,7 +78,7 @@ const MechanicsTransactions = () => {
   
   const searchClient = async () => {
     try {
-      const client = await filterByFinalCustomer(searchByClient);
+      const client = await filterByFinalCustomer(session?.user.token, searchByClient);
       const filtered = client.filter(
         (transaction) => transaction.status === true
       );

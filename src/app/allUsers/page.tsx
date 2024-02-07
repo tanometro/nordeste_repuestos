@@ -2,7 +2,7 @@
 
 import Header from "../../components/header";
 import getAllUsers from "../../requests/getAllUsers";
-import { UserInterface } from "../../components/interfaces";
+import { UserInterface } from "../../types/interfaces";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ActiveMechanics from "../../components/users/mechanics/activeMechanics";

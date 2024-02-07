@@ -3,7 +3,7 @@ import { DateRange } from 'react-date-range';
 import format from 'date-fns/format';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { DateInputProps } from '../interfaces';
+import { DateInputProps } from '../../types/interfaces';
 
 function DateInput(props: DateInputProps) {
   const { onClickFunction, range, setRange, open, setOpen } = props;

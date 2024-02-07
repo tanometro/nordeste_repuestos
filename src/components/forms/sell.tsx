@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { SellInterface, UserInterface, ValidationsTransaction } from '../interfaces';
+import { SellInterface, UserInterface, ValidationsTransaction } from '../../types/interfaces';
 import postTransaction from '../../requests/postTransaction';
 import SelectUser from './selectUser';
 import validateTransaction from '../validations/transactionValidations';
 import { useRouter } from 'next/navigation';
 import SubmitButton from '../buttons/submitButton';
+import { useSession } from 'next-auth/react';
 
 function NewSell() {
   const router = useRouter();
+  const {data: session} = useSession();
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     finalCustomerName: '',
     finalCustomerDni: '',
@@ -64,7 +66,7 @@ function NewSell() {
   
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    postTransaction(sellData);
+    postTransaction(session?.user.token, sellData);
     router.push('/allTransactions');
   };
   

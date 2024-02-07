@@ -15,7 +15,7 @@ async function allTransactions(sessionToken: string | undefined, limit?: number,
     });
 
     if (response.status !== 200) {
-      if (response.status === 401) {
+      if (!sessionToken) {
         window.location.href = '/'; 
       } else {
         throw new Error(`Error en la solicitud: ${response.status}`);
@@ -29,7 +29,8 @@ async function allTransactions(sessionToken: string | undefined, limit?: number,
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
       if (axiosError.response?.status === 401) {
-        window.location.href = '/'; 
+        console.log('Error en la consulta');
+        
       } else {
         throw new Error(`Error en la solicitud: ${axiosError.response?.status}`);
       }

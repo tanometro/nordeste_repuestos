@@ -10,8 +10,8 @@ const getAllUsers = async (sessionToken: string | undefined) => {
     });
 
     if (response.status !== 200) {
-      if (response.status === 401) {
-        window.location.href = '/login?tokenExpired=true';
+      if (!sessionToken) {
+        console.log('No existe token');
       } else {
         throw new Error(`Error en la solicitud: ${response.status}`);
       }
@@ -23,9 +23,8 @@ const getAllUsers = async (sessionToken: string | undefined) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
-      if (axiosError.response?.status === 401) {
+      if (!sessionToken) {
         
-        window.location.href = '/'; 
       } else {
         throw new Error(`Error en la solicitud: ${axiosError.response?.status}`);
       }

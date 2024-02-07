@@ -8,7 +8,6 @@ export default function Dashboard() {
   const router = useRouter();
   const defaultCommission = 5
   const { data: session, status } = useSession();
-
   const name = session?.user?.user.name;
 
   return (

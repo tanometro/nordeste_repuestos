@@ -4,14 +4,13 @@ import List from "@/src/components/lists";
 import { useState } from "react";
 import activateUser from "@/src/requests/activateUser";
 import { useRouter } from "next/navigation";
-import {ActiveAdminsProps } from "@/src/components/interfaces";
+import {ActiveAdminsProps } from "@/src/types/interfaces";
 import Pagination from "../../pagination/pagination";
 import EditButton from "../../buttons/editButton";
 import { useSession } from "next-auth/react";
 
 const InactiveAdmins: React.FC<ActiveAdminsProps> = (props) => {
   const {admins, setAdmins} = props;
-  // const users = useAppSelector(state => state.userReducer.users)
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);

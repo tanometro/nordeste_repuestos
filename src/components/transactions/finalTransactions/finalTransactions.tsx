@@ -1,9 +1,9 @@
 'use client';
-
+//librería de rsuitejs.com -> components -> date-range-picker
 import React, {useEffect, useState} from 'react'
 import filterByFinalCustomer from '../../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../../requests/filterByMechanic';
-import { TransactionInterface, SearchParameters,  } from '@/src/components/interfaces';
+import { TransactionInterface, SearchParameters,  } from '@/src/types/interfaces';
 import DateRange from '../../inputs/dateRangeInput';
 import RenderResult from '../../renderResult';
 import SearchInput from '../../inputs/searchInput';
@@ -62,25 +62,29 @@ function finalTransactions() {
         from_date: searchByMechanic.from_date || undefined,  
         to_date: searchByMechanic.to_date || undefined,      
       };
-  
-      const mechanic = await filterByMechanic(parameters);
+      console.log('p', parameters);
+      
+      const mechanic = await filterByMechanic(session?.user.token, parameters);
       const filtered = mechanic.filter((transaction) => transaction.status === true);
+      
       setFilteredTransactions(filtered);
     } catch (error) {
       console.error("Error en búsqueda de mecánico", error);
     }
   };
   
-  const dateRange = (range: any) => {    
-    const startDate = range[0].toISOString();
-    setSearchByClient({...searchByClient, from_date: startDate});
-    setSearchByMechanic({...searchByMechanic, from_date: startDate});
-    const endDate = range[1].toISOString();
-    setSearchByClient({...searchByClient, to_date: endDate});
-    setSearchByMechanic({...searchByMechanic, to_date: endDate});
-
-    console.log(searchByClient);
-    console.log(searchByMechanic);
+  const dateRange = (range: any) => {  
+    setRanged(range)
+    console.log('range', range);
+    const startDate = range[0];
+    const endDate = range[1];
+    const formattedStartDate = startDate.toISOString();
+    const formattedEndDate = endDate.toISOString();
+     
+    setSearchByClient(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByMechanic(prevState => ({...prevState, from_date: formattedStartDate}));
+    setSearchByClient(prevState => ({...prevState, to_date: formattedEndDate}));
+    setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
 }
 
   const searchClient = async () => {
@@ -90,8 +94,8 @@ function finalTransactions() {
         from_date: searchByClient.from_date || undefined,  
         to_date: searchByClient.to_date || undefined,      
       };
-  
-      const client = await filterByFinalCustomer(parameters);
+      
+      const client = await filterByFinalCustomer(session?.user.token, parameters);
       const filtered = client.filter((transaction) => transaction.status === true);
       setFilteredTransactions(filtered);
     } catch (error) {
@@ -106,11 +110,16 @@ function finalTransactions() {
     searchClient();
   }, [searchByClient]);
 
-
 const transactionShow =
-(searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
+  (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
   ? filteredTransactions
   : finalTransactions;
+
+  let message = null;
+
+  if (!searchByClient.dni_or_name && !searchByMechanic.dni_or_name && ranged.length === 0 && transactionShow.length === 0) {
+    message = "No hay resultados";
+  }
   
     return (
       <div className='w-full mb-24'>
@@ -135,6 +144,7 @@ const transactionShow =
             <div className="inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
                 <RenderResult data={transactionShow} setFinalTransactions={setFinalTransactions} eliminar='Eliminar'/>
+                {message && <p>{message}</p>}
                 <div className="flex items-center justify-center space-x-4">
                   <PrimaryButton title='Cargar más' onClickfunction={loadMore}/>
                 </div>

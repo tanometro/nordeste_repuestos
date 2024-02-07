@@ -1,4 +1,4 @@
-import { BalanceListInterface } from "../components/interfaces";
+import { BalanceListInterface } from "../types/interfaces";
 
 const balanceList = async (sessionToken: string | undefined): Promise<BalanceListInterface[]> => {
 
@@ -13,7 +13,7 @@ const balanceList = async (sessionToken: string | undefined): Promise<BalanceLis
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/'; 
         } else {
           throw new Error('Error de la API: ' + response);

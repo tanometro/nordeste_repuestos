@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react';
 import filterByFinalCustomer from '../../requests/filterByFinalCustomer';
-import { FilterByClientProps, TransactionInterface } from '../interfaces';
+import { FilterByClientProps } from '../../types/interfaces';
+import { useSession } from 'next-auth/react';
 
 const FilterByClient: React.FC<FilterByClientProps> = (props) => {
   const { searchClient, searchByClient, setFilteredTransactions } = props;
+  const {data: session} = useSession();
 
   useEffect(() => {
+    let parameters = {
+      dni_or_name: searchByClient,
+      token: session?.user.token,
+    }
     const fetchTransactions = async () => {
       try {
         if (searchByClient.trim() === '') {
           setFilteredTransactions([]);
         } else {
-          const transactionFind = await filterByFinalCustomer(searchByClient);
+          const transactionFind = await filterByFinalCustomer(parameters);
           setFilteredTransactions(transactionFind);
         }
       } catch (error) {

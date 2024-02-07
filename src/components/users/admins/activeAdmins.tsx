@@ -4,7 +4,7 @@ import List from "@/src/components/lists";
 import { useState } from "react";
 import deleteUser from "@/src/requests/deleteUser";
 import { useRouter } from "next/navigation";
-import { ActiveAdminsProps } from "@/src/components/interfaces";
+import { ActiveAdminsProps } from "@/src/types/interfaces";
 import Pagination from "../../pagination/pagination";
 import { useSession } from "next-auth/react";
 

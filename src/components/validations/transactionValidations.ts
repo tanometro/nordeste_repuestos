@@ -1,4 +1,4 @@
-import {ValidationsTransaction } from '../interfaces';
+import {ValidationsTransaction } from '../../types/interfaces';
 
 const validateTransaction = (inputs: ValidationsTransaction) => {
   let errors = {

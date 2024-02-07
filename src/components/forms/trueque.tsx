@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { SellInterface } from '../interfaces';
-import { UserInterface } from '../interfaces';
+import { SellInterface } from '../../types/interfaces';
+import { UserInterface } from '../../types/interfaces';
 import postTransaction from '../../requests/postTransaction';
 import SelectUser from './selectUser';
 import { useRouter } from 'next/navigation';
 import SubmitButton from '../buttons/submitButton';
+import { useSession } from 'next-auth/react';
 
 function Trueque() {
   const router = useRouter();
+  const {data: session} = useSession();
   const [data, setSellData] = useState<SellInterface>({
       finalCustomerName: null,
       finalCustomerDni: null,
@@ -39,8 +41,7 @@ function Trueque() {
   
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    postTransaction(data);
+    postTransaction(session?.user.token, data);
     router.push('/allTransactions');    
   }
 

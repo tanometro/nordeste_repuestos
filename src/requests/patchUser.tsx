@@ -1,4 +1,4 @@
-import { UserInterface } from "../components/interfaces";
+import { UserInterface } from "../types/interfaces";
 
 const patchUser = async (sessionToken: string | undefined, user: UserInterface) => {
   try {
@@ -13,7 +13,7 @@ const patchUser = async (sessionToken: string | undefined, user: UserInterface) 
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/';
         } else {
           throw new Error('Error al editar el usuario');

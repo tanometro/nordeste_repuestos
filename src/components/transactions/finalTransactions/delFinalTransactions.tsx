@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { TransactionInterface, SearchParameters } from '@/src/components/interfaces';
+import { TransactionInterface, SearchParameters } from '@/src/types/interfaces';
 import PrimaryButton from '../../buttons/primaryButton';
 import filterByMechanic from '@/src/requests/filterByMechanic';
 import filterByFinalCustomer from '@/src/requests/filterByFinalCustomer';
@@ -9,6 +9,7 @@ import SearchInput from '@/src/components/inputs/searchInput';
 import RenderResult from '@/src/components/renderResult';
 import getAllTransactions from '@/src/requests/allTransactions';
 import { addDays } from 'date-fns'
+import { useSession } from 'next-auth/react';
 
 const DelFinalTransactions = () => {
   const [deletedFinalTransactions, setDeletedFinalTransactions] = useState<TransactionInterface[]>([]);
@@ -30,12 +31,13 @@ const DelFinalTransactions = () => {
   ]);
   const [open, setOpen] = useState(false);
   const refOne = useRef<HTMLDivElement | null>(null);
+  const {data: session} = useSession();
 
   // Cuando monta el componente //
   useEffect(() => {
     async function fetchData() {
       try {
-        const transList = await getAllTransactions(undefined, undefined, false);
+        const transList = await getAllTransactions(session?.user.token, undefined, undefined, false);
         const delFinalTransList = transList.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true);
         setDeletedFinalTransactions(delFinalTransList);
       } catch (error) {
@@ -45,11 +47,9 @@ const DelFinalTransactions = () => {
     fetchData();
   }, []);
 
-  
-
   const loadMore = async () => {
     try {
-      const next = await getAllTransactions(pagination, currentPage * pagination, false);
+      const next = await getAllTransactions(session?.user.token, pagination, currentPage * pagination, false);
       const deletedNext = next.filter((transaction: TransactionInterface) => transaction.isFinalCustomerTransaction === true);
       setDeletedFinalTransactions((prevTransactions) => [...prevTransactions, ...deletedNext]); 
       setCurrentPage((prevPage) => prevPage + 1);
@@ -59,8 +59,12 @@ const DelFinalTransactions = () => {
   };
   
   const searchMechanic = async () => {
+    // let parameters = {
+    //   sessionToken: session?.user.token,
+    //   dni_or_name: searchByMechanic,
+    // }
     try {
-      const mechanic = await filterByMechanic(searchByMechanic);
+      const mechanic = await filterByMechanic(session?.user.token, searchByMechanic);
       const filtered = mechanic.filter(
         (transaction) => transaction.status === false
       );
@@ -72,7 +76,7 @@ const DelFinalTransactions = () => {
   
   const searchClient = async () => {
     try {
-      const client = await filterByFinalCustomer(searchByClient);
+      const client = await filterByFinalCustomer(session?.user.token, searchByClient);
       const filtered = client.filter(
         (transaction) => transaction.status === false
       );

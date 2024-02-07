@@ -1,4 +1,4 @@
-import { TransactionInterface } from "../components/interfaces";
+import { TransactionInterface } from "../types/interfaces";
 
 const deleteTransaction = async (sessionToken: string | undefined, id: number, setTransactions: React.Dispatch<React.SetStateAction<TransactionInterface[]>>) => {
   try {
@@ -13,7 +13,7 @@ const deleteTransaction = async (sessionToken: string | undefined, id: number, s
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/';
         } else {
           throw new Error('Error al eliminar la transacción' + response);

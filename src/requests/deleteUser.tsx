@@ -1,4 +1,4 @@
-import { UserInterface } from "../components/interfaces";
+import { UserInterface } from "../types/interfaces";
 
 const deleteUser = async (sessionToken: string | undefined, id: number, setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>) => {
   // const storedToken = localStorage.getItem('token');
@@ -14,7 +14,7 @@ const deleteUser = async (sessionToken: string | undefined, id: number, setUsers
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (!sessionToken) {
           window.location.href = '/';
         } else {
           throw new Error('Error al eliminar el usuario' + response);

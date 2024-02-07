@@ -7,7 +7,7 @@ import patchUser from '@/src/requests/patchUser';
 import deleteTransaction from '@/src/requests/deleteTransaction';
 import Header from '@/src/components/header';
 import filterByMechanic from '@/src/requests/filterByMechanic';
-import { TransactionInterface } from '@/src/components/interfaces';
+import { TransactionInterface } from '@/src/types/interfaces';
 import { useSession } from 'next-auth/react';
 
 export default function EditUserForm () {
@@ -202,7 +202,7 @@ export default function EditUserForm () {
                       </button>
                     </td>
                     <td>
-                      <button onClick={() => deleteTransaction(transaction.id, setTransactions)}>
+                      <button onClick={() => deleteTransaction(session?.user?.token, transaction.id, setTransactions)}>
                     <a className="text-custom-red px-3">Eliminar</a>
                       </button>
                     </td>
