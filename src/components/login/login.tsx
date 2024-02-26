@@ -25,14 +25,8 @@ export default function Login (){
       if (response?.error) {
         setErrors(response.error.split(","));
       } else {
-        const userRole = response?.user?.user?.roleId;
-  
-        if (userRole === 3) {
-          router.push("/mechanicNotAuthorized");
-        } else {
           router.push("/dashboard");
         }
-      }
     } catch (error) {
       console.error("Error durante el inicio de sesión:", error);
     }

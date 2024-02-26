@@ -9,8 +9,9 @@ import SearchInput from '@/src/components/inputs/searchInput';
 import DateRange from '../../inputs/dateRangeInput'
 import RenderResult from '@/src/components/renderResult';
 import getAllTransactions from '@/src/requests/allTransactions';
-import { addDays } from 'date-fns'
 import { useSession } from 'next-auth/react';
+
+type DateRangeType = [Date, Date];
 
 const DelFinalTransactions = () => {
   const [deletedFinalTransactions, setDeletedFinalTransactions] = useState<TransactionInterface[]>([]);
@@ -23,14 +24,7 @@ const DelFinalTransactions = () => {
     dni_or_name: "",
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-  const [range, setRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: 'selection'
-    }
-  ]);
-  const [ranged, setRanged] = useState([])
+  const [ranged, setRanged] = useState<DateRangeType | null>(null);
   const {data: session} = useSession();
 
   // Cuando monta el componente //
@@ -45,7 +39,7 @@ const DelFinalTransactions = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [session?.user.token]);
 
   const loadMore = async () => {
     try {
@@ -70,7 +64,7 @@ const DelFinalTransactions = () => {
     setSearchByClient(prevState => ({...prevState, to_date: formattedEndDate}));
     setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
 }
-  
+useEffect(() => {
   const searchMechanic = async () => {
     try {
       const parameters: SearchParameters = {
@@ -87,7 +81,11 @@ const DelFinalTransactions = () => {
       console.error("Error en búsqueda de mecánico", error);
     }
   };
+
+  searchMechanic();
+}, [searchByMechanic, session?.user.token]);
   
+useEffect(() => {
   const searchClient = async () => {
     try {
       const parameters: SearchParameters = {
@@ -103,14 +101,10 @@ const DelFinalTransactions = () => {
       console.error("Error en búsqueda de cliente", error);
     }
   };
-  
-  useEffect(() => {
-    searchMechanic();
-  }, [searchByMechanic]);
-  useEffect(() => {
-    searchClient();
-  }, [searchByClient]);
 
+  searchClient();
+}, [searchByClient, session?.user.token]);
+  
   const transactionShow =
     (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
     ? filteredTransactions

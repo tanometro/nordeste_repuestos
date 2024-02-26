@@ -8,10 +8,12 @@ import addDays from 'date-fns/addDays';
 import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import addMonths from 'date-fns/addMonths';
-import { ValueType } from 'rsuite/lib/DateRangePicker';
+import { ValueType, DateRange } from 'rsuite/esm/DateRangePicker';
+
+type DateRangeType = [Date, Date];
 
 interface CustomDateRangeProps {
-  value?: ValueType;
+  value: DateRangeType | null;
   onChangeFunction: (value: ValueType) => void;
 }
 
@@ -65,11 +67,14 @@ const predefinedRanges = [
 
 function CustomDateRange(props: CustomDateRangeProps) {
     const {value, onChangeFunction} = props;
+    if (!value) {
+      return <div>No se ha seleccionado un rango de fechas.</div>;
+  }
   return (
     <Stack direction="column" spacing={8} alignItems="flex-start">
       <DateRangePicker
-        value={value || [null, null]}
-        onChange={(nextValue) => onChangeFunction(nextValue)}
+        value={value}
+        onChange={(nextValue) => onChangeFunction(nextValue as ValueType)}
         placeholder="Seleccionar fechas"
         appearance="default"
         showOneCalendar

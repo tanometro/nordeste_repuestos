@@ -24,7 +24,7 @@ const SelectUser = (props: SelectUserProps) => {
       if (searchTerm.trim() !== '') {
         fetchUsers();
       }
-    }, [searchTerm]);
+    }, [session?.user.token, searchTerm]);
 
     const handleSelectOption = (user: UserInterface) => {
       setUser(user);

@@ -31,17 +31,16 @@ function Pagination(props: PaginationProps) {
     <div className="flex items-center justify-center mt-6 space-x-4">
         <PrimaryButton title='Anteriores' onClickfunction={prevPage}/>
         {
-            numbers.map((n) => (
-             <div className='text-black flex items-center'>
+            numbers.map((n, index) => (
+                <div className='text-black flex items-center' key={index}>
                 <button
-                    key={n.id}
                     onClick={() => changePage(n)}
                     className={`text-red mx-2 ${currentPage === n ? 'font-bold' : ''}`}
                 >
                     {n}
                 </button>
-            </div>
-                ))
+                </div>
+            ))
         }
         <PrimaryButton title='Siguientes' onClickfunction={nextPage}/>
     </div>  

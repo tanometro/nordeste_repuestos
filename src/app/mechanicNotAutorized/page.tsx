@@ -7,7 +7,7 @@ export default function MechanicNotAutorized() {
     return (
         <div className="flex items-center justify-center h-screen" >
         <div className="text-center">
-            <h1 className="text-black mb-4 ">¡Hola! Si sos un usuarios "mecánico", esta página no es para vos</h1>
+            <h1 className="text-black mb-4 ">¡Hola! Si sos un usuarios mecánico, esta página no es para vos</h1>
             <h1 className="text-black mb-4 ">Te recomendamos el uso de la app móvil que Nordeste Repuestos preparó para vos</h1>
             <button
                 type="button" 

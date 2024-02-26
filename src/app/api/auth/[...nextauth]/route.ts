@@ -21,6 +21,7 @@ const handler = NextAuth({
           }
         );
         const user = await res.json();
+        
         if (res.status !== 200) {
           throw new Error('Credenciales incorrectas');
         } else {

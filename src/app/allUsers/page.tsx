@@ -35,7 +35,7 @@ export default function Users(){
     }
   
     fetchData();
-  }, []);
+  }, [session?.user.token]);
   const toggleActive = () => {
     setActive(!active);
   };

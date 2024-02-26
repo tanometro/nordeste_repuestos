@@ -17,7 +17,7 @@ const FilterByClient: React.FC<FilterByClientProps> = (props) => {
         if (searchByClient.trim() === '') {
           setFilteredTransactions([]);
         } else {
-          const transactionFind = await filterByFinalCustomer(parameters);
+          const transactionFind = await filterByFinalCustomer(session?.user.token, parameters);
           setFilteredTransactions(transactionFind);
         }
       } catch (error) {
@@ -32,7 +32,7 @@ const FilterByClient: React.FC<FilterByClientProps> = (props) => {
       controller.abort();
     };
 
-  }, [searchByClient, setFilteredTransactions]);
+  }, [session?.user.token, searchByClient, setFilteredTransactions]);
 
   return (
     <div className="flex justify-center mt-12 w-7/12">

@@ -7,13 +7,13 @@ import Image from 'next/image';
 export default function Dashboard() {
   const router = useRouter();
   const defaultCommission = 5
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const name = session?.user?.user.name;
 
   return (
     <div>
       <Header title="Dashboard" />
-      <div className='flex flex-row items-center mt-12 ml-12 py-3 px-3 '>
+      <div className='flex flex-row items-center mt-12 ml-12 py-3 px-3'>
       <Image
         width={50}
         height={50}

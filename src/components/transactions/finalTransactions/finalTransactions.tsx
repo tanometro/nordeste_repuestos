@@ -11,7 +11,9 @@ import getAllTransactions from '../../../requests/allTransactions';
 import PrimaryButton from '../../buttons/primaryButton';
 import { useSession } from 'next-auth/react';
 
-function finalTransactions() {
+type DateRangeType = [Date, Date];
+
+function FinalTransactions() {
   const [finalTransactions, setFinalTransactions] = useState<TransactionInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pagination = 10;
@@ -26,7 +28,7 @@ function finalTransactions() {
     from_date: '',
     to_date: '',
   });
-  const [ranged, setRanged] = useState([])
+  const [ranged, setRanged] = useState<DateRangeType | null>(null);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
   const {data: session} = useSession();
 
@@ -43,7 +45,7 @@ function finalTransactions() {
       }
     }
     fetchData();
-  }, []);
+  }, [session?.user.token]);
   
   const loadMore = async () => {
     try {
@@ -52,23 +54,6 @@ function finalTransactions() {
       setCurrentPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("Error al cargar la siguiente página", error);
-    }
-  };
-  
-  const searchMechanic = async () => {
-    try {
-      const parameters: SearchParameters = {
-        dni_or_name: searchByMechanic.dni_or_name,
-        from_date: searchByMechanic.from_date || undefined,  
-        to_date: searchByMechanic.to_date || undefined,      
-      };
-      
-      const mechanic = await filterByMechanic(session?.user.token, parameters);
-      const filtered = mechanic.filter((transaction) => transaction.status === true);
-      
-      setFilteredTransactions(filtered);
-    } catch (error) {
-      console.error("Error en búsqueda de mecánico", error);
     }
   };
   
@@ -85,35 +70,50 @@ function finalTransactions() {
     setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
 }
 
-  const searchClient = async () => {
-    try {
-      const parameters: SearchParameters = {
-        dni_or_name: searchByClient.dni_or_name,
-        from_date: searchByClient.from_date || undefined,  
-        to_date: searchByClient.to_date || undefined,      
-      };
-      
-      const client = await filterByFinalCustomer(session?.user.token, parameters);
-      const filtered = client.filter((transaction) => transaction.status === true);
-      setFilteredTransactions(filtered);
-    } catch (error) {
-      console.error("Error en búsqueda de cliente", error);
-    }
-  };
-  
   useEffect(() => {
+    const searchMechanic = async () => {
+      try {
+        const parameters: SearchParameters = {
+          dni_or_name: searchByMechanic.dni_or_name,
+          from_date: searchByMechanic.from_date || undefined,  
+          to_date: searchByMechanic.to_date || undefined,      
+        };
+        
+        const mechanic = await filterByMechanic(session?.user.token, parameters);
+        const filtered = mechanic.filter((transaction) => transaction.status === true);
+        
+        setFilteredTransactions(filtered);
+      } catch (error) {
+        console.error("Error en búsqueda de mecánico", error);
+      }
+    };
     searchMechanic();
-  }, [searchByMechanic]);
+  }, [session?.user.token, searchByMechanic]);
+
   useEffect(() => {
+    const searchClient = async () => {
+      try {
+        const parameters: SearchParameters = {
+          dni_or_name: searchByClient.dni_or_name,
+          from_date: searchByClient.from_date || undefined,  
+          to_date: searchByClient.to_date || undefined,      
+        };
+        
+        const client = await filterByFinalCustomer(session?.user.token, parameters);
+        const filtered = client.filter((transaction) => transaction.status === true);
+        setFilteredTransactions(filtered);
+      } catch (error) {
+        console.error("Error en búsqueda de cliente", error);
+      }
+    };
     searchClient();
-  }, [searchByClient]);
+  }, [session?.user.token, searchByClient]);
 
 const transactionShow =
   (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0
   ? filteredTransactions
   : finalTransactions;
 
-  
     return (
       <div className='w-full mb-24'>
         <div className='flex items-center w-full'>
@@ -148,4 +148,4 @@ const transactionShow =
     );
 }
 
-export default finalTransactions;
+export default FinalTransactions;

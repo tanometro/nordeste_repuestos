@@ -11,6 +11,8 @@ import filterByFinalCustomer from '../../../requests/filterByFinalCustomer';
 import filterByMechanic from '../../../requests/filterByMechanic';
 import { useSession } from 'next-auth/react';
 
+type DateRangeType = [Date, Date];
+
 const DelMechanicsTransactions = () => {
   const {data: session} = useSession();
   const [deletedMechanicTransactions, setDeletedMechhanicTransactions] = useState<TransactionInterface[]>([]);
@@ -23,7 +25,7 @@ const DelMechanicsTransactions = () => {
     dni_or_name: "",
   });
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionInterface[]>([]);
-  const [ranged, setRanged] = useState([])
+  const [ranged, setRanged] = useState<DateRangeType | null>(null);
 
    // Cuando monta el componente //
    useEffect(() => {
@@ -38,7 +40,7 @@ const DelMechanicsTransactions = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [session?.user.token]);
 
   const loadMore = async () => {
     try {
@@ -48,23 +50,6 @@ const DelMechanicsTransactions = () => {
       setCurrentPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("Error al cargar la siguiente página", error);
-    }
-  };
-    
-  const searchMechanic = async () => {
-    try {
-      const parameters: SearchParameters = {
-        dni_or_name: searchByMechanic.dni_or_name,
-        from_date: searchByMechanic.from_date || undefined,  
-        to_date: searchByMechanic.to_date || undefined,      
-      };
-      
-      const mechanic = await filterByMechanic(session?.user.token, parameters);
-      const filtered = mechanic.filter((transaction) => transaction.status === true);
-      
-      setFilteredTransactions(filtered);
-    } catch (error) {
-      console.error("Error en búsqueda de mecánico", error);
     }
   };
   
@@ -80,29 +65,45 @@ const DelMechanicsTransactions = () => {
     setSearchByClient(prevState => ({...prevState, to_date: formattedEndDate}));
     setSearchByMechanic(prevState => ({...prevState, to_date: formattedEndDate}));
 }
-
-  const searchClient = async () => {
-    try {
-      const parameters: SearchParameters = {
-        dni_or_name: searchByClient.dni_or_name,
-        from_date: searchByClient.from_date || undefined,  
-        to_date: searchByClient.to_date || undefined,      
-      };
-      
-      const client = await filterByFinalCustomer(session?.user.token, parameters);
-      const filtered = client.filter((transaction) => transaction.status === true);
-      setFilteredTransactions(filtered);
-    } catch (error) {
-      console.error("Error en búsqueda de cliente", error);
-    }
-  };
   
   useEffect(() => {
+    const searchMechanic = async () => {
+      try {
+        const parameters: SearchParameters = {
+          dni_or_name: searchByMechanic.dni_or_name,
+          from_date: searchByMechanic.from_date || undefined,  
+          to_date: searchByMechanic.to_date || undefined,      
+        };
+        
+        const mechanic = await filterByMechanic(session?.user.token, parameters);
+        const filtered = mechanic.filter((transaction) => transaction.status === true);
+        
+        setFilteredTransactions(filtered);
+      } catch (error) {
+        console.error("Error en búsqueda de mecánico", error);
+      }
+    };
     searchMechanic();
-  }, [searchByMechanic]);
+  }, [session?.user.token, searchByMechanic]);
+
   useEffect(() => {
+    const searchClient = async () => {
+      try {
+        const parameters: SearchParameters = {
+          dni_or_name: searchByClient.dni_or_name,
+          from_date: searchByClient.from_date || undefined,  
+          to_date: searchByClient.to_date || undefined,      
+        };
+        
+        const client = await filterByFinalCustomer(session?.user.token, parameters);
+        const filtered = client.filter((transaction) => transaction.status === true);
+        setFilteredTransactions(filtered);
+      } catch (error) {
+        console.error("Error en búsqueda de cliente", error);
+      }
+    };
     searchClient();
-  }, [searchByClient]);
+  }, [session?.user.token, searchByClient]);
 
   const transactionShow =
     (searchByClient.dni_or_name || searchByMechanic.dni_or_name) && filteredTransactions.length > 0

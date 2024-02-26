@@ -1,12 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import { BASE_URL } from '@/app/components/constants';
 import { UserInterface } from '@/src/types/interfaces';
 
 const getToken = () => {
   return localStorage.getItem('token');
 };
 
-// Definición del tipo para el objeto userApi
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
@@ -32,16 +30,19 @@ export const userApi = createApi({
         method: 'PATCH',
       }),
     }),
-    editUser: builder.mutation({
-      query: () => ({
-        
-      })
-    })
+    editUser: builder.mutation<UserInterface, { id: number; data: Partial<UserInterface> }>({
+      query: ({ id, data }) => ({
+        url: `/user/edit/${id}`,
+        method: 'PATCH',
+        body: JSON.stringify(data), // Asegúrate de ajustar esto según la estructura esperada por tu API
+        headers: {
+          'Content-Type': 'application/json', // Asegúrate de ajustar los encabezados según lo requerido por tu API
+        },
+      }),
+    }),
   }),
 });
 
-// Exporta el tipo completo de userApi
 export type UserApi = typeof userApi;
 
-// Exporta las funciones generadas automáticamente por createApi
 export const { useGetUsersQuery, useGetUserByIdQuery, useDeleteUserMutation } = userApi;

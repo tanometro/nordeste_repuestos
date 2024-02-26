@@ -42,7 +42,7 @@ function DetailTransaction() {
           }
         }
         fetchData();
-      }, []);
+      }, [session?.user.token, transactionId]);
   return (
     <div>
         <Header title={`Detalle de transacción número ${transactionData.id}`}/>

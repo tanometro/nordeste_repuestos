@@ -41,8 +41,7 @@ export default function EditUserForm () {
           sessionToken: session?.user?.token
         }
         console.log(userData.username);
-        const transactions = await filterByMechanic(parameters);
-        console.log(transactions);
+        const transactions = await filterByMechanic(session?.user?.token, parameters);
         
         setUserData(user);
         setTransactions(transactions);
@@ -51,7 +50,7 @@ export default function EditUserForm () {
       }
     }
     fetchData();
-  }, []);
+  }, [session?.user?.token, userData.username, userId]);
 
     const handleEditClick = () => {
       setIsEditing(true);

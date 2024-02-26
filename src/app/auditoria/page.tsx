@@ -30,7 +30,7 @@ const Auditoría = () => {
         }
       
         fetchData();
-      }, []);
+      }, [session?.user.token]);
     
     const searchMechanic = async ({target}: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(0);
@@ -39,7 +39,7 @@ const Auditoría = () => {
         dni_or_name: searchByMechanic,
         sessionToken: session?.user?.token
       }
-      const mechanic = await filterByMechanic(parameters);
+      const mechanic = await filterByMechanic(session?.user.token, parameters);
    }
     
     const searchDate = ({target}: React.ChangeEvent<HTMLInputElement>) => {
